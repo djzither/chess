@@ -7,10 +7,15 @@ package chess;
  * signature of the existing methods.
  */
 public class ChessBoard {
+    //so this creates a chess board that holds chess pieces and then you
+    // make it
+    ChessPiece[][] squares = new ChessPiece[8][8];
 
     public ChessBoard() {
         
     }
+    //making chess board as a 2d array
+
 
     /**
      * Adds a chess piece to the chessboard
@@ -19,7 +24,11 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        throw new RuntimeException("Not implemented");
+        //we use the chessposition "position" object and chesspiece "piece" object
+        // the chessposion position object has methods "getrow" and "get col"
+        //because my tests are 1 based and my array is zero based, I subtract 1
+        squares[position.getRow()-1][position.getColumn()-1] = piece;
+
     }
 
     /**
@@ -30,7 +39,8 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        throw new RuntimeException("Not implemented");
+        return squares[position.getRow()-1][position.getColumn()-1];
+
     }
 
     /**
@@ -39,5 +49,20 @@ public class ChessBoard {
      */
     public void resetBoard() {
         throw new RuntimeException("Not implemented");
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+    // overriding the "to" string is good for debugging and i should do it everywhere
+    @Override
+    public String toString() {
+        return super.toString();
     }
 }
