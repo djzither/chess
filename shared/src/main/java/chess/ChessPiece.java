@@ -11,8 +11,8 @@ import java.util.List;
  */
 public class ChessPiece {
 
-    private final ChessGame.TeamColor pieceColor;
-    private final PieceType type;
+    private ChessGame.TeamColor pieceColor;
+    private PieceType type;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
@@ -56,15 +56,20 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     //collection allows us to return different types of chess move objects
+    //like possible destinatioins, nessary info to execute each move legally with rules for piece
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
 
         //import list
         //we are importing variables from different classes above in func name
+//
+//        ChessPiece piece = board.getPiece(myPosition);
+//        if (piece.getPieceType() == PieceType.BISHOP){
+//            return List.of(new ChessMove(new ChessPosition(5,4), new ChessPosition(1,8), null));
+//        }
+//        this allows me to have access to the this objects for this piece
+        PieceType piece = getPieceType();
+        PieceMovesCalculator instance = new PieceMovesCalculator(board, myPosition, piece);
 
-        ChessPiece piece = board.getPiece(myPosition);
-        if (piece.getPieceType() == PieceType.BISHOP){
-            return List.of(new ChessMove(new ChessPosition(5,4), new ChessPosition(1,8), null));
-        }
         return List.of();
     } // ofc in the future we will impliment all of the pieces programatically instead of hard coding bc it would be horrible
 
