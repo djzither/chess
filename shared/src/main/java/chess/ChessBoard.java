@@ -47,8 +47,18 @@ public class ChessBoard {
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
      */
+    //all the pieces going in the starting position
     public void resetBoard() {
-        throw new RuntimeException("Not implemented");
+        // clear the board
+        for (int row = 0; row < 8; row++){
+            for (int col = 0; col < 8; col++) {
+                squares[row][col] = null;
+            }
+        }
+        // put the pawns
+        for (int col = 0; col < 8; col++){
+            addPiece(new ChessPosition(2, col), new Pawn("White"));
+        }
     }
 
     @Override
