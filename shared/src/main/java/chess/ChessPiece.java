@@ -2,6 +2,7 @@ package chess;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -69,7 +70,7 @@ public class ChessPiece {
 //        }
 //        this allows me to have access to the objects for this piece
         PieceType pieces = getPieceType();
-        PieceType piece = PieceType.KNIGHT;
+        PieceType piece = PieceType.KING;
         PieceMovesCalculator instance = new PieceMovesCalculator(board, myPosition, piece, getTeamColor());
         List<ChessPosition> valid_moves = instance.findRightMove();
         Collection<ChessMove> moves = new java.util.ArrayList<>();
@@ -80,12 +81,16 @@ public class ChessPiece {
     } // ofc in the future we will impliment all of the pieces programatically instead of hard coding bc it would be horrible
 
     @Override
-    public int hashCode() {
-        return super.hashCode();
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessPiece piece = (ChessPiece) o;
+        return pieceColor == piece.pieceColor && Objects.equals(position, piece.position) && type == piece.type;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+    public int hashCode() {
+        return Objects.hash(pieceColor, position, type);
     }
 }
