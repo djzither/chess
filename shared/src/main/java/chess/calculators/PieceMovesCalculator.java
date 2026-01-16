@@ -1,7 +1,11 @@
-package chess;
+package chess.calculators;
 
 
-import java.util.Collection;
+import chess.ChessBoard;
+import chess.ChessGame;
+import chess.ChessPiece;
+import chess.ChessPosition;
+
 import java.util.List;
 
 public class PieceMovesCalculator {

@@ -1,8 +1,12 @@
-package chess;
+package chess.calculators;
 
+
+import chess.ChessBoard;
+import chess.ChessGame;
+import chess.ChessPiece;
+import chess.ChessPosition;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class KingMovesCalculator {
