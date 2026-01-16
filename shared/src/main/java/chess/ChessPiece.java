@@ -12,7 +12,8 @@ import java.util.List;
 public class ChessPiece {
 
     private ChessGame.TeamColor pieceColor;
-    private ChessPosition positio
+    private ChessPosition position;
+    private PieceType type;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
@@ -70,8 +71,12 @@ public class ChessPiece {
         PieceType pieces = getPieceType();
         PieceType piece = PieceType.KING;
         PieceMovesCalculator instance = new PieceMovesCalculator(board, myPosition, piece, getTeamColor());
+        List<ChessPosition> valid_moves = instance.findRightMove();
+        Collection<ChessMove> moves = new java.util.ArrayList<>();
 
-        return instance()
+        for (ChessPosition i : valid_moves)
+            moves.add(new ChessMove(myPosition, i, null));
+        return moves;
     } // ofc in the future we will impliment all of the pieces programatically instead of hard coding bc it would be horrible
 
     @Override

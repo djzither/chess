@@ -2,6 +2,7 @@ package chess;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class KingMovesCalculator {
@@ -14,7 +15,7 @@ public class KingMovesCalculator {
         this.position = position;
 
     }
-    public List<ChessPosition> isPathValid(){
+    public List<ChessPosition> getPathValid(){
         int row = position.getRow();
         int col = position.getColumn();
 
@@ -29,6 +30,7 @@ public class KingMovesCalculator {
         king_possible_moves.add(new int[]{-1, -1});
         king_possible_moves.add(new int[]{0, -1});
         king_possible_moves.add(new int[]{1, -1});
+        king_possible_moves.add(new int[]{-1, -1});
 
         List<ChessPosition> king_valid = new ArrayList<>();
 

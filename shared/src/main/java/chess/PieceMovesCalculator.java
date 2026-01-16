@@ -22,24 +22,29 @@ public class PieceMovesCalculator {
         switch (piecetype){
             case PAWN -> {
                 PawnMovesCalculator instance = new PawnMovesCalculator(piecetype, position, board);
+                return instance.getPathValid();
             }
             case ROOK -> {
                 RookMovesCalculator instance = new RookMovesCalculator(piecetype, position, board);
+                return instance.getPathValid();
             }
             case KNIGHT -> {
                 KnightMovesCalculator instance = new KnightMovesCalculator(piecetype, position, board);
+                return instance.getPathValid();
             }
             case BISHOP -> {
                 BishopMovesCalculator instance = new BishopMovesCalculator(piecetype, position, board);
+                return instance.getPathValid();
             }
             case QUEEN -> {
                 QueenMovesCalculator instance = new QueenMovesCalculator(piecetype, position, board);
+                return instance.getPathValid();
             }
             case KING -> {
                 KingMovesCalculator instance = new KingMovesCalculator(piecetype, position, board);
-                return instance.isPathValid();
+                return instance.getPathValid();
             }
-
+            default -> throw new IllegalArgumentException("Invalid piece");
         }
     }
 }
