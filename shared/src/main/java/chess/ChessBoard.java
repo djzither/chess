@@ -15,8 +15,6 @@ public class ChessBoard {
         
     }
     //making chess board as a 2d array
-
-
     /**
      * Adds a chess piece to the chessboard
      *

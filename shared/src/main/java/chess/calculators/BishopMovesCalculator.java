@@ -8,10 +8,19 @@ import java.util.Collections;
 import java.util.List;
 
 public class BishopMovesCalculator {
-    public BishopMovesCalculator(ChessPiece.PieceType piecetype, ChessPosition position, ChessBoard board) {
+    private final ChessBoard board;
+    private final ChessPosition position;
+    private final ChessPiece.PieceType pieceType;
+    public BishopMovesCalculator(ChessPiece.PieceType piecetype, ChessPosition position, ChessBoard board, ChessBoard board1, ChessPosition position1, ChessPiece.PieceType pieceType) {
+        this.board = board1;
+        this.position = position1;
+        this.pieceType = pieceType;
     }
 
     public List<ChessPosition> getPathValid() {
+        int row = position.getRow();
+        int 
+
         return Collections.emptyList();
     }
 }

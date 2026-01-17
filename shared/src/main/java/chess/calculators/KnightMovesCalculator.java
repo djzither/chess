@@ -35,23 +35,8 @@ public class KnightMovesCalculator {
         knight_possible_moves.add(new int[]{-1, 2});
         knight_possible_moves.add(new int[]{-1, -2});
 
-        List<ChessPosition> knight_valid = new ArrayList<>();
+        OnBoardAndCapture instance = new OnBoardAndCapture(board, position, piece.getTeamColor());
+        return instance.outsideAndPosition(knight_possible_moves);
 
-        for (int[] i : knight_possible_moves){
-            int new_row = i[0] + row;
-            int new_col = i[1] + col;
-            //this should make sure we are inside
-            if (new_row < 1 || new_row > 8 || new_col < 1 || new_col > 8){
-                continue;
-
-            }
-            ChessPosition new_pos = new ChessPosition(new_row, new_col);
-            ChessPiece new_piece = board.getPiece(new_pos);
-            if (new_piece == null || new_piece.getTeamColor() != piece.getTeamColor()){
-                knight_valid.add(new_pos);
-            }
-
-        }
-        return knight_valid;
     }
 }
