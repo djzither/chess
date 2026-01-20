@@ -69,7 +69,7 @@ public class ChessPiece {
 //        }
 //        this allows me to have access to the objects for this piece
         PieceType pieces = getPieceType();
-        PieceType piece = PieceType.BISHOP;
+        PieceType piece = PieceType.ROOK;
         PieceMovesCalculator instance = new PieceMovesCalculator(board, myPosition, piece, getTeamColor());
         List<ChessPosition> valid_moves = instance.findRightMove();
         Collection<ChessMove> moves = new java.util.ArrayList<>();

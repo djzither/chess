@@ -29,7 +29,7 @@ public class PieceMovesCalculator {
                 return instance.getPathValid();
             }
             case ROOK -> {
-                RookMovesCalculator instance = new RookMovesCalculator(piecetype, position, board);
+                RookMovesCalculator instance = new RookMovesCalculator(position, board, piecetype);
                 return instance.getPathValid();
             }
             case KNIGHT -> {

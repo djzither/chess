@@ -33,20 +33,28 @@ public class BishopMovesCalculator {
                 for (int i = 1; i <= 8; i++){
                     x += move[0];
                     y += move[1];
+                    //check if on board
                     if (x < 1 || x > 8 || y < 1 || y > 8) {
                         break;
                     }
+                    //create new position and do checks on it
                     ChessPosition new_pos = new ChessPosition(x, y);
                     ChessPiece new_piece = board.getPiece(new_pos);
-                    if (new_piece == null || new_piece.getTeamColor() != piece.getTeamColor()){
+                    if (new_piece == null) {
+                        bishop_valid.add(new_pos);
+                    }
+                    if (new_piece != null && new_piece.getTeamColor() != piece.getTeamColor()) {
                         bishop_valid.add(new_pos);
                         break;
-
+                    }
+                    if (new_piece != null && new_piece.getTeamColor() == piece.getTeamColor()) {
+                        break;
                     }
 
                 }
             }
-
+        return bishop_valid;
         }
+
     }
 
