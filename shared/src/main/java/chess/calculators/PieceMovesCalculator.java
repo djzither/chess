@@ -41,7 +41,7 @@ public class PieceMovesCalculator {
                 return instance.getPathValid();
             }
             case QUEEN -> {
-                QueenMovesCalculator instance = new QueenMovesCalculator(piecetype, position, board);
+                QueenMovesCalculator instance = new QueenMovesCalculator(position, board, piecetype);
                 return instance.getPathValid();
             }
             case KING -> {
