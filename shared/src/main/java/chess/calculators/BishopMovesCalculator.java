@@ -36,7 +36,7 @@ public class BishopMovesCalculator {
                     x += bishop_possible_dir[0];
                     y += bishop_possible_dir[1];
 
-                    if (x >= 8 || x <0 ||)
+                    if (x >= 8 || x <0 ||e)
 
 
 
