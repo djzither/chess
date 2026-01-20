@@ -5,8 +5,6 @@ import chess.ChessPiece;
 import chess.ChessPosition;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class BishopMovesCalculator {
@@ -25,7 +23,7 @@ public class BishopMovesCalculator {
 
         ChessPiece piece = board.getPiece(position);
 
-        List<int[]> bishop_valid = new ArrayList<>();
+        List<ChessPosition> bishop_valid = new ArrayList<>();
 
         List<int[]> bishop_possible_dir = new ArrayList<>(List.of(new int[]{1, 1}, new int[]{1, -1}, new int[]{-1, 1}, new int[]{-1, -1}));
 
@@ -33,19 +31,22 @@ public class BishopMovesCalculator {
                 int x = row;
                 int y = col;
                 for (int i = 1; i <= 8; i++){
-                    x += bishop_possible_dir[0];
-                    y += bishop_possible_dir[1];
+                    x += move[0];
+                    y += move[1];
+                    if (x < 1 || x > 8 || y < 1 || y > 8) {
+                        break;
+                    }
+                    ChessPosition new_pos = new ChessPosition(x, y);
+                    ChessPiece new_piece = board.getPiece(new_pos);
+                    if (new_piece == null || new_piece.getTeamColor() != piece.getTeamColor()){
+                        bishop_valid.add(new_pos);
+                        break;
 
-                    if (x >= 8 || x <0 ||e)
-
-
+                    }
 
                 }
-
             }
-            OnBoardAndCapture intance = new OnBoardAndCapture(board, position, piece.getTeamColor());
-            List<ChessPosition>
+
         }
-        return Collections.emptyList();
     }
-}
+

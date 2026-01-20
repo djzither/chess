@@ -37,7 +37,7 @@ public class PieceMovesCalculator {
                 return instance.getPathValid();
             }
             case BISHOP -> {
-                BishopMovesCalculator instance = new BishopMovesCalculator(piecetype, position, board);
+                BishopMovesCalculator instance = new BishopMovesCalculator(position, board, piecetype);
                 return instance.getPathValid();
             }
             case QUEEN -> {
