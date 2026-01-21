@@ -1,5 +1,8 @@
 package chess;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -48,8 +51,8 @@ public class ChessBoard {
     //all the pieces going in the starting position
     public void resetBoard() {
         // clear the board
-        for (int row = 1; row <= 8; row++){
-            for (int col = 1; col <= 8; col++) {
+        for (int row = 0; row < 8; row++){
+            for (int col = 0; col < 8; col++) {
                 squares[row][col] = null;
             }
         }
@@ -90,14 +93,19 @@ public class ChessBoard {
     }
 
     @Override
-    public int hashCode() {
-        return super.hashCode();
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessBoard that = (ChessBoard) o;
+        return Objects.deepEquals(squares, that.squares);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+    public int hashCode() {
+        return Arrays.deepHashCode(squares);
     }
+
     // overriding the "to" string is good for debugging and i should do it everywhere
     @Override
     public String toString() {

@@ -123,7 +123,7 @@ public class PawnMovesCalculator {
             if (new_row >= 1 && new_row <= 8 && new_col >= 1 && new_col <= 8) {
                 ChessPosition end = new ChessPosition(new_row, new_col);
 
-// promotion
+
                 if ((piece.getTeamColor() == ChessGame.TeamColor.WHITE && new_row == 8) ||
                         (piece.getTeamColor() == ChessGame.TeamColor.BLACK && new_row == 1)) {
 
