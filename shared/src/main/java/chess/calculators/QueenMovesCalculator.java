@@ -1,6 +1,7 @@
 package chess.calculators;
 
 import chess.ChessBoard;
+import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
 
@@ -18,17 +19,17 @@ public class QueenMovesCalculator {
         this.position = position;
         this.pieceType = pieceType;
     }
-        public List<ChessPosition> getPathValid() {
+        public List<ChessMove> getPathValid() {
             int row = position.getRow();
             int col = position.getColumn();
 
             ChessPiece piece = board.getPiece(position);
 
-            List<ChessPosition> bishop_valid = new ArrayList<>();
+            List<ChessMove> queen_valid = new ArrayList<>();
 
-            List<int[]> bishop_possible_dir = new ArrayList<>(List.of(new int[]{1, 1}, new int[]{1, -1}, new int[]{-1, 1}, new int[]{-1, -1}, new int[]{0, 1}, new int[]{1, 0}, new int[]{-1, 0}, new int[]{0, -1}));
+            List<int[]> queen_possible_dir = new ArrayList<>(List.of(new int[]{1, 1}, new int[]{1, -1}, new int[]{-1, 1}, new int[]{-1, -1}, new int[]{0, 1}, new int[]{1, 0}, new int[]{-1, 0}, new int[]{0, -1}));
 
-            for (int[] move : bishop_possible_dir){
+            for (int[] move : queen_possible_dir){
                 int x = row;
                 int y = col;
                 for (int i = 1; i <= 8; i++){
@@ -42,10 +43,10 @@ public class QueenMovesCalculator {
                     ChessPosition new_pos = new ChessPosition(x, y);
                     ChessPiece new_piece = board.getPiece(new_pos);
                     if (new_piece == null) {
-                        bishop_valid.add(new_pos);
+                        queen_valid.add(new ChessMove(position, new_pos, null));
                     }
                     if (new_piece != null && new_piece.getTeamColor() != piece.getTeamColor()) {
-                        bishop_valid.add(new_pos);
+                        queen_valid.add(new ChessMove(position, new_pos, null));
                         break;
                     }
                     if (new_piece != null && new_piece.getTeamColor() == piece.getTeamColor()) {
@@ -54,7 +55,7 @@ public class QueenMovesCalculator {
 
                 }
             }
-            return bishop_valid;
+            return queen_valid;
         }
     }
 

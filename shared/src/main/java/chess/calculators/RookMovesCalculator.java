@@ -1,6 +1,7 @@
 package chess.calculators;
 
 import chess.ChessBoard;
+import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
 
@@ -19,13 +20,13 @@ public class RookMovesCalculator {
 
     }
 
-    public List<ChessPosition> getPathValid() {
+    public List<ChessMove> getPathValid() {
         int row = position.getRow();
         int col = position.getColumn();
 
         ChessPiece piece = board.getPiece(position);
 
-        List<ChessPosition> rook_valid = new ArrayList<>();
+        List<ChessMove> rook_valid = new ArrayList<>();
 
         List<int[]> rook_possible_dir = new ArrayList<>(List.of(new int[]{0, 1}, new int[]{0, -1}, new int[]{-1, 0}, new int[]{1, 0}));
 
@@ -43,10 +44,12 @@ public class RookMovesCalculator {
                 ChessPosition new_pos = new ChessPosition(x, y);
                 ChessPiece new_piece = board.getPiece(new_pos);
                 if (new_piece == null) {
-                    rook_valid.add(new_pos);
+                    rook_valid.add(new ChessMove(position, new_pos, null)); // null because Rooks don’t promote
+
                 }
                 if (new_piece != null && new_piece.getTeamColor() != piece.getTeamColor()) {
-                    rook_valid.add(new_pos);
+                    rook_valid.add(new ChessMove(position, new_pos, null)); // null because Rooks don’t promote
+
                     break;
                 }
                 if (new_piece != null && new_piece.getTeamColor() == piece.getTeamColor()) {

@@ -1,6 +1,7 @@
 package chess.calculators;
 
 import chess.ChessBoard;
+import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
 
@@ -17,7 +18,7 @@ public class KnightMovesCalculator {
         this.position = position;
     }
 
-    public List<ChessPosition> getPathValid() {
+    public List<ChessMove> getPathValid() {
         int row = position.getRow();
         int col = position.getColumn();
 
@@ -36,7 +37,15 @@ public class KnightMovesCalculator {
         knight_possible_moves.add(new int[]{-1, -2});
 
         OnBoardAndCapture instance = new OnBoardAndCapture(board, position, piece.getTeamColor());
-        return instance.outsideAndPosition(knight_possible_moves);
+        List<ChessPosition> valid_positions = instance.outsideAndPosition(knight_possible_moves);
+
+
+        List<ChessMove> valid_moves = new ArrayList<>();
+        for (ChessPosition end : valid_positions) {
+            valid_moves.add(new ChessMove(position, end, null)); // Knight never promotes
+        }
+
+        return valid_moves;
 
     }
 }

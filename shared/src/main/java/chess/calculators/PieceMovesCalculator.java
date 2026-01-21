@@ -1,10 +1,7 @@
 package chess.calculators;
 
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.*;
 
 import java.util.List;
 
@@ -22,10 +19,10 @@ public class PieceMovesCalculator {
         this.piecetype = piecetype;
     }
 
-    public List<ChessPosition> findRightMove(){
+    public List<ChessMove> findRightMove(){
         switch (piecetype){
             case PAWN -> {
-                PawnMovesCalculator instance = new PawnMovesCalculator(piecetype, position, board);
+                PawnMovesCalculator instance = new PawnMovesCalculator(position, board, piecetype);
                 return instance.getPathValid();
             }
             case ROOK -> {

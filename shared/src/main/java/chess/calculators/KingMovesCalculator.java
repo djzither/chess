@@ -1,10 +1,7 @@
 package chess.calculators;
 
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +19,10 @@ public class KingMovesCalculator {
 
 
     }
-    public List<ChessPosition> king_check() {
+    public List<ChessMove> king_check() {
         ChessPiece piece = board.getPiece(position);
         ChessGame.TeamColor color_king = piece.getTeamColor();
-        List<ChessPosition> king_valid = getPathValid();
+        List<ChessMove> king_valid = getPathValid();
 
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
@@ -45,9 +42,9 @@ public class KingMovesCalculator {
                     if (other_color != color_king) {
                         ChessPiece.PieceType other_piece_type = other_piece.getPieceType();
                         PieceMovesCalculator instance = new PieceMovesCalculator(board, pos, other_piece_type, other_color);
-                        List<ChessPosition> valid_moves = instance.findRightMove();
+                        List<ChessMove> valid_moves = instance.findRightMove();
 
-                        for (ChessPosition move : valid_moves) {
+                        for (ChessMove move : valid_moves) {
                             king_valid.remove(move);
 
                         }
@@ -58,7 +55,7 @@ public class KingMovesCalculator {
         return king_valid;
     }
 
-    public List<ChessPosition> getPathValid(){
+    public List<ChessMove> getPathValid() {
         int row = position.getRow();
         int col = position.getColumn();
 
@@ -77,8 +74,13 @@ public class KingMovesCalculator {
 
 
         OnBoardAndCapture instance = new OnBoardAndCapture(board, position, piece.getTeamColor());
-        return instance.outsideAndPosition(king_possible_moves);
-    }
 
+        List<ChessPosition> valid = instance.outsideAndPosition(king_possible_moves);
+        List<ChessMove> king_valid = new ArrayList<>();
+        for (ChessPosition pos : valid) {
+            king_valid.add(new ChessMove(position, pos, null));
+        }
 
+        return king_valid;
+    } 
 }

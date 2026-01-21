@@ -69,14 +69,9 @@ public class ChessPiece {
 //        }
 //        this allows me to have access to the objects for this piece
         PieceType pieces = getPieceType();
-        PieceType piece = PieceType.QUEEN;
-        PieceMovesCalculator instance = new PieceMovesCalculator(board, myPosition, piece, getTeamColor());
-        List<ChessPosition> valid_moves = instance.findRightMove();
-        Collection<ChessMove> moves = new java.util.ArrayList<>();
-
-        for (ChessPosition i : valid_moves)
-            moves.add(new ChessMove(myPosition, i, null));
-        return moves;
+        PieceMovesCalculator instance = new PieceMovesCalculator(board, myPosition, pieces, getTeamColor());
+        List<ChessMove> valid_moves = instance.findRightMove();
+        return valid_moves;
     } // ofc in the future we will impliment all of the pieces programatically instead of hard coding bc it would be horrible
 
     @Override
