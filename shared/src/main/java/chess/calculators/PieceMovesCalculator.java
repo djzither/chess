@@ -6,7 +6,7 @@ import chess.*;
 import java.util.List;
 
 public class PieceMovesCalculator {
-
+//basically, I am gearing up to make the chess move object
     private final ChessBoard board;
     private final ChessPosition position;
     private final ChessPiece.PieceType piecetype;

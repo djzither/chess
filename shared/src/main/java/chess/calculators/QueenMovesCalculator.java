@@ -39,7 +39,6 @@ public class QueenMovesCalculator {
                     if (x < 1 || x > 8 || y < 1 || y > 8) {
                         break;
                     }
-                    //create new position and do checks on it
                     ChessPosition new_pos = new ChessPosition(x, y);
                     ChessPiece new_piece = board.getPiece(new_pos);
                     if (new_piece == null) {

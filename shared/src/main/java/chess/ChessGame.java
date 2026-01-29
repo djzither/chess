@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -9,8 +10,11 @@ import java.util.Collection;
  * signature of the existing methods.
  */
 public class ChessGame {
-
+    private ChessBoard board;
+    private TeamColor currentTurn;
     public ChessGame() {
+        this.board = new ChessBoard();
+        this.currentTurn = TeamColor.WHITE;
 
     }
 
@@ -18,7 +22,7 @@ public class ChessGame {
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        throw new RuntimeException("Not implemented");
+        return currentTurn;
     }
 
     /**
@@ -27,7 +31,29 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
+        this.currentTurn = team;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessGame chessGame = (ChessGame) o;
+        return Objects.equals(board, chessGame.board) && currentTurn == chessGame.currentTurn;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(board, currentTurn);
+    }
+
+    @Override
+    public String toString() {
+        return "ChessGame{" +
+                "board=" + board +
+                ", currentTurn=" + currentTurn +
+                '}';
     }
 
     /**
@@ -66,7 +92,41 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece piece = board.getPiece(position);
+        ChessGame.TeamColor color_king = piece.getTeamColor();
+        List<ChessMove> king_valid = getPathValid();
+
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition pos = new ChessPosition(row, col);
+                ChessPiece other_piece = board.getPiece(pos);
+                // remember that .'s are enum and you call them with whatever type you have
+                //with the method that calls it in you class if it's in a different class
+
+
+                if (other_piece == null) {
+                    continue;
+                }
+
+                else {
+                    ChessGame.TeamColor other_color = other_piece.getTeamColor();
+
+                    if (other_color != color_king) {
+                        ChessPiece.PieceType other_piece_type = other_piece.getPieceType();
+                        PieceMovesCalculator instance = new PieceMovesCalculator(board, pos, other_piece_type, other_color);
+                        List<ChessMove> valid_moves = instance.findRightMove();
+
+                        for (ChessMove move : valid_moves) {
+                            king_valid.remove(move);
+
+                        }
+                    }
+                }
+            }
+        }
+        return king_valid;
+    }
+
     }
 
     /**
