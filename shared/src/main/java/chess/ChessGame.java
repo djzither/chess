@@ -21,6 +21,7 @@ public class ChessGame {
 
     public ChessGame() {
         this.board = new ChessBoard();
+        this.board.resetBoard();
         this.currentTurn = TeamColor.WHITE;
     }
 
@@ -55,14 +56,6 @@ public class ChessGame {
         return Objects.hash(board, currentTurn);
     }
 
-    @Override
-    public String toString() {
-        return "ChessGame{" +
-                "board=" + board +
-                ", currentTurn=" + currentTurn +
-                '}';
-    }
-
 
     /**
      * Enum identifying the 2 possible teams in a chess game
@@ -94,11 +87,8 @@ public class ChessGame {
             ChessBoard testBoard = board.copy();
             testBoard.addPiece(move.getEndPosition(), testBoard.getPiece(move.getStartPosition()));
             testBoard.addPiece(move.getStartPosition(), null);
-            if(!isInCheckCloned(currentTurn, testBoard)){
+            if(!isInCheckCloned(piece.getTeamColor(), testBoard)){
                 validMoves.add(move);
-
-
-
             }
         }
         return validMoves;
@@ -160,8 +150,7 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
         ChessPosition kingPos = findKing(teamColor);
-        ChessPiece instance = new ChessPiece(teamColor, ChessPiece.PieceType.KING);
-        Collection<ChessMove> possibleKingMoves = instance.pieceMoves(board, kingPos);
+
         for (int row = 1; row <= 8; row++)
             for (int col = 1; col <= 8; col++) {
                 ChessPosition otherPos = new ChessPosition(row, col);
@@ -184,8 +173,7 @@ public class ChessGame {
 
     public boolean isInCheckCloned(TeamColor teamColor, ChessBoard testBoard) {
         ChessPosition kingPos = findKingCloned(teamColor, testBoard);
-        ChessPiece instance = new ChessPiece(teamColor, ChessPiece.PieceType.KING);
-        Collection<ChessMove> possibleKingMoves = instance.pieceMoves(testBoard, kingPos);
+
         for (int row = 1; row <= 8; row++)
             for (int col = 1; col <= 8; col++) {
                 ChessPosition otherPos = new ChessPosition(row, col);
@@ -243,7 +231,30 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+
+        if (!isInCheck(teamColor)) {
+            return false;
+        }
+
+        TeamColor originalTurn = currentTurn;
+        currentTurn = teamColor;
+
+        for (int row = 1; row <= 8; row ++){
+            for (int col = 1; col <= 8; col ++){
+                ChessPosition pos = new ChessPosition(row, col);
+                ChessPiece piece = board.getPiece(pos);
+                if(piece != null && piece.getTeamColor() == teamColor){
+                    if(!validMoves(pos).isEmpty()){
+                        currentTurn = originalTurn;
+                        return false;
+
+                    }
+                }
+
+            }
+
+        }
+        return true;
     }
 
     /**
@@ -254,8 +265,32 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if (isInCheck(teamColor)) {
+            return false;
+        }
+
+
+        TeamColor originalTurn = currentTurn;
+        currentTurn = teamColor;
+
+        for (int row = 1; row <= 8; row ++){
+            for (int col = 1; col <= 8; col ++){
+                ChessPosition pos = new ChessPosition(row, col);
+                ChessPiece piece = board.getPiece(pos);
+                if(piece != null && piece.getTeamColor() == teamColor){
+                    if(!validMoves(pos).isEmpty()){
+                        currentTurn = originalTurn;
+                        return false;
+
+                    }
+                }
+
+            }
+
+        }
+        return true;
     }
+
 
     /**
      * Sets this game's chessboard with a given board
