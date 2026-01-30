@@ -13,11 +13,17 @@ public class ChessGame {
 
     private TeamColor currentTurn;
 
-    public ChessGame(ChessBoard board, TeamColor currentTurn) {
-        this.board = board;
-        this.currentTurn = currentTurn;
+//    public ChessGame(ChessBoard board, TeamColor currentTurn) {
+//        this.board = board;
+//        this.currentTurn = currentTurn;
+//
+//    }
 
+    public ChessGame() {
+        this.board = new ChessBoard();
+        this.currentTurn = TeamColor.WHITE;
     }
+
 
     /**
      * @return Which team's turn it is
@@ -33,6 +39,28 @@ public class ChessGame {
      */
     public void setTeamTurn(TeamColor team) {
         this.currentTurn = team;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessGame chessGame = (ChessGame) o;
+        return Objects.equals(board, chessGame.board) && currentTurn == chessGame.currentTurn;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(board, currentTurn);
+    }
+
+    @Override
+    public String toString() {
+        return "ChessGame{" +
+                "board=" + board +
+                ", currentTurn=" + currentTurn +
+                '}';
     }
 
 
@@ -55,6 +83,9 @@ public class ChessGame {
 
         ChessPiece piece = board.getPiece(startPosition);
 
+        if (piece == null){
+            return Collections.emptyList();
+        }
         Collection<ChessMove> pieceMoves = piece.pieceMoves(board, startPosition);
         Collection<ChessMove> validMoves = new ArrayList<>();
 
@@ -85,7 +116,6 @@ public class ChessGame {
         ChessPosition end = move.getEndPosition();
 
         ChessPiece piece = board.getPiece(start);
-
         if (piece == null){
             throw new InvalidMoveException("No piece here");
         }
@@ -234,25 +264,4 @@ public class ChessGame {
     }
 
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        ChessGame chessGame = (ChessGame) o;
-        return Objects.equals(board, chessGame.board) && currentTurn == chessGame.currentTurn;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(board, currentTurn);
-    }
-
-    @Override
-    public String toString() {
-        return "ChessGame{" +
-                "board=" + board +
-                ", currentTurn=" + currentTurn +
-                '}';
-    }
 }

@@ -24,8 +24,9 @@ public class ChessBoard {
         for (int row = 0; row < 8; row ++){
             for (int col = 0; col < 8; col ++){
                 ChessPiece piece = current.squares[row][col];
-                this.squares[row][col] = new ChessPiece(piece.getTeamColor(), piece.getPieceType());
-
+                if (piece != null) {
+                    this.squares[row][col] = new ChessPiece(piece.getTeamColor(), piece.getPieceType());
+                }
 
             }
 
