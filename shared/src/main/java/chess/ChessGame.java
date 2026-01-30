@@ -97,6 +97,16 @@ public class ChessGame {
         if (!legal.contains(move)){
             throw new InvalidMoveException("invalid move");
         }
+        board.addPiece(end, piece);
+        board.addPiece(start, null);
+
+        // how to switch??
+        if (currentTurn == TeamColor.WHITE){
+            currentTurn = TeamColor.BLACK;
+        }
+        if (currentTurn == TeamColor.BLACK){
+            currentTurn = TeamColor.WHITE;
+        }
 
     }
 
