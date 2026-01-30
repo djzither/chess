@@ -120,6 +120,7 @@ public class ChessGame {
             throw new InvalidMoveException("No piece here");
         }
 
+
         if (piece.getTeamColor() != currentTurn){
             throw new InvalidMoveException("not your turn");
         }
@@ -127,14 +128,25 @@ public class ChessGame {
         if (!legal.contains(move)){
             throw new InvalidMoveException("invalid move");
         }
-        board.addPiece(end, piece);
+
+        if (piece.getPieceType() == ChessPiece.PieceType.PAWN)
+            if(move.getEndPosition().getRow() == 8 && piece.getTeamColor() == TeamColor.WHITE
+                    || move.getEndPosition().getRow() == 1 && piece.getTeamColor() == TeamColor.BLACK){
+                ChessPiece.PieceType promotion = move.getPromotionPiece();
+                board.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), promotion));
+            }
+            else{
+                board.addPiece(end, piece);
+            }
+            else {
+            board.addPiece(end, piece);
+        }
         board.addPiece(start, null);
 
         // how to switch??
-        if (currentTurn == TeamColor.WHITE){
+        if (currentTurn == TeamColor.WHITE) {
             currentTurn = TeamColor.BLACK;
-        }
-        if (currentTurn == TeamColor.BLACK){
+        } else {
             currentTurn = TeamColor.WHITE;
         }
 
