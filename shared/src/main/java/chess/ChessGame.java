@@ -68,8 +68,6 @@ public class ChessGame {
 
 
 
-
-
             }
         }
         return validMoves;
@@ -85,6 +83,20 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPosition start = move.getStartPosition();
         ChessPosition end = move.getEndPosition();
+
+        ChessPiece piece = board.getPiece(start);
+
+        if (piece == null){
+            throw new InvalidMoveException("No piece here");
+        }
+
+        if (piece.getTeamColor() != currentTurn){
+            throw new InvalidMoveException("not your turn");
+        }
+        Collection<ChessMove> legal = validMoves(start);
+        if (!legal.contains(move)){
+            throw new InvalidMoveException("invalid move");
+        }
 
     }
 
