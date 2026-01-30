@@ -25,7 +25,7 @@ public class ChessGame {
         this.currentTurn = TeamColor.WHITE;
     }
 
-    //finished
+    //finished, finished
     /**
      * @return Which team's turn it is
      */
