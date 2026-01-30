@@ -14,16 +14,33 @@ public class ChessBoard {
     // make it
     ChessPiece[][] squares = new ChessPiece[8][8];
 
+
     public ChessBoard() {
         
     }
-    //making chess board as a 2d array
+
+    public ChessBoard(ChessBoard current){
+        this.squares = new ChessPiece[8][8];
+        for (int row = 0; row < 8; row ++){
+            for (int col = 0; col < 8; col ++){
+                ChessPiece piece = current.squares[row][col];
+                this.squares[row][col] = new ChessPiece(piece.getTeamColor(), piece.getPieceType());
+
+
+            }
+
+        }
+    }
+    public ChessBoard copy() {
+        return new ChessBoard(this);
+    }
     /**
      * Adds a chess piece to the chessboard
      *
      * @param position where to add the piece to
      * @param piece    the piece to add
      */
+
     public void addPiece(ChessPosition position, ChessPiece piece) {
         //we use the chessposition "position" object and chesspiece "piece" object
         // the chessposion position object has methods "getrow" and "get col"

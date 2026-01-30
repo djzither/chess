@@ -54,17 +54,25 @@ public class ChessGame {
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
 
         ChessPiece piece = board.getPiece(startPosition);
-        Collection<ChessMove> pieceMoves = piece.pieceMoves(board, startPosition);
-        if (isInCheck(currentTurn)) {
-            for (ChessMove move : pieceMoves) {
-                ChessBoard testBoard = new ChessBoard();
-                testBoard.addPiece(move.getEndPosition(), testBoard.getPiece(move.getStartPosition()));
 
-                testBoard.addPiece(move.getStartPosition(), null); // clear old square
+        Collection<ChessMove> pieceMoves = piece.pieceMoves(board, startPosition);
+        Collection<ChessMove> validMoves = new ArrayList<>();
+
+
+        for (ChessMove move : pieceMoves) {
+            ChessBoard testBoard = board.copy();
+            testBoard.addPiece(move.getEndPosition(), testBoard.getPiece(move.getStartPosition()));
+            testBoard.addPiece(move.getStartPosition(), null);
+            if(!isInCheckCloned(currentTurn, testBoard)){
+                validMoves.add(move);
+
+
+
 
 
             }
         }
+        return validMoves;
     }
 
 
@@ -110,12 +118,52 @@ public class ChessGame {
         return false;
     }
 
+    public boolean isInCheckCloned(TeamColor teamColor, ChessBoard testBoard) {
+        ChessPosition kingPos = findKingCloned(teamColor, testBoard);
+        ChessPiece instance = new ChessPiece(teamColor, ChessPiece.PieceType.KING);
+        Collection<ChessMove> possibleKingMoves = instance.pieceMoves(testBoard, kingPos);
+        for (int row = 1; row <= 8; row++)
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition otherPos = new ChessPosition(row, col);
+                ChessPiece otherPiece = testBoard.getPiece(otherPos);
+                if (otherPiece == null) {
+                    continue;
+                }
+
+                if (otherPiece.getTeamColor() != teamColor) {
+                    Collection<ChessMove> possibleOtherMoves = otherPiece.pieceMoves(testBoard, otherPos);
+                    for (ChessMove possibleOtherMove : possibleOtherMoves) {
+                        if (possibleOtherMove.getEndPosition().equals(kingPos)) {
+                            return (true);
+                        }
+                    }
+                }
+            }
+        return false;
+    }
+
+
     public ChessPosition findKing(TeamColor teamColor){
         for (int row = 1; row <= 8; row++){
             for (int col = 1; col <= 8; col++){
                 ChessPosition position = new ChessPosition(row, col);
                 ChessPiece piece = board.getPiece(position);
                 if (piece != null && piece.getTeamColor() == teamColor && piece.getPieceType() == ChessPiece.PieceType.KING){
+                    return position;
+                }
+            }
+        }
+        return null;
+
+    }
+
+    private ChessPosition findKingCloned(TeamColor teamColor, ChessBoard board) {
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition position = new ChessPosition(row, col);
+                ChessPiece piece = board.getPiece(position);
+                if (piece != null && piece.getTeamColor() == teamColor
+                        && piece.getPieceType() == ChessPiece.PieceType.KING) {
                     return position;
                 }
             }
