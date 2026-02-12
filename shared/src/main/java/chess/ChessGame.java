@@ -36,7 +36,7 @@ public class ChessGame {
     /**
      * Set's which teams turn it is
      *
-     * @param team the team whose turn it is
+     * @param team the team dwhose turn it is
      */
     public void setTeamTurn(TeamColor team) {
         this.currentTurn = team;
