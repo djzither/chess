@@ -11,6 +11,7 @@ public interface DataAccess {
 
     static void createAuth(AuthData authData) {
     }
+    //this is so werid, i don't get
 
     void clear();
     void createUser(User user);
