@@ -4,24 +4,28 @@ import model.AuthData;
 import model.UserData;
 import model.GameData;
 
+import java.util.List;
+
+//need this because we will be changing to database
 
 public interface DataAccess {
-    static void createUser(UserData newUser) {
-    }
 
-    static void createAuth(AuthData authData) {
-    }
-    //this is so werid, i don't get
 
+    //testing
     void clear();
-    void createUser(User user);
-    User getUser(String username);
-    void createGame(Game game);
-    Game getGame(String gameID);
-    List<Game> listGames();
-    void updateGame(Game game);
-    void createAuth(Auth auth);
-    Auth getAuth(String authToken);
+
+    //user
+    void createUser(UserData user);
+    UserData getUser(String username);
+
+    //game
+    void createGame(GameData game);
+    GameData getGame(String gameID);
+    List<GameData> listGames();
+    void updateGame(GameData game);
+    //auth
+    void createAuth(AuthData auth);
+    AuthData getAuth(String authToken);
     void deleteAuth(String authToken);
 }
 

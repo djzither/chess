@@ -1,4 +1,4 @@
-package server.DataAccess;
+package dataaccess;
 
 public class UpdateDeleteAuth {
 }
