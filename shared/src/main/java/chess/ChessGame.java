@@ -170,7 +170,7 @@ public class ChessGame {
                 for (ChessMove possibleOtherMove : possibleOtherMoves) {
                     if (possibleOtherMove.getEndPosition().equals(kingPos)) {
                         return true;
-                    }
+                    }//commit
                 }
             }
         }
