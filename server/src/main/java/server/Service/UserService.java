@@ -1,8 +1,9 @@
 package server.Service;
 import java.util.UUID;
 import dataaccess.DataAccess;
-import dataaccess.DataAccessException;
+import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UserNameTakenException;
+import io.javalin.validation.ValidationException;
 import model.UserData;
 import model.AuthData;
 
@@ -19,34 +20,30 @@ public class UserService {
 
     //RegisterResult is from the DAO and RegisterRequest is from HANDLER
     public RegisterResult register(RegisterRequest registerRequest) {
-
-
         String authToken;
         try {
-            if (registerRequest.getUserName() == null ||
-                    registerRequest.getPassword() == null ||
-                    registerRequest.getEmail() == null) {
-                throw new DataAccessException("Error: username exists");
-            }
-            UserData userExists = dao.getUser(registerRequest.getUserName());
-            if (userExists != null) {
-                throw new UserNameTakenException("Error: username already taken");
-            }
             UserData newUser = new UserData(
                     registerRequest.getUserName(),
                     registerRequest.getPassword(),
                     registerRequest.getEmail()
             );
             dao.createUser(newUser);
-
             authToken = UUID.randomUUID().toString();
-
             AuthData authData = new AuthData(authToken, registerRequest.getUserName());
             dao.createAuth(authData);
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e); // this will have to change
+
+            return new RegisterResult(true, registerRequest.getUserName(), authToken);
+
+        } catch (UserNameTakenException e) {
+            throw e; // this will have to change
         }
-        return new RegisterResult(true, registerRequest.getUserName(), authToken);
+        catch (ValidationException e){
+            throw e;
+        }
+        catch (DataAccessException e){
+            throw new RuntimeException(e);
+        }
+
     }
 
 //    public LoginResult login(LoginRequest loginRequest) {}

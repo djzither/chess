@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 
 
 public class Registration implements Handler{
+
     private final UserService userService;
     private final Gson gson;
     public Registration(UserService userService) {
@@ -25,7 +26,9 @@ public class Registration implements Handler{
 
             RegisterResult result = userService.register(registerRequest);
 
-        } catch ()
+        } catch (Exception e){
+            ctx.status(400).json("Error: " + e.getMessage());
+        }
 
     }
 
