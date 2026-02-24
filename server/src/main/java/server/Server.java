@@ -16,7 +16,7 @@ public class Server {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
 
         // Register your endpoints and exception handlers here.
-        DataAccess dao = new DataAccess();
+        DataAccess dao = new CreateUpdateUserData();
         UserService userService = new UserService(dao);
         javalin.post("/user",  new Registration(userService));
     }
