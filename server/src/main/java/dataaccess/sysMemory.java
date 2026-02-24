@@ -5,7 +5,7 @@ import model.AuthData;
 import model.GameData;
 import model.UserData;
 
-
+// gotta throw some errors here I think
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
