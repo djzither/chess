@@ -24,6 +24,7 @@ public class UserService {
             throws IllegalArgumentException
     //will have to add maybe more exceptions
     {
+        //
 
         if (registerRequest.getUserName() == null ||
                 registerRequest.getEmail() == null ||
