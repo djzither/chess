@@ -36,7 +36,7 @@ public class SysMemory implements DataAccess {
             throw new DataAccessException("User doesn't exist");
         }
         return users.get(userName);
-    }
+    }d
     //game stuff
     @Override
     public void createGame(GameData game) {
