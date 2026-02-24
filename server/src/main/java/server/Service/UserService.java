@@ -1,9 +1,8 @@
 package server.Service;
 import java.util.UUID;
 import dataaccess.DataAccess;
-import dataaccess.exceptions.DataAccessException;
-import dataaccess.exceptions.UserNameTakenException;
-import io.javalin.validation.ValidationException;
+import dataaccess.exceptions.BadRequest;
+
 import model.UserData;
 import model.AuthData;
 
@@ -21,31 +20,30 @@ public class UserService {
     }
 
     //RegisterResult is from the DAO and RegisterRequest is from HANDLER
-    public RegisterResult register(RegisterRequest registerRequest) {
+    public RegisterResult register(RegisterRequest registerRequest)
+            throws IllegalArgumentException
+    //will have to add maybe more exceptions
+    {
+
+        if (registerRequest.getUserName() == null ||
+                registerRequest.getEmail() == null ||
+                registerRequest.getPassword() == null){
+            throw new BadRequest("Bad creation request");
+
+        }
         String authToken;
-        try {
-            UserData newUser = new UserData(
-                    registerRequest.getUserName(),
-                    registerRequest.getPassword(),
-                    registerRequest.getEmail()
-            );
-            dao.createUser(newUser);
-            authToken = UUID.randomUUID().toString();
-            AuthData authData = new AuthData(authToken, registerRequest.getUserName());
-            dao.createAuth(authData);
 
-            return new RegisterResult(true, registerRequest.getUserName(), authToken);
+        UserData newUser = new UserData(
+                registerRequest.getUserName(),
+                registerRequest.getPassword(),
+                registerRequest.getEmail()
+        );
+        dao.createUser(newUser);
+        authToken = UUID.randomUUID().toString();
+        AuthData authData = new AuthData(authToken, registerRequest.getUserName());
+        dao.createAuth(authData);
 
-        } catch (UserNameTakenException e) {
-            throw e; // this will have to change
-        }
-        catch (ValidationException e){
-            throw e;
-        }
-        catch (DataAccessException e){
-            throw new RuntimeException(e);
-        }
-
+        return new RegisterResult(true, registerRequest.getUserName(), authToken);
     }
 
 //    public LoginResult login(LoginRequest loginRequest) {}
