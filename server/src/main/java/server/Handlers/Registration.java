@@ -21,7 +21,7 @@ public class Registration implements Handler{
 
     public void handle(Context context){
 
-
+        //did it
         try {
             RegisterRequest registerRequest = new Gson().fromJson(context.body(), RegisterRequest.class);
             RegisterResult result = userService.register(registerRequest);
