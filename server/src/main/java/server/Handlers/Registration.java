@@ -1,33 +1,35 @@
 package server.Handlers;
-import com.google.gson.JsonObject;
+import dataaccess.exceptions.DataAccessException;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
-import server.Service.RegisterRequest;
-import server.Service.RegisterResult;
+import server.Service.RequestObjects.RegisterRequest;
+import server.Service.RequestObjects.RegisterResult;
 import server.Service.UserService;
 import com.google.gson.Gson;
-//will have to make this a try except
+
 
 
 public class Registration implements Handler{
-
     private final UserService userService;
-    private final Gson gson;
+
     public Registration(UserService userService) {
         this.userService = userService;
-        this.gson = new Gson();
     }
 
-    //@Override
-    public void handle(Context ctx){
+    public void handle(Context context){
+
+
         try {
-            RegisterRequest registerRequest = gson.fromJson(ctx.body(), RegisterRequest.class);
-
-
+            RegisterRequest registerRequest = new Gson().fromJson(context.body(), RegisterRequest.class);
             RegisterResult result = userService.register(registerRequest);
 
-        } catch (Exception e){
-            ctx.status(400).json("Error: " + e.getMessage());
+            context.status(201);
+            context.result(new Gson().toJson(result));
+
+        } catch (DataAccessException){
+            context.status(403).json("Error: " + e.getMessage());
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
         }
 
     }

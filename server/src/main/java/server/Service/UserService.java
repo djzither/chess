@@ -1,12 +1,13 @@
 package server.Service;
 import java.util.UUID;
 import dataaccess.DataAccess;
-import dataaccess.exceptions.BadRequest;
+import dataaccess.exceptions.BadCreationRequest;
 
+import dataaccess.exceptions.DataAccessException;
 import model.UserData;
 import model.AuthData;
-
-import javax.xml.crypto.Data;
+import server.Service.RequestObjects.RegisterRequest;
+import server.Service.RequestObjects.RegisterResult;
 
 
 // still have to do a lot of work with errors, getting which ones but I'm doing better
@@ -21,19 +22,19 @@ public class UserService {
 
     //RegisterResult is from the DAO and RegisterRequest is from HANDLER
     public RegisterResult register(RegisterRequest registerRequest)
-            throws IllegalArgumentException
+            throws BadCreationRequest, DataAccessException
     //will have to add maybe more exceptions
     {
-        //
+        // this could be a separate function...bread these more later if i want
 
         if (registerRequest.getUserName() == null ||
                 registerRequest.getEmail() == null ||
                 registerRequest.getPassword() == null){
-            throw new BadRequest("Bad creation request");
+            throw new BadCreationRequest("Bad creation request");
 
         }
-        String authToken;
 
+        String authToken;
         UserData newUser = new UserData(
                 registerRequest.getUserName(),
                 registerRequest.getPassword(),

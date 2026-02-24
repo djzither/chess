@@ -1,4 +1,4 @@
-package server.Service;
+package server.Service.RequestObjects;
 
 public record RegisterResult(boolean success, String userName, String authToken) {
     public boolean success(){

@@ -1,16 +1,18 @@
 package dataaccess;
 
 import dataaccess.exceptions.DataAccessException;
+import dataaccess.exceptions.UserNameTakenException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
+import org.eclipse.jetty.server.Authentication;
 
 // gotta throw some errors here I think
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class sysMemory implements DataAccess {
+public class SysMemory implements DataAccess {
     private final Map<String, UserData> users = new HashMap<>();
     private final Map<Integer, GameData> games = new HashMap<>();
     private final Map<String, AuthData> authTokens = new HashMap<>();
@@ -22,14 +24,20 @@ public class sysMemory implements DataAccess {
     }
 
     @Override
-    public void createUser(UserData user){
+    public void createUser(UserData user) throws DataAccessException {
+        if (users.containsKey(user.username())){
+            throw new UserNameTakenException("Username Taken");
+        }
         users.put(user.username(), user);
     }
     @Override
-    public UserData getUser(String userName){
+    public UserData getUser(String userName) throws DataAccessException {
+        if (!users.containsKey(userName)) {
+            throw new DataAccessException("User doesn't exist");
+        }
         return users.get(userName);
     }
-
+    //game stuff
     @Override
     public void createGame(GameData game) {
         games.put(game.gameId(), game);
