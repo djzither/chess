@@ -12,14 +12,7 @@ public class ChessGame {
     private ChessBoard board;
 
     private TeamColor currentTurn;
-
-//    public ChessGame(ChessBoard board, TeamColor currentTurn) {
-//        this.board = board;
-//        this.currentTurn = currentTurn;
-//
-//    }
-
-    public ChessGame() {
+        public ChessGame() {
         this.board = new ChessBoard();
         this.board.resetBoard();
         this.currentTurn = TeamColor.WHITE;
