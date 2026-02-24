@@ -112,16 +112,16 @@ public class ChessGame {
             throw new InvalidMoveException("invalid move");
         }
 
-        if (piece.getPieceType() == ChessPiece.PieceType.PAWN)
-            if(move.getEndPosition().getRow() == 8 && piece.getTeamColor() == TeamColor.WHITE
-                    || move.getEndPosition().getRow() == 1 && piece.getTeamColor() == TeamColor.BLACK){
+        if (piece.getPieceType() == ChessPiece.PieceType.PAWN) {
+            // pawn promotion
+            if ((move.getEndPosition().getRow() == 8 && piece.getTeamColor() == TeamColor.WHITE)
+                    || (move.getEndPosition().getRow() == 1 && piece.getTeamColor() == TeamColor.BLACK)) {
                 ChessPiece.PieceType promotion = move.getPromotionPiece();
                 board.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), promotion));
-            }
-            else{
+            } else {
                 board.addPiece(end, piece);
             }
-            else {
+        } else {
             board.addPiece(end, piece);
         }
         board.addPiece(start, null);
@@ -199,27 +199,31 @@ public class ChessGame {
         if (!isInCheck(teamColor)) {
             return false;
         }
+        return noValidMoves(teamColor);
 
+    }
+
+    private boolean noValidMoves(TeamColor teamColor) {
         TeamColor originalTurn = currentTurn;
         currentTurn = teamColor;
 
-        for (int row = 1; row <= 8; row ++){
-            for (int col = 1; col <= 8; col ++){
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
                 ChessPosition pos = new ChessPosition(row, col);
                 ChessPiece piece = board.getPiece(pos);
-                if(piece != null && piece.getTeamColor() == teamColor){
-                    if(!validMoves(pos).isEmpty()){
+                if (piece != null && piece.getTeamColor() == teamColor) {
+                    if (!validMoves(pos).isEmpty()) {
                         currentTurn = originalTurn;
                         return false;
-
                     }
                 }
-
             }
-
         }
+
+        currentTurn = originalTurn;
         return true;
     }
+
 
     /**
      * Determines if the given team is in stalemate, which here is defined as having
@@ -232,27 +236,7 @@ public class ChessGame {
         if (isInCheck(teamColor, board)) {
             return false;
         }
-
-
-        TeamColor originalTurn = currentTurn;
-        currentTurn = teamColor;
-
-        for (int row = 1; row <= 8; row ++){
-            for (int col = 1; col <= 8; col ++){
-                ChessPosition pos = new ChessPosition(row, col);
-                ChessPiece piece = board.getPiece(pos);
-                if(piece != null && piece.getTeamColor() == teamColor){
-                    if(!validMoves(pos).isEmpty()){
-                        currentTurn = originalTurn;
-                        return false;
-
-                    }
-                }
-
-            }
-
-        }
-        return true;
+        return noValidMoves(teamColor);
     }
 
 

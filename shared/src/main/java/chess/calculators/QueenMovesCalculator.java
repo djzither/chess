@@ -27,7 +27,9 @@ public class QueenMovesCalculator {
 
             List<ChessMove> queenValid = new ArrayList<>();
 
-            List<int[]> queenPossibleDir = new ArrayList<>(List.of(new int[]{1, 1}, new int[]{1, -1}, new int[]{-1, 1}, new int[]{-1, -1}, new int[]{0, 1}, new int[]{1, 0}, new int[]{-1, 0}, new int[]{0, -1}));
+            List<int[]> queenPossibleDir = new ArrayList<>(List.of(new int[]{1, 1},
+                    new int[]{1, -1}, new int[]{-1, 1}, new int[]{-1, -1}, new int[]{0, 1}, new int[]{1, 0},
+                    new int[]{-1, 0}, new int[]{0, -1}));
 
             for (int[] move : queenPossibleDir){
                 int x = row;
