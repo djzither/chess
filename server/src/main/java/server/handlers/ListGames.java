@@ -1,4 +1,4 @@
-package server.Handlers;
+package server.handlers;
 
 public class ListGames {
 }

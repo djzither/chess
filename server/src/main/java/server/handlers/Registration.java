@@ -1,12 +1,12 @@
-package server.Handlers;
+package server.handlers;
 import dataaccess.exceptions.BadCreationRequest;
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UserNameTakenException;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
-import server.Service.RequestObjects.RegisterRequest;
-import server.Service.RequestObjects.RegisterResult;
-import server.Service.UserService;
+import server.service.requestobjects.RegisterRequest;
+import server.service.requestobjects.RegisterResult;
+import server.service.UserService;
 import com.google.gson.Gson;
 
 import java.util.Map;

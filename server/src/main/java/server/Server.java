@@ -2,8 +2,8 @@ package server;
 import dataaccess.DataAccess;
 import dataaccess.SysMemory;
 import io.javalin.*;
-import server.Handlers.Registration;
-import server.Service.UserService;
+import server.handlers.Registration;
+import server.service.UserService;
 
 public class Server {
 

@@ -1,4 +1,4 @@
-package server.Service;
+package server.service;
 import java.util.UUID;
 import dataaccess.DataAccess;
 import dataaccess.exceptions.BadCreationRequest;
@@ -7,9 +7,8 @@ import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UserNameTakenException;
 import model.UserData;
 import model.AuthData;
-import org.eclipse.jetty.server.Authentication;
-import server.Service.RequestObjects.RegisterRequest;
-import server.Service.RequestObjects.RegisterResult;
+import server.service.requestobjects.RegisterRequest;
+import server.service.requestobjects.RegisterResult;
 
 
 // still have to do a lot of work with errors, getting which ones but I'm doing better
