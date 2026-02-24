@@ -10,7 +10,7 @@ import java.util.*;
  */
 public class ChessGame {
     private ChessBoard board;
-
+//no mor ecomments
     private TeamColor currentTurn;
         public ChessGame() {
         this.board = new ChessBoard();
