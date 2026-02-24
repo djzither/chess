@@ -4,7 +4,7 @@ public record RegisterResult(boolean success, String userName, String authToken)
     public boolean success(){
         return success;
     }
-    public String userName(){
+    public String username(){
         return userName;
     }
     public String authToken(){

@@ -4,8 +4,10 @@ import dataaccess.DataAccess;
 import dataaccess.exceptions.BadCreationRequest;
 
 import dataaccess.exceptions.DataAccessException;
+import dataaccess.exceptions.UserNameTakenException;
 import model.UserData;
 import model.AuthData;
+import org.eclipse.jetty.server.Authentication;
 import server.Service.RequestObjects.RegisterRequest;
 import server.Service.RequestObjects.RegisterResult;
 
@@ -22,7 +24,7 @@ public class UserService {
 
     //RegisterResult is from the DAO and RegisterRequest is from HANDLER
     public RegisterResult register(RegisterRequest registerRequest)
-            throws BadCreationRequest, DataAccessException
+            throws UserNameTakenException, DataAccessException
     //will have to add maybe more exceptions
     {
         // this could be a separate function...bread these more later if i want
