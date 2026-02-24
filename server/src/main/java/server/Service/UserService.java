@@ -7,6 +7,8 @@ import io.javalin.validation.ValidationException;
 import model.UserData;
 import model.AuthData;
 
+import javax.xml.crypto.Data;
+
 
 // still have to do a lot of work with errors, getting which ones but I'm doing better
 
