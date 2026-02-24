@@ -15,6 +15,7 @@ public class CreateUpdateUserData {
         users.put(user.username(), user);
 
     }
+    /
     public UserData getUser(String userName) throws DataAccessException{
         if (!users.containsKey(userName)){
             throw new DataAccessException("User not found");
