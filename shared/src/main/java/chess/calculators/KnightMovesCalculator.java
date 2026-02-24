@@ -25,27 +25,27 @@ public class KnightMovesCalculator {
 
         ChessPiece piece = board.getPiece(position);
 
-        List<int[]> knight_possible_moves = new ArrayList<>();
-        knight_possible_moves.add(new int[]{2, 1});
-        knight_possible_moves.add(new int[]{2, -1});
-        knight_possible_moves.add(new int[]{1, 2});
-        knight_possible_moves.add(new int[]{1, -2});
+        List<int[]> knightPossibleMoves = new ArrayList<>();
+        knightPossibleMoves.add(new int[]{2, 1});
+        knightPossibleMoves.add(new int[]{2, -1});
+        knightPossibleMoves.add(new int[]{1, 2});
+        knightPossibleMoves.add(new int[]{1, -2});
 
-        knight_possible_moves.add(new int[]{-2, 1});
-        knight_possible_moves.add(new int[]{-2, -1});
-        knight_possible_moves.add(new int[]{-1, 2});
-        knight_possible_moves.add(new int[]{-1, -2});
+        knightPossibleMoves.add(new int[]{-2, 1});
+        knightPossibleMoves.add(new int[]{-2, -1});
+        knightPossibleMoves.add(new int[]{-1, 2});
+        knightPossibleMoves.add(new int[]{-1, -2});
 
         OnBoardAndCapture instance = new OnBoardAndCapture(board, position, piece.getTeamColor());
-        List<ChessPosition> valid_positions = instance.outsideAndPosition(knight_possible_moves);
+        List<ChessPosition> validPositions = instance.outsideAndPosition(knightPossibleMoves);
 
 
-        List<ChessMove> valid_moves = new ArrayList<>();
-        for (ChessPosition end : valid_positions) {
-            valid_moves.add(new ChessMove(position, end, null)); // Knight never promotes
+        List<ChessMove> validMoves = new ArrayList<>();
+        for (ChessPosition end : validPositions) {
+            validMoves.add(new ChessMove(position, end, null)); // Knight never promotes
         }
 
-        return valid_moves;
+        return validMoves;
 
     }
 }

@@ -69,7 +69,7 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        List<ChessMove[]> valid_moves = new ArrayList<>();
+        List<ChessMove[]> validMoves = new ArrayList<>();
         PieceMovesCalculator instance = new PieceMovesCalculator(board, myPosition, getPieceType(), getTeamColor());
         return instance.findRightMove();
 

@@ -26,11 +26,11 @@ public class RookMovesCalculator {
 
         ChessPiece piece = board.getPiece(position);
 
-        List<ChessMove> rook_valid = new ArrayList<>();
+        List<ChessMove> rookValid = new ArrayList<>();
 
-        List<int[]> rook_possible_dir = new ArrayList<>(List.of(new int[]{0, 1}, new int[]{0, -1}, new int[]{-1, 0}, new int[]{1, 0}));
+        List<int[]> rookPossibleDir = new ArrayList<>(List.of(new int[]{0, 1}, new int[]{0, -1}, new int[]{-1, 0}, new int[]{1, 0}));
 
-        for (int[] move : rook_possible_dir){
+        for (int[] move : rookPossibleDir){
             int x = row;
             int y = col;
             for (int i = 1; i <= 8; i++){
@@ -41,24 +41,24 @@ public class RookMovesCalculator {
                     break;
                 }
                 //create new position and do checks on it
-                ChessPosition new_pos = new ChessPosition(x, y);
-                ChessPiece new_piece = board.getPiece(new_pos);
-                if (new_piece == null) {
-                    rook_valid.add(new ChessMove(position, new_pos, null)); // null because Rooks don’t promote
+                ChessPosition newPos = new ChessPosition(x, y);
+                ChessPiece newPiece = board.getPiece(newPos);
+                if (newPiece == null) {
+                    rookValid.add(new ChessMove(position, newPos, null)); // null because Rooks don’t promote
 
                 }
-                if (new_piece != null && new_piece.getTeamColor() != piece.getTeamColor()) {
-                    rook_valid.add(new ChessMove(position, new_pos, null)); // null because Rooks don’t promote
+                if (newPiece != null && newPiece.getTeamColor() != piece.getTeamColor()) {
+                    rookValid.add(new ChessMove(position, newPos, null)); // null because Rooks don’t promote
 
                     break;
                 }
-                if (new_piece != null && new_piece.getTeamColor() == piece.getTeamColor()) {
+                if (newPiece != null && newPiece.getTeamColor() == piece.getTeamColor()) {
                     break;
                 }
 
             }
         }
-        return rook_valid;
+        return rookValid;
     }
 
 }

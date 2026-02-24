@@ -19,29 +19,29 @@ public class OnBoardAndCapture {
         this.color = color;
     }
 
-    public List<ChessPosition> outsideAndPosition(List<int[]> possible_moves) {
-        List<ChessPosition> valid_moves = new ArrayList<>();
+    public List<ChessPosition> outsideAndPosition(List<int[]> possibleMoves) {
+        List<ChessPosition> validMoves = new ArrayList<>();
         int row = position.getRow();
         int col = position.getColumn();
         ChessPiece piece = board.getPiece(position);
 
         //check if on board, then get the piece and if returns none then good
         //color/capture, on board
-        for (int[] i : possible_moves) {
-            int new_row = i[0] + row;
-            int new_col = i[1] + col;
+        for (int[] i : possibleMoves) {
+            int newRow = i[0] + row;
+            int newCol = i[1] + col;
             //this should make sure we are inside
-            if (new_row < 1 || new_row > 8 || new_col < 1 || new_col > 8) {
+            if (newRow < 1 || newRow > 8 || newCol < 1 || newCol > 8) {
                 continue;
 
             }
-            ChessPosition new_pos = new ChessPosition(new_row, new_col);
-            ChessPiece new_piece = board.getPiece(new_pos);
-            if (new_piece == null || new_piece.getTeamColor() != piece.getTeamColor()) {
-                valid_moves.add(new_pos);
+            ChessPosition newPos = new ChessPosition(newRow, newCol);
+            ChessPiece newPiece = board.getPiece(newPos);
+            if (newPiece == null || newPiece.getTeamColor() != piece.getTeamColor()) {
+                validMoves.add(newPos);
             }
 
         }
-        return valid_moves;
+        return validMoves;
     }
 }

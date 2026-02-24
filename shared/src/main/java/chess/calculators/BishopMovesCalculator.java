@@ -24,11 +24,11 @@ public class BishopMovesCalculator {
 
         ChessPiece piece = board.getPiece(position);
 
-        List<ChessMove> bishop_valid = new ArrayList<>();
+        List<ChessMove> bishopValid = new ArrayList<>();
 
-        List<int[]> bishop_possible_dir = List.of(new int[]{1, 1}, new int[]{1, -1}, new int[]{-1, 1}, new int[]{-1, -1});
+        List<int[]> bishopPossibleDir = List.of(new int[]{1, 1}, new int[]{1, -1}, new int[]{-1, 1}, new int[]{-1, -1});
 
-        for (int[] move : bishop_possible_dir){
+        for (int[] move : bishopPossibleDir){
                 int x = row;
                 int y = col;
                 for (int i = 1; i <= 8; i++){
@@ -39,22 +39,22 @@ public class BishopMovesCalculator {
                         break;
                     }
                     //create new position and do checks on it
-                    ChessPosition new_pos = new ChessPosition(x, y);
-                    ChessPiece new_piece = board.getPiece(new_pos);
-                    if (new_piece == null) {
-                        bishop_valid.add(new ChessMove(position, new_pos, null));;
+                    ChessPosition newPos = new ChessPosition(x, y);
+                    ChessPiece newPiece = board.getPiece(newPos);
+                    if (newPiece == null) {
+                        bishopValid.add(new ChessMove(position, newPos, null));;
                     }
-                    if (new_piece != null && new_piece.getTeamColor() != piece.getTeamColor()) {
-                        bishop_valid.add(new ChessMove(position, new_pos, null));;
+                    if (newPiece != null && newPiece.getTeamColor() != piece.getTeamColor()) {
+                        bishopValid.add(new ChessMove(position, newPos, null));;
                         break;
                     }
-                    if (new_piece != null && new_piece.getTeamColor() == piece.getTeamColor()) {
+                    if (newPiece != null && newPiece.getTeamColor() == piece.getTeamColor()) {
                         break;
                     }
 
                 }
             }
-        return bishop_valid;
+        return bishopValid;
         }
 
     }
