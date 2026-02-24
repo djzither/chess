@@ -1,6 +1,6 @@
 package server;
-import dataaccess.CreateUpdateUserData;
 import dataaccess.DataAccess;
+import dataaccess.SysMemory;
 import io.javalin.*;
 import server.Handlers.Registration;
 import server.Service.UserService;
@@ -16,9 +16,10 @@ public class Server {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
 
         // Register your endpoints and exception handlers here.
-        DataAccess dao = new CreateUpdateUserData();
+        DataAccess dao = new SysMemory();
         UserService userService = new UserService(dao);
-        javalin.post("/user",  new Registration(userService));
+        Registration registration = new Registration(userService);
+        javalin.post("/user", registration::handle);
     }
 
 
