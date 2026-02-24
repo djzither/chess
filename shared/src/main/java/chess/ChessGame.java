@@ -154,13 +154,17 @@ public class ChessGame {
 
     private boolean isInCheck(TeamColor teamColor, ChessBoard boardToCheck) {
         ChessPosition kingPos = findKing(teamColor, boardToCheck);
-        if (kingPos == null) return false;
+        if (kingPos == null)
+        {return false;
+            }
 
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
                 ChessPosition otherPos = new ChessPosition(row, col);
                 ChessPiece otherPiece = boardToCheck.getPiece(otherPos);
-                if (otherPiece == null || otherPiece.getTeamColor() == teamColor) continue;
+                if (otherPiece == null || otherPiece.getTeamColor() == teamColor){
+                    continue;
+                }
 
                 Collection<ChessMove> possibleOtherMoves = otherPiece.pieceMoves(boardToCheck, otherPos);
                 for (ChessMove possibleOtherMove : possibleOtherMoves) {
