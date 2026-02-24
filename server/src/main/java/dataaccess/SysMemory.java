@@ -5,7 +5,6 @@ import dataaccess.exceptions.UserNameTakenException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
-import org.eclipse.jetty.server.Authentication;
 
 // gotta throw some errors here I think
 import java.util.HashMap;
@@ -62,7 +61,7 @@ public class SysMemory implements DataAccess {
 
     @Override
     public void createAuth(AuthData auth) {
-        authTokens.put(auth.AuthToken(), auth);
+        authTokens.put(auth.authToken(), auth);
     }
 
     @Override
