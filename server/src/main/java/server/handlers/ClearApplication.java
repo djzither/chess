@@ -18,6 +18,9 @@ public class ClearApplication implements Handler {
         this.clearService = clearService;
     }
     public void handle(Context context){
+        clearService.clear();
+        context.status(200);
+
 
     }
 

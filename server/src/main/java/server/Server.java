@@ -2,8 +2,11 @@ package server;
 import dataaccess.DataAccess;
 import dataaccess.SysMemory;
 import io.javalin.*;
+import server.handlers.ClearApplication;
 import server.handlers.Registration;
+import server.service.ClearService;
 import server.service.UserService;
+import io.javalin.json.JavalinGson;
 
 public class Server {
 
@@ -14,12 +17,24 @@ public class Server {
     public Server() {
 
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
-
+        //this could fix it
+//        javalin = Javalin.create(config -> {
+//            config.jsonMapper(new JavalinGson());
+//            config.staticFiles.add("web");
+//        });
         // Register your endpoints and exception handlers here.
         DataAccess dao = new SysMemory();
         UserService userService = new UserService(dao);
         Registration registration = new Registration(userService);
         javalin.post("/user", registration::handle);
+        //clear
+
+
+        ClearService clearService = new ClearService(dao);
+        ClearApplication clear = new ClearApplication(clearService);
+        javalin.delete("/db", clear::handle);
+
+
     }
 
 
