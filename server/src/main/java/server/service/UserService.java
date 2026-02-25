@@ -23,7 +23,7 @@ public class UserService {
 
     //RegisterResult is from the DAO and RegisterRequest is from HANDLER
     public RegisterResult register(RegisterRequest registerRequest)
-            throws UserNameTakenException, DataAccessException
+            throws UserNameTakenException, DataAccessException, BadCreationRequest
     //will have to add maybe more exceptions
     {
         // this could be a separate function...bread these more later if i want
