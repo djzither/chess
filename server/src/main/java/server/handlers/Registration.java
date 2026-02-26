@@ -34,6 +34,7 @@ public class Registration implements Handler{
             context.json(Map.of("success", false, "message", e.getMessage()));
         } catch (UserNameTakenException e) {
             context.status(403).result(new Gson().toJson(e.getMessage()));
+            //this works
 
         } catch(DataAccessException e){
             context.status(500);
