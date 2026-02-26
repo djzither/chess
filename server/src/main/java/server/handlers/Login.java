@@ -32,7 +32,7 @@ public class Login implements Handler{
         } catch (BadCreationRequest e){
             context.status(400).result(new Gson().toJson(e.getMessage()));
         } catch(UnauthorizedException e){
-            context.status(403).result(new Gson().toJson(e.getMessage()));
+            context.status(401).result(new Gson().toJson(e.getMessage()));
         } catch(DataAccessException e){
             context.status(500).result(new Gson().toJson(e.getMessage()));
         }

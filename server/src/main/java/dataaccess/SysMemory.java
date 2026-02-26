@@ -1,6 +1,7 @@
 package dataaccess;
 
 import dataaccess.exceptions.DataAccessException;
+import dataaccess.exceptions.UnauthorizedException;
 import dataaccess.exceptions.UserNameTakenException;
 import model.AuthData;
 import model.GameData;
@@ -30,9 +31,9 @@ public class SysMemory implements DataAccess {
         users.put(user.username(), user);
     }
     @Override
-    public UserData getUser(String userName) throws DataAccessException {
+    public UserData getUser(String userName) throws UnauthorizedException {
         if (!users.containsKey(userName)) {
-            throw new DataAccessException("User doesn't exist");
+            throw new UnauthorizedException("Error: Unauthorized");
         }
         return users.get(userName);
     }

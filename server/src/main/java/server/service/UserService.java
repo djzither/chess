@@ -52,7 +52,7 @@ public class UserService {
     throws BadLoginRequestException, UnauthorizedException, DataAccessException {
         if (loginRequest.getUserName() == null ||
                 loginRequest.password() == null ) {
-            throw new BadLoginRequestException("Bad login request");
+            throw new BadLoginRequestException("Error: Bad Request");
 
         }
         UserData user = dao.getUser(loginRequest.username());
