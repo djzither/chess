@@ -1,14 +1,13 @@
 package server.service;
 import java.util.UUID;
 import dataaccess.DataAccess;
-import dataaccess.exceptions.BadCreationRequest;
+import dataaccess.exceptions.*;
 
-import dataaccess.exceptions.DataAccessException;
-import dataaccess.exceptions.UserNameTakenException;
 import model.UserData;
 import model.AuthData;
+import server.service.requestobjects.LoginRequest;
 import server.service.requestobjects.RegisterRequest;
-import server.service.requestobjects.RegisterResult;
+import server.service.requestobjects.RegisterLoginResult;
 
 
 // still have to do a lot of work with errors, getting which ones but I'm doing better
@@ -22,7 +21,7 @@ public class UserService {
     }
 
     //RegisterResult is from the DAO and RegisterRequest is from HANDLER
-    public RegisterResult register(RegisterRequest registerRequest)
+    public RegisterLoginResult register(RegisterRequest registerRequest)
             throws UserNameTakenException, DataAccessException, BadCreationRequest
     //will have to add maybe more exceptions
     {
@@ -46,9 +45,29 @@ public class UserService {
         AuthData authData = new AuthData(authToken, registerRequest.getUserName());
         dao.createAuth(authData);
 
-        return new RegisterResult(true, registerRequest.getUserName(), authToken);
+        return new RegisterLoginResult(true, registerRequest.getUserName(), authToken);
     }
 
-//    public LoginResult login(LoginRequest loginRequest) {}
+    public RegisterLoginResult login(LoginRequest loginRequest)
+    throws BadLoginRequestException, UnauthorizedException, DataAccessException {
+        if (loginRequest.getUserName() == null ||
+                loginRequest.password() == null ) {
+            throw new BadLoginRequestException("Bad login request");
+
+        }
+        UserData user = dao.getUser(loginRequest.username());
+        if (!user.password().equals(loginRequest.password()));
+        {
+            dao.getUser(loginRequest.username());
+        }
+
+
+        String authToken = UUID.randomUUID().toString();
+        AuthData authData = new AuthData(authToken, user.username());
+        dao.createAuth(authData);
+
+        return new RegisterLoginResult(true, user.username(), authToken);
+
+    }
 //    public void logout(LogoutRequest logoutRequest) {}
 }

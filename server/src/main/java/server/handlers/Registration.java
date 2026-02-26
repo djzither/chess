@@ -5,11 +5,9 @@ import dataaccess.exceptions.UserNameTakenException;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import server.service.requestobjects.RegisterRequest;
-import server.service.requestobjects.RegisterResult;
+import server.service.requestobjects.RegisterLoginResult;
 import server.service.UserService;
 import com.google.gson.Gson;
-
-import java.util.Map;
 
 
 public class Registration implements Handler{
@@ -24,7 +22,7 @@ public class Registration implements Handler{
         //did it
         try {
             RegisterRequest registerRequest = new Gson().fromJson(context.body(), RegisterRequest.class);
-            RegisterResult result = userService.register(registerRequest);
+            RegisterLoginResult result = userService.register(registerRequest);
 
             context.status(200);
             context.result(new Gson().toJson(result));
@@ -42,3 +40,5 @@ public class Registration implements Handler{
     }
 
 }
+
+

@@ -10,4 +10,7 @@ public record RegisterRequest(String username, String password, String email) {
     public String getEmail(){
         return email;
     }
+
+    public static record LoginRequest() {
+    }
 }

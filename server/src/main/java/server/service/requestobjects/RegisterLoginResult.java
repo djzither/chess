@@ -1,6 +1,6 @@
 package server.service.requestobjects;
 
-public record RegisterResult(boolean success, String userName, String authToken) {
+public record RegisterLoginResult(boolean success, String userName, String authToken) {
     public boolean success(){
         return success;
     }

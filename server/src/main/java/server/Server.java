@@ -3,6 +3,7 @@ import dataaccess.DataAccess;
 import dataaccess.SysMemory;
 import io.javalin.*;
 import server.handlers.ClearApplication;
+import server.handlers.Login;
 import server.handlers.Registration;
 import server.service.ClearService;
 import server.service.UserService;
@@ -29,6 +30,10 @@ public class Server {
         ClearService clearService = new ClearService(dao);
         ClearApplication clear = new ClearApplication(clearService);
         javalin.delete("/db", clear::handle);
+
+        //login
+        Login login = new Login(userService);
+        javalin.post("/session", login::handle);
 
 
     }
