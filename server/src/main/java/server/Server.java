@@ -4,6 +4,7 @@ import dataaccess.SysMemory;
 import io.javalin.*;
 import server.handlers.ClearApplication;
 import server.handlers.Login;
+import server.handlers.Logout;
 import server.handlers.Registration;
 import server.service.ClearService;
 import server.service.UserService;
@@ -34,6 +35,10 @@ public class Server {
         //login
         Login login = new Login(userService);
         javalin.post("/session", login::handle);
+
+        //
+        Logout logout = new Logout(userService);
+        javalin.delete("/session", logout::handle);
 
 
     }

@@ -41,6 +41,7 @@ public class UserService {
                 registerRequest.getPassword(),
                 registerRequest.getEmail()
         );
+
         dao.createUser(newUser);
         authToken = UUID.randomUUID().toString();
         AuthData authData = new AuthData(authToken, registerRequest.getUserName());
@@ -57,10 +58,14 @@ public class UserService {
 
         }
         UserData user = dao.getUser(loginRequest.username());
-        if (!user.password().equals(loginRequest.password()));
-        {
-            dao.getUser(loginRequest.username());
+        if (user == null){
+            throw new UnauthorizedException("Error: Unauthorized");
         }
+        if (!user.password().equals(loginRequest.password()))
+        {
+            throw new UnauthorizedException("Error: Unauthorized");
+        }
+        dao.getUser(loginRequest.username());
 
 
         String authToken = UUID.randomUUID().toString();
@@ -70,12 +75,23 @@ public class UserService {
         return new RegisterLoginResult(true, user.username(), authToken);
 
     }
+
+
     public void logout(LogoutRequest logoutRequest)
-    throws UnauthorizedException {
-        AuthData authData = dao.getAuth(logoutRequest.authToken());
-        if (!authData.authToken().equals(logoutRequest.getAuthToken()){
-            throw new UnauthorizedException("Error Unauthorized");
+    throws UnauthorizedException, DataAccessException {
+        //do I need to check for nulls? --yes because could return null or give null
+        if (logoutRequest.authToken() == null){
+            throw new UnauthorizedException("Error: Unauthorized");
         }
-        Authdata
+
+        AuthData authData = dao.getAuth(logoutRequest.authToken());
+
+        //yes because I am creatign an object and what if it returns null
+        if (authData == null){
+            throw new UnauthorizedException("Error: Unauthorized");
+        }
+
+
+        dao.deleteAuth(logoutRequest.authToken());
     }
 }

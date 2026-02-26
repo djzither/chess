@@ -31,10 +31,8 @@ public class SysMemory implements DataAccess {
         users.put(user.username(), user);
     }
     @Override
-    public UserData getUser(String userName) throws UnauthorizedException {
-        if (!users.containsKey(userName)) {
-            throw new UnauthorizedException("Error: Unauthorized");
-        }
+    public UserData getUser(String userName) {
+        //doesn't need exception here
         return users.get(userName);
     }
     //game stuff
@@ -67,6 +65,7 @@ public class SysMemory implements DataAccess {
 
     @Override
     public AuthData getAuth(String authToken) {
+
         return authTokens.get(authToken);
     }
 
