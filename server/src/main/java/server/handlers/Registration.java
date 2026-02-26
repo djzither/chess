@@ -30,15 +30,13 @@ public class Registration implements Handler{
             context.result(new Gson().toJson(result));
 
         } catch (BadCreationRequest e){
-            context.status(400);
-            context.json(Map.of("success", false, "message", e.getMessage()));
+            context.status(400).result(new Gson().toJson(e.getMessage()));
         } catch (UserNameTakenException e) {
             context.status(403).result(new Gson().toJson(e.getMessage()));
             //this works
 
         } catch(DataAccessException e){
-            context.status(500);
-            context.json(Map.of("success", false, "message", e.getMessage()));
+            context.status(500).result(new Gson().toJson(e.getMessage()));
         }
 
     }
