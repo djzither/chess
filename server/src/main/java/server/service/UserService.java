@@ -6,6 +6,7 @@ import dataaccess.exceptions.*;
 import model.UserData;
 import model.AuthData;
 import server.service.requestobjects.LoginRequest;
+import server.service.requestobjects.LogoutRequest;
 import server.service.requestobjects.RegisterRequest;
 import server.service.requestobjects.RegisterLoginResult;
 
@@ -69,5 +70,12 @@ public class UserService {
         return new RegisterLoginResult(true, user.username(), authToken);
 
     }
-//    public void logout(LogoutRequest logoutRequest) {}
+    public void logout(LogoutRequest logoutRequest)
+    throws UnauthorizedException {
+        AuthData authData = dao.getAuth(logoutRequest.authToken());
+        if (!authData.authToken().equals(logoutRequest.getAuthToken()){
+            throw new UnauthorizedException("Error Unauthorized");
+        }
+        Authdata
+    }
 }
