@@ -6,7 +6,7 @@ import dataaccess.exceptions.*;
 import model.UserData;
 import model.AuthData;
 import server.service.requestobjects.LoginRequest;
-import server.service.requestobjects.LogoutRequest;
+import server.service.requestobjects.AuthTokenRequest;
 import server.service.requestobjects.RegisterRequest;
 import server.service.requestobjects.RegisterLoginResult;
 
@@ -77,14 +77,14 @@ public class UserService {
     }
 
 
-    public void logout(LogoutRequest logoutRequest)
+    public void logout(AuthTokenRequest authTokenRequest)
     throws UnauthorizedException, DataAccessException {
         //do I need to check for nulls? --yes because could return null or give null
-        if (logoutRequest.authToken() == null){
+        if (authTokenRequest.authToken() == null){
             throw new UnauthorizedException("Error: Unauthorized");
         }
 
-        AuthData authData = dao.getAuth(logoutRequest.authToken());
+        AuthData authData = dao.getAuth(authTokenRequest.authToken());
 
         //yes because I am creatign an object and what if it returns null
         if (authData == null){
@@ -92,6 +92,6 @@ public class UserService {
         }
 
 
-        dao.deleteAuth(logoutRequest.authToken());
+        dao.deleteAuth(authTokenRequest.authToken());
     }
 }

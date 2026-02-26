@@ -6,9 +6,7 @@ import dataaccess.exceptions.UnauthorizedException;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import server.service.UserService;
-import server.service.requestobjects.LogoutRequest;
-
-import javax.xml.crypto.Data;
+import server.service.requestobjects.AuthTokenRequest;
 
 
 public class Logout implements Handler {
@@ -23,7 +21,8 @@ public class Logout implements Handler {
         try{
             //does this work the AUTHORIZATION THING
             String authToken = context.header("authorization");
-            userService.logout(new LogoutRequest(authToken));
+            userService.logout(new AuthTokenRequest(authToken));
+
             context.status(200);
             context.result(new Gson().toJson(""));
 

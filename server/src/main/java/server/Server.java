@@ -2,11 +2,9 @@ package server;
 import dataaccess.DataAccess;
 import dataaccess.SysMemory;
 import io.javalin.*;
-import server.handlers.ClearApplication;
-import server.handlers.Login;
-import server.handlers.Logout;
-import server.handlers.Registration;
+import server.handlers.*;
 import server.service.ClearService;
+import server.service.GameService;
 import server.service.UserService;
 import io.javalin.json.JavalinGson;
 
@@ -39,6 +37,13 @@ public class Server {
         //
         Logout logout = new Logout(userService);
         javalin.delete("/session", logout::handle);
+
+
+
+        //game service
+        GameService gameService = new GameService(dao);
+        ListGames listGames = new ListGames(gameService);
+        javalin.get("/game", listGames::handle);
 
 
     }
