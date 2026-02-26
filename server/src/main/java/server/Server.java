@@ -46,6 +46,16 @@ public class Server {
         javalin.get("/game", listGames::handle);
 
 
+        //game service
+
+        CreateGame createGame = new CreateGame(gameService);
+        javalin.post("/game", createGame::handle);
+
+
+
+
+
+
     }
 
 

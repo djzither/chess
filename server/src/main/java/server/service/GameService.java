@@ -1,6 +1,7 @@
 package server.service;
 
 import dataaccess.DataAccess;
+import dataaccess.exceptions.BadCreationRequest;
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
 import model.GameData;
@@ -18,12 +19,29 @@ public class GameService {
         if (authToken == "") {
             throw new UnauthorizedException("Error: Unauthorized");
         }
+        if (dao.getAuth(authToken) == null){
+            throw new UnauthorizedException("Error: Unauthorized");
+        }
 
         List<GameData> games = dao.listGames();
 
         return games;
 
 
+
+    }
+
+    public GameData createGame(String authToken, String gameID) throws UnauthorizedException, BadCreationRequest, DataAccessException {
+        if (authToken == "") {
+            throw new UnauthorizedException("Error: Unauthorized");
+        }
+        if (dao.getAuth(authToken) == null){
+            throw new UnauthorizedException("Error: Unauthorized");
+        }
+
+        dao.createGame(gameID);
+
+        return gameID;
 
     }
 }
