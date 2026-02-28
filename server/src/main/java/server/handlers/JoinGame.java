@@ -23,7 +23,7 @@ public class JoinGame {
             gameService.joinGame(authToken, playerColor, gameID);
 
             context.status(200);
-            context.result(new Gson().toJson(""));
+            context.result("{}");
 
         }catch (BadCreationRequest e) {
             context.status(400).result(new Gson().toJson(e.getMessage()));

@@ -24,7 +24,7 @@ public class Logout implements Handler {
             userService.logout(new AuthTokenRequest(authToken));
 
             context.status(200);
-            context.result(new Gson().toJson(""));
+            context.result("{}");
 
 
         }catch (UnauthorizedException e){
