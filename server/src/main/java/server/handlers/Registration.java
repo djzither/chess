@@ -26,29 +26,23 @@ public class Registration implements Handler{
             RegisterLoginResult result = userService.register(registerRequest);
 
             context.status(200);
-            context.json(result);
+            context.result(new Gson().toJson(result));
 
         } catch (BadCreationRequest e){
             context.status(400);
-            context.json(new ErrorResponseResult(e.getMessage()));
+            context.result(new Gson().toJson(new ErrorResponseResult(e.getMessage())));
+
         } catch (UserNameTakenException e) {
             context.status(403);
-            context.json(new ErrorResponseResult(e.getMessage()));
-            //this works
+            context.result(new Gson().toJson(new ErrorResponseResult(e.getMessage())));
+
 
         } catch(DataAccessException e){
             context.status(500);
-            context.json(new ErrorResponseResult(e.getMessage()));
+            context.result(new Gson().toJson(new ErrorResponseResult(e.getMessage())));
+
         }
 
     }
 
 }
-
-
-
-
-
-
-
-

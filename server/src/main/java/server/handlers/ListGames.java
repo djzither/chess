@@ -27,14 +27,16 @@ public class ListGames implements Handler{
             List<GameData> games = gameService.listGames(authToken);
             ListGamesResult gamesObj = new ListGamesResult(games);
             context.status(200);
-            context.json(gamesObj);
+            context.json(new Gson().toJson(gamesObj));
 
         }catch (UnauthorizedException e){
             context.status(401);
-            context.json(new ErrorResponseResult(e.getMessage()));
+            context.result(new Gson().toJson(new ErrorResponseResult(e.getMessage())));
+
         }catch(DataAccessException e){
             context.status(500);
-            context.json(new ErrorResponseResult(e.getMessage()));
+            context.result(new Gson().toJson(new ErrorResponseResult(e.getMessage())));
+
         }
 
     }

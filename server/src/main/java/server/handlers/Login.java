@@ -29,16 +29,19 @@ public class Login implements Handler{
             RegisterLoginResult result = userService.login(loginRequest);
 
             context.status(200);
-            context.json(result);
+            context.json(new Gson().toJson(result));
         } catch (BadCreationRequest e){
             context.status(400);
-            context.json(new ErrorResponseResult(e.getMessage()));
+            context.result(new Gson().toJson(new ErrorResponseResult(e.getMessage())));
+
         } catch(UnauthorizedException e){
             context.status(401);
-            context.json(new ErrorResponseResult(e.getMessage()));
+            context.result(new Gson().toJson(new ErrorResponseResult(e.getMessage())));
+
         } catch(DataAccessException e){
             context.status(500);
-            context.json(new ErrorResponseResult(e.getMessage()));
+            context.result(new Gson().toJson(new ErrorResponseResult(e.getMessage())));
+
         }
     }
 }

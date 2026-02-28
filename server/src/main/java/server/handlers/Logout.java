@@ -25,15 +25,16 @@ public class Logout implements Handler {
             userService.logout(new AuthTokenRequest(authToken));
 
             context.status(200);
-            context.result("{}");
+            context.result(new Gson().toJson("{}"));
 
 
         }catch (UnauthorizedException e){
             context.status(401);
-            context.json(new ErrorResponseResult(e.getMessage()));
+            context.result(new Gson().toJson(new ErrorResponseResult(e.getMessage())));
+
         }catch(DataAccessException e){
             context.status(500);
-            context.json(new ErrorResponseResult(e.getMessage()));
+            context.result(new Gson().toJson(new ErrorResponseResult(e.getMessage())));
         }
     }
 

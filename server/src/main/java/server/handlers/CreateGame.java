@@ -35,14 +35,14 @@ public class CreateGame {
             context.json(gamesObj);
         }catch (BadCreationRequest e){
             context.status(400);
-            context.json(new ErrorResponseResult(e.getMessage()));
+            context.result(new Gson().toJson(new ErrorResponseResult(e.getMessage())));
         }catch(UnauthorizedException e) {
             context.status(401);
-            context.json(new ErrorResponseResult(e.getMessage()));
+            context.result(new Gson().toJson(new ErrorResponseResult(e.getMessage())));
         }
         catch(DataAccessException e) {
             context.status(500);
-            context.json(new ErrorResponseResult(e.getMessage()));
+            context.result(new Gson().toJson(new ErrorResponseResult(e.getMessage())));
         }
     }
 
