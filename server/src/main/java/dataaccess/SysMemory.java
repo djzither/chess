@@ -72,24 +72,13 @@ public class SysMemory implements DataAccess {
         authTokens.remove(authToken);
     }
 
-    public void updateUser(UserData user) throws DataAccessException{
-        if (!users.containsKey(user.username())){
-            throw new DataAccessException("Error: User doesn't exist");
-        }
-        users.put(user.username(), user);
-    }
+
 
     @Override
     public String authToUsername(String authToken) {
         AuthData authData = authTokens.get(authToken);
         return authData.userName();
 
-    }
-
-    @Override
-    public void addGameInfo(GameData gameData) {
-        gameID +=1;
-        games.put(gameID, gameData);
     }
 
     @Override

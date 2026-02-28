@@ -15,7 +15,8 @@ public class GameService {
         this.dao = dao;
     }
 
-    public List<GameData> listGames(String authToken) throws UnauthorizedException, DataAccessException {
+    public List<GameData> listGames(String authToken) throws
+            UnauthorizedException, DataAccessException {
         if (authToken.isEmpty()) {
             throw new UnauthorizedException();
         }
@@ -43,7 +44,8 @@ public class GameService {
         String userName = dao.authToUsername(authToken);
 
         int gameID = dao.generateGameID();
-        GameData gameData = new GameData(gameID, null, null, gameName, newGame);
+        GameData gameData =
+                new GameData(gameID, null, null, gameName, newGame);
 
 
 
@@ -53,7 +55,8 @@ public class GameService {
 
     }
 
-    public void joinGame(String authToken, String playerColorString, int gameID) throws BadRequestException,UnauthorizedException, AlreadyTakenException, DataAccessException {
+    public void joinGame(String authToken, String playerColorString, int gameID)
+            throws BadRequestException,UnauthorizedException, AlreadyTakenException, DataAccessException {
         //GAME ID NULL ISN'T CHECKED!!!
 
         if (authToken == null || playerColorString == null){
