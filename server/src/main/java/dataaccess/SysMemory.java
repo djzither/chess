@@ -41,8 +41,8 @@ public class SysMemory implements DataAccess {
     }
 
     @Override
-    public GameData getGame(String gameName) {
-        return(games.get(gameName));
+    public GameData getGame(int gameID) {
+        return(games.get(gameID));
     }
 
     @Override
