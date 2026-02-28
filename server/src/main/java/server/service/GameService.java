@@ -16,7 +16,7 @@ public class GameService {
     }
 
     public List<GameData> listGames(String authToken) throws UnauthorizedException, DataAccessException {
-        if (authToken == "") {
+        if (authToken.isEmpty()) {
             throw new UnauthorizedException();
         }
         if (dao.getAuth(authToken) == null){
@@ -53,18 +53,30 @@ public class GameService {
 
     }
 
-    public void joinGame(String authToken, String playerColor, String gameID) throws BadRequestException,UnauthorizedException, AlreadyTakenException, DataAccessException {
+    public void joinGame(String authToken, String playerColorString, int gameID) throws BadRequestException,UnauthorizedException, AlreadyTakenException, DataAccessException {
+        //GAME ID NULL ISN'T CHECKED!!!
+
+        if (authToken == null || playerColorString == null){
+            throw new BadRequestException();
+        }
+
+        if (!playerColorString.equals("WHITE") &&
+                !playerColorString.equals("BLACK")) {
+            throw new BadRequestException();
+        }
+
+        ChessGame.TeamColor playerColor = ChessGame.TeamColor.valueOf(playerColorString);
+
+        if (playerColor != ChessGame.TeamColor.BLACK && playerColor != ChessGame.TeamColor.WHITE){
+            throw new BadRequestException();
+        }
+
         if (dao.getAuth(authToken) == null){
             throw new UnauthorizedException();
         }
-        if (authToken == null || playerColor == null || gameID == null){
-            throw new BadRequestException();
-        }
 
 
-        if (!playerColor.equals("BLACK") && !playerColor.equals("WHITE")){
-            throw new BadRequestException();
-        }
+
         GameData game = dao.getGame(gameID);
 
         if (game == null){
@@ -74,13 +86,14 @@ public class GameService {
 
 
         String userName = dao.authToUsername(authToken);
-        if (playerColor.equals("WHITE")){
-            if (dao.getGame(gameID).whiteUsername() != null){
+
+        if (playerColor == ChessGame.TeamColor.WHITE){
+            if (game.whiteUsername() != null){
                 throw new AlreadyTakenException();
             }
         }
-        if (playerColor.equals("BLACK")){
-            if (dao.getGame(gameID).blackUsername() != null){
+        if (playerColor == ChessGame.TeamColor.BLACK){
+            if (game.blackUsername() != null){
                 throw new AlreadyTakenException();
             }
         }
@@ -88,7 +101,7 @@ public class GameService {
 
 
         GameData updatedGame;
-        if ("WHITE".equals(playerColor)){
+        if (playerColor == ChessGame.TeamColor.WHITE){
 
             updatedGame = new GameData(game.gameId(), userName, game.blackUsername(),
                     game.gameName(), game.game());

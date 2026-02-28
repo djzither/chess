@@ -1,5 +1,7 @@
 package server.handlers;
 
+import chess.ChessGame;
+import chess.ChessGame.TeamColor;
 import com.google.gson.Gson;
 import dataaccess.exceptions.*;
 import io.javalin.http.Context;
@@ -16,12 +18,14 @@ public class JoinGame {
         try {
             String authToken = context.header("authorization");
             JoinGameRequest request = new Gson().fromJson(context.body(), JoinGameRequest.class);
+
+            int gameID = request.getGameID();
             String playerColor = request.getPlayerColor();
-            String gameID = request.gameID();
             gameService.joinGame(authToken, playerColor, gameID);
 
             context.status(200);
-            context.result(new Gson().toJson(""));
+            context.result(new Gson().toJson(new Object()));
+//            context.result(new Gson().toJson(""));
 
         }   catch (BadRequestException e) {
             context.status(400);
