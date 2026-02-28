@@ -15,6 +15,9 @@ public class ClearApplication implements Handler {
         clearService.clear();
         context.status(200);
 
+        context.status(200);
+        context.json("{}");
+
 
     }
 

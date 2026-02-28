@@ -29,7 +29,7 @@ public class Login implements Handler{
             RegisterLoginResult result = userService.login(loginRequest);
 
             context.status(200);
-            context.result(new Gson().toJson(result));
+            context.json(result);
         } catch (BadCreationRequest e){
             context.status(400);
             context.json(new ErrorResponseResult(e.getMessage()));

@@ -31,8 +31,8 @@ public class CreateGame {
             int gamesID = gameService.createGame(authToken, gameName);
             CreateGameResult gamesObj = new CreateGameResult(gamesID);
 
-            context.status(200).result(new Gson().toJson(gamesObj));
-
+            context.status(200);
+            context.json(gamesObj);
         }catch (BadCreationRequest e){
             context.status(400);
             context.json(new ErrorResponseResult(e.getMessage()));

@@ -26,7 +26,7 @@ public class Registration implements Handler{
             RegisterLoginResult result = userService.register(registerRequest);
 
             context.status(200);
-            context.result(new Gson().toJson(result));
+            context.json(result);
 
         } catch (BadCreationRequest e){
             context.status(400);

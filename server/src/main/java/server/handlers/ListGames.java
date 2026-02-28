@@ -27,7 +27,7 @@ public class ListGames implements Handler{
             List<GameData> games = gameService.listGames(authToken);
             ListGamesResult gamesObj = new ListGamesResult(games);
             context.status(200);
-            context.result(new Gson().toJson(gamesObj));
+            context.json(gamesObj);
 
         }catch (UnauthorizedException e){
             context.status(401);
