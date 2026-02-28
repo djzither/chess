@@ -7,36 +7,48 @@ import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
 import model.GameData;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.service.GameService;
 import server.service.UserService;
 import server.service.requestobjects.*;
 
+import javax.xml.crypto.Data;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameServiceTest {
 
-    @Test
-    void listGamesPos() throws UnauthorizedException, DataAccessException, BadRequestException, AlreadyTakenException {
-        DataAccess dao = new SysMemory();
-        UserService userService = new UserService(dao);
-        String userName = "Derek";
-        String password = "12";
-        String email = "djzither@byu.edu";
+    private DataAccess dao;
+    private UserService userService;
+    private GameService gameService;
+    private String authToken;
+    private String userName;
+    private String password;
+    private String email;
+
+    @BeforeEach
+    void setupUser() throws BadRequestException, AlreadyTakenException, DataAccessException, UnauthorizedException {
+        dao = new SysMemory();
+        userService = new UserService(dao);
+        gameService = new GameService(dao);
+
+        userName = "Derek";
+        password = "12";
+        email = "djzither@byu.edu";
 
         RegisterRequest registerRequest = new RegisterRequest(userName, password, email);
         userService.register(registerRequest);
 
         LoginRequest loginRequest = new LoginRequest(userName, password);
         RegisterLoginResult loginResult = userService.login(loginRequest);
+        authToken = loginResult.authToken();
+    }
 
-        String authToken = loginResult.authToken();
-        AuthTokenRequest authTokenRequest = new AuthTokenRequest(authToken);
+    @Test
+    void listGamesPos() throws UnauthorizedException, DataAccessException, BadRequestException, AlreadyTakenException {
 
-        //game service stuff
-        GameService gameService = new GameService(dao);
         List<GameData> gameData = gameService.listGames(authToken);
 
         assertTrue(gameData.isEmpty());
@@ -46,18 +58,8 @@ class GameServiceTest {
 
     @Test
     void listGamesNeg() throws UnauthorizedException, DataAccessException, BadRequestException, AlreadyTakenException {
-        DataAccess dao = new SysMemory();
-        UserService userService = new UserService(dao);
-        String userName = "Derek";
-        String password = "12";
-        String email = "djzither@byu.edu";
-
-        RegisterRequest registerRequest = new RegisterRequest(userName, password, email);
-        userService.register(registerRequest);
-
-
         //game service stuff
-        GameService gameService = new GameService(dao);
+
         String invalidToken = "oo";
 
         assertThrows(UnauthorizedException.class, () -> {
@@ -68,20 +70,6 @@ class GameServiceTest {
 
     @Test
     void createGame() throws BadRequestException, AlreadyTakenException, DataAccessException, UnauthorizedException {
-        DataAccess dao = new SysMemory();
-        UserService userService = new UserService(dao);
-        GameService gameService = new GameService(dao);
-        String userName = "Derek";
-        String password = "12";
-        String email = "djzither@byu.edu";
-
-        RegisterRequest registerRequest = new RegisterRequest(userName, password, email);
-        userService.register(registerRequest);
-        //login
-        LoginRequest loginRequest = new LoginRequest(userName, password);
-        RegisterLoginResult loginResult = userService.login(loginRequest);
-
-        String authToken = loginResult.authToken();
 
         //make game
         String gameName = "game";
@@ -97,15 +85,10 @@ class GameServiceTest {
     }
     @Test
     void createGameNeg() throws BadRequestException, AlreadyTakenException, DataAccessException, UnauthorizedException {
-        DataAccess dao = new SysMemory();
-        UserService userService = new UserService(dao);
-        GameService gameService = new GameService(dao);
-        String userName = "Derek";
-        String password = "12";
-        String email = "djzither@byu.edu";
 
-        RegisterRequest registerRequest = new RegisterRequest(userName, password, email);
-        userService.register(registerRequest);
+
+
+
 
 
         LoginRequest loginRequest = new LoginRequest(userName, password);
@@ -122,20 +105,6 @@ class GameServiceTest {
 
     @Test
     void joinGamePos() throws BadRequestException, AlreadyTakenException, DataAccessException, UnauthorizedException {
-        DataAccess dao = new SysMemory();
-        UserService userService = new UserService(dao);
-        GameService gameService = new GameService(dao);
-        String userName = "Derek";
-        String password = "12";
-        String email = "djzither@byu.edu";
-
-        RegisterRequest registerRequest = new RegisterRequest(userName, password, email);
-        userService.register(registerRequest);
-        //login
-        LoginRequest loginRequest = new LoginRequest(userName, password);
-        RegisterLoginResult loginResult = userService.login(loginRequest);
-
-        String authToken = loginResult.authToken();
 
         //make game
         String gameName = "game";
@@ -160,20 +129,6 @@ class GameServiceTest {
 
     @Test
     void joinGameNeg() throws BadRequestException, AlreadyTakenException, DataAccessException, UnauthorizedException {
-        DataAccess dao = new SysMemory();
-        UserService userService = new UserService(dao);
-        GameService gameService = new GameService(dao);
-        String userName = "Derek";
-        String password = "12";
-        String email = "djzither@byu.edu";
-
-        RegisterRequest registerRequest = new RegisterRequest(userName, password, email);
-        userService.register(registerRequest);
-        //login
-        LoginRequest loginRequest = new LoginRequest(userName, password);
-        RegisterLoginResult loginResult = userService.login(loginRequest);
-
-        String authToken = loginResult.authToken();
 
         //make game
         String gameName = "game";
