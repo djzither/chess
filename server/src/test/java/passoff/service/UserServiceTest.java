@@ -13,11 +13,9 @@ import server.service.requestobjects.LoginRequest;
 import server.service.requestobjects.RegisterLoginResult;
 import server.service.requestobjects.RegisterRequest;
 
-import javax.sql.rowset.serial.SerialException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserServiceTests {
+class UserServiceTest {
 
     @Test
     void registerPositive() throws BadRequestException, AlreadyTakenException, DataAccessException {

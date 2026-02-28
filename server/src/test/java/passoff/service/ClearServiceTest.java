@@ -17,7 +17,7 @@ import server.service.requestobjects.RegisterRequest;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class ClearServiceTests {
+public class ClearServiceTest {
     @Test
     void clearServicePos() throws BadRequestException, AlreadyTakenException, DataAccessException, UnauthorizedException {
         DataAccess dao = new SysMemory();
