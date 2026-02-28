@@ -8,6 +8,7 @@ import io.javalin.http.Handler;
 import model.GameData;
 import server.service.GameService;
 import server.service.requestobjects.AuthTokenRequest;
+import server.service.requestobjects.ListGamesResult;
 
 import java.util.List;
 
@@ -23,9 +24,9 @@ public class ListGames implements Handler{
         try {
             String authToken = context.header("authorization");
             List<GameData> games = gameService.listGames(authToken);
-
+            ListGamesResult gamesObj = new ListGamesResult(games);
             context.status(200);
-            context.result(new Gson().toJson(games));
+            context.result(new Gson().toJson(gamesObj));
 
         }catch (UnauthorizedException e){
             context.status(401).result(new Gson().toJson(e.getMessage()));

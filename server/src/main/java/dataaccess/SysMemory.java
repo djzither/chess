@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SysMemory implements DataAccess {
+    private int gameID = 1;
     private final Map<String, UserData> users = new HashMap<>();
     private final Map<Integer, GameData> games = new HashMap<>();
     private final Map<String, AuthData> authTokens = new HashMap<>();
@@ -21,6 +22,7 @@ public class SysMemory implements DataAccess {
         users.clear();
         games.clear();
         authTokens.clear();
+
     }
 
     @Override
@@ -43,8 +45,8 @@ public class SysMemory implements DataAccess {
     }
 
     @Override
-    public GameData getGame(String gameID) {
-        return(games.get(gameID));
+    public GameData getGame(String gameName) {
+        return(games.get(gameName));
     }
 
     @Override
@@ -79,5 +81,24 @@ public class SysMemory implements DataAccess {
             throw new DataAccessException("User doesn't exist");
         }
         users.put(user.username(), user);
+    }
+
+    @Override
+    public String authToUsername(String authToken) {
+        AuthData authData = authTokens.get(authToken);
+        return authData.userName();
+
+    }
+
+    @Override
+    public void addGameInfo(GameData gameData) {
+        gameID +=1;
+        games.put(gameID, gameData);
+    }
+
+    @Override
+    public int generateGameID() {
+        gameID += 1;
+        return gameID;
     }
 }
