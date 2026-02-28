@@ -1,6 +1,7 @@
 package server.handlers;
 
 import com.google.gson.Gson;
+import dataaccess.exceptions.DataAccessException;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import server.service.ClearService;
@@ -12,13 +13,12 @@ public class ClearApplication implements Handler {
     public ClearApplication(ClearService clearService) {
         this.clearService = clearService;
     }
-    public void handle(Context context){
+    public void handle(Context context) throws DataAccessException {
         clearService.clear();
         context.status(200);
 
-        context.status(200);
-        String json = new Gson().toJson("");
-        context.result(new Gson().toJson(json));//
+
+        context.result("{}");//
 
 
     }

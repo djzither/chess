@@ -1,9 +1,7 @@
 package server.handlers;
 
 import com.google.gson.Gson;
-import dataaccess.exceptions.BadRequestException;
-import dataaccess.exceptions.DataAccessException;
-import dataaccess.exceptions.UnauthorizedException;
+import dataaccess.exceptions.*;
 import io.javalin.http.Context;
 import server.service.GameService;
 import server.service.requestobjects.ErrorResponseResult;
@@ -32,13 +30,19 @@ public class JoinGame {
         }catch (UnauthorizedException e){
             context.status(401);
             context.result(new Gson().toJson(new ErrorResponseResult(e.getMessage())));
-        }catch(DataAccessException e){
+
+
+
+        } catch (AlreadyTakenException e) {
+            context.status(403);
+            context.result(new Gson().toJson(new ErrorResponseResult(e.getMessage())));
+        } catch(DataAccessException e){
             context.status(500);
             context.result(new Gson().toJson(new ErrorResponseResult(e.getMessage())));
         }
 
 
-        }
+    }
 
 
 }

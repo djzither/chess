@@ -1,8 +1,6 @@
 package dataaccess;
 
 import dataaccess.exceptions.DataAccessException;
-import dataaccess.exceptions.UnauthorizedException;
-import dataaccess.exceptions.AlreadyTakenException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;

@@ -9,6 +9,7 @@ import model.GameData;
 import server.service.GameService;
 import server.service.requestobjects.AuthTokenRequest;
 import server.service.requestobjects.ErrorResponseResult;
+import server.service.requestobjects.GameParts;
 import server.service.requestobjects.ListGamesResult;
 
 import java.util.List;
@@ -25,9 +26,20 @@ public class ListGames implements Handler{
         try {
             String authToken = context.header("authorization");
             List<GameData> games = gameService.listGames(authToken);
-            ListGamesResult gamesObj = new ListGamesResult(games);
+            List<GameParts> summaries = new java.util.ArrayList<>();
+
+            for (GameData g : games) {
+                summaries.add(new GameParts(
+                        g.gameId(),
+                        g.whiteUsername(),
+                        g.blackUsername(),
+                        g.gameName()
+                ));
+            }
+
+            ListGamesResult result = new ListGamesResult(summaries);
             context.status(200);
-            context.result(new Gson().toJson(gamesObj));
+            context.result(new Gson().toJson(result));
 
         }catch (UnauthorizedException e){
             context.status(401);

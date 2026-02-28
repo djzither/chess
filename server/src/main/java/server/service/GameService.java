@@ -35,11 +35,15 @@ public class GameService {
         if (dao.getAuth(authToken) == null){
             throw new UnauthorizedException();
         }
+        if (authToken == null || gameName == null){
+            throw new BadRequestException();
+        }
+
         ChessGame newGame = new ChessGame();
         String userName = dao.authToUsername(authToken);
 
         int gameID = dao.generateGameID();
-        GameData gameData = new GameData(gameID, userName, null, gameName, newGame);
+        GameData gameData = new GameData(gameID, null, null, gameName, newGame);
 
 
 
@@ -49,13 +53,25 @@ public class GameService {
 
     }
 
-    public void joinGame(String authToken, String playerColor, String gameID) throws ServiceException, DataAccessException {
-        if (authToken == null || playerColor == null || gameID == null){
-            throw new AlreadyTakenException();
-        }
+    public void joinGame(String authToken, String playerColor, String gameID) throws BadRequestException,UnauthorizedException, AlreadyTakenException, DataAccessException {
         if (dao.getAuth(authToken) == null){
             throw new UnauthorizedException();
         }
+        if (authToken == null || playerColor == null || gameID == null){
+            throw new BadRequestException();
+        }
+
+
+        if (!playerColor.equals("BLACK") && !playerColor.equals("WHITE")){
+            throw new BadRequestException();
+        }
+        GameData game = dao.getGame(gameID);
+
+        if (game == null){
+            throw new BadRequestException();
+        }
+
+
 
         String userName = dao.authToUsername(authToken);
         if (playerColor.equals("WHITE")){
@@ -69,7 +85,6 @@ public class GameService {
             }
         }
         //need to finish method
-        GameData game = dao.getGame(gameID);
 
 
         GameData updatedGame;
