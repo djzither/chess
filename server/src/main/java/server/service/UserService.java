@@ -41,6 +41,9 @@ public class UserService {
                 registerRequest.getPassword(),
                 registerRequest.getEmail()
         );
+        if (dao.getUser(registerRequest.username()) != null){
+            throw new AlreadyTakenException();
+        }
 
         dao.createUser(newUser);
         authToken = UUID.randomUUID().toString();

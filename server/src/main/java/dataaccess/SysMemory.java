@@ -26,10 +26,8 @@ public class SysMemory implements DataAccess {
     }
 
     @Override
-    public void createUser(UserData user) throws UserNameTakenException {
-        if (users.containsKey(user.username())){
-            throw new UserNameTakenException("Username Taken");
-        }
+    public void createUser(UserData user) {
+
         users.put(user.username(), user);
     }
     @Override
