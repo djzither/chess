@@ -27,7 +27,7 @@ class GameServiceTest {
     private String userName;
     private String password;
     private String email;
-
+    //deleted unecessary files
     @BeforeEach
     void setupUser() throws BadRequestException, AlreadyTakenException, DataAccessException, UnauthorizedException {
         dao = new SysMemory();
