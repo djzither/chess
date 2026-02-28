@@ -32,7 +32,7 @@ public class CreateGame {
             CreateGameResult gamesObj = new CreateGameResult(gamesID);
 
             context.status(200);
-            context.json(gamesObj);
+            context.result(new Gson().toJson(gamesObj));
         }catch (BadCreationRequest e){
             context.status(400);
             context.result(new Gson().toJson(new ErrorResponseResult(e.getMessage())));
