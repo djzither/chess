@@ -51,6 +51,10 @@ public class Server {
         CreateGame createGame = new CreateGame(gameService);
         javalin.post("/game", createGame::handle);
 
+        JoinGame joinGame = new JoinGame(gameService);
+        javalin.put("/game", joinGame::handle);
+
+
 
 
 
