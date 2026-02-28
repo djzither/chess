@@ -23,7 +23,7 @@ public class UserService {
 
     //RegisterResult is from the DAO and RegisterRequest is from HANDLER
     public RegisterLoginResult register(RegisterRequest registerRequest)
-            throws UserNameTakenException, DataAccessException, BadCreationRequest
+            throws AlreadyTakenException, DataAccessException, BadRequestException
     //will have to add maybe more exceptions
     {
         // this could be a separate function...bread these more later if i want
@@ -31,7 +31,7 @@ public class UserService {
         if (registerRequest.getUserName() == null ||
                 registerRequest.getEmail() == null ||
                 registerRequest.getPassword() == null){
-            throw new BadCreationRequest("Bad creation request");
+            throw new BadRequestException();
 
         }
 
@@ -51,19 +51,19 @@ public class UserService {
     }
 
     public RegisterLoginResult login(LoginRequest loginRequest)
-    throws BadLoginRequestException, UnauthorizedException, DataAccessException {
+    throws BadRequestException, UnauthorizedException, DataAccessException {
         if (loginRequest.getUserName() == null ||
                 loginRequest.password() == null ) {
-            throw new BadLoginRequestException("Error: Bad Request");
+            throw new BadRequestException();
 
         }
         UserData user = dao.getUser(loginRequest.username());
         if (user == null){
-            throw new UnauthorizedException("Error: Unauthorized");
+            throw new UnauthorizedException();
         }
         if (!user.password().equals(loginRequest.password()))
         {
-            throw new UnauthorizedException("Error: Unauthorized");
+            throw new UnauthorizedException();
         }
         dao.getUser(loginRequest.username());
 
@@ -81,14 +81,14 @@ public class UserService {
     throws UnauthorizedException, DataAccessException {
         //do I need to check for nulls? --yes because could return null or give null
         if (authTokenRequest.authToken() == null){
-            throw new UnauthorizedException("Error: Unauthorized");
+            throw new UnauthorizedException();
         }
 
         AuthData authData = dao.getAuth(authTokenRequest.authToken());
 
         //yes because I am creatign an object and what if it returns null
         if (authData == null){
-            throw new UnauthorizedException("Error: Unauthorized");
+            throw new UnauthorizedException();
         }
 
 

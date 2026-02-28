@@ -2,7 +2,7 @@ package dataaccess;
 
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
-import dataaccess.exceptions.UserNameTakenException;
+import dataaccess.exceptions.AlreadyTakenException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -78,7 +78,7 @@ public class SysMemory implements DataAccess {
 
     public void updateUser(UserData user) throws DataAccessException{
         if (!users.containsKey(user.username())){
-            throw new DataAccessException("User doesn't exist");
+            throw new DataAccessException("Error: User doesn't exist");
         }
         users.put(user.username(), user);
     }

@@ -1,19 +1,14 @@
 package server.handlers;
 
 import com.google.gson.Gson;
-import dataaccess.exceptions.BadCreationRequest;
+import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
 import io.javalin.http.Context;
-import model.GameData;
 import server.service.GameService;
 import server.service.requestobjects.CreateGameRequest;
 import server.service.requestobjects.CreateGameResult;
 import server.service.requestobjects.ErrorResponseResult;
-import server.service.requestobjects.ListGamesResult;
-
-import java.lang.reflect.Type;
-import java.util.List;
 
 public class CreateGame {
     private final GameService gameService;
@@ -33,7 +28,7 @@ public class CreateGame {
 
             context.status(200);
             context.result(new Gson().toJson(gamesObj));
-        }catch (BadCreationRequest e){
+        }catch (BadRequestException e){
             context.status(400);
             context.result(new Gson().toJson(new ErrorResponseResult(e.getMessage())));
         }catch(UnauthorizedException e) {

@@ -13,24 +13,24 @@ public interface DataAccess {
 
 
     //testing
-    void clear();
+    void clear() throws DataAccessException;
 
     //user
     void createUser(UserData user) throws DataAccessException;
     UserData getUser(String username) throws DataAccessException;
 
     //game
-    void createGame(GameData game);
-    GameData getGame(String gameID);
-    List<GameData> listGames();
-    void updateGame(GameData game);
+    void createGame(GameData game) throws DataAccessException;
+    GameData getGame(String gameID) throws DataAccessException;
+    List<GameData> listGames() throws DataAccessException;
+    void updateGame(GameData game) throws DataAccessException;
     //auth
-    void createAuth(AuthData auth);
-    AuthData getAuth(String authToken);
-    void deleteAuth(String authToken);
-    String authToUsername(String authToken);
-    void addGameInfo(GameData gameData);
-    int generateGameID();
+    void createAuth(AuthData auth) throws DataAccessException;
+    AuthData getAuth(String authToken) throws DataAccessException;
+    void deleteAuth(String authToken) throws DataAccessException;
+    String authToUsername(String authToken) throws DataAccessException;
+    void addGameInfo(GameData gameData) throws DataAccessException;
+    int generateGameID() throws DataAccessException;
 
 
 

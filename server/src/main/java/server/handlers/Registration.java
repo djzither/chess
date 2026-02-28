@@ -1,7 +1,7 @@
 package server.handlers;
-import dataaccess.exceptions.BadCreationRequest;
+import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.DataAccessException;
-import dataaccess.exceptions.UserNameTakenException;
+import dataaccess.exceptions.AlreadyTakenException;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import server.service.requestobjects.ErrorResponseResult;
@@ -28,11 +28,11 @@ public class Registration implements Handler{
             context.status(200);
             context.result(new Gson().toJson(result));
 
-        } catch (BadCreationRequest e){
+        } catch (BadRequestException e){
             context.status(400);
             context.result(new Gson().toJson(new ErrorResponseResult(e.getMessage())));
 
-        } catch (UserNameTakenException e) {
+        } catch (AlreadyTakenException e) {
             context.status(403);
             context.result(new Gson().toJson(new ErrorResponseResult(e.getMessage())));
 

@@ -1,6 +1,7 @@
 package server;
 import dataaccess.DataAccess;
 import dataaccess.SysMemory;
+import dataaccess.exceptions.ServiceException;
 import io.javalin.*;
 import server.handlers.*;
 import server.service.ClearService;
@@ -42,8 +43,7 @@ public class Server {
 
         //game service
         GameService gameService = new GameService(dao);
-        ListGames listGames = new ListGames(gameService);
-        javalin.get("/game", listGames::handle);
+        javalin.get("/game", new ListGames(gameService));
 
 
         //create game service
@@ -55,7 +55,7 @@ public class Server {
         javalin.put("/game", joinGame::handle);
 
 
-
+        javalin.exception(ServiceException.class, new ErrorHandler());
 
 
 

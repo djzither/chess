@@ -3,7 +3,6 @@ package server.service;
 import chess.ChessGame;
 import dataaccess.DataAccess;
 import dataaccess.exceptions.*;
-import model.AuthData;
 import model.GameData;
 
 import java.util.List;
@@ -18,10 +17,10 @@ public class GameService {
 
     public List<GameData> listGames(String authToken) throws UnauthorizedException, DataAccessException {
         if (authToken == "") {
-            throw new UnauthorizedException("Error: Unauthorized");
+            throw new UnauthorizedException();
         }
         if (dao.getAuth(authToken) == null){
-            throw new UnauthorizedException("Error: Unauthorized");
+            throw new UnauthorizedException();
         }
 
         List<GameData> games = dao.listGames();
@@ -32,9 +31,9 @@ public class GameService {
 
     }
 
-    public int createGame(String authToken, String gameName) throws UnauthorizedException, BadCreationRequest, DataAccessException {
+    public int createGame(String authToken, String gameName) throws UnauthorizedException, BadRequestException, DataAccessException {
         if (dao.getAuth(authToken) == null){
-            throw new UnauthorizedException("Error: Unauthorized");
+            throw new UnauthorizedException();
         }
         ChessGame newGame = new ChessGame();
         String userName = dao.authToUsername(authToken);
@@ -50,24 +49,23 @@ public class GameService {
 
     }
 
-    public void joinGame(String authToken, String playerColor, String gameID)
-    throws BadJoinRequest, UnauthorizedException, GameTakenException, DataAccessException {
+    public void joinGame(String authToken, String playerColor, String gameID) throws ServiceException, DataAccessException {
         if (authToken == null || playerColor == null || gameID == null){
-            throw new BadJoinRequest("Error: Bad Request");
+            throw new AlreadyTakenException();
         }
         if (dao.getAuth(authToken) == null){
-            throw new UnauthorizedException("Error: Unauthorized");
+            throw new UnauthorizedException();
         }
 
         String userName = dao.authToUsername(authToken);
         if (playerColor.equals("WHITE")){
             if (dao.getGame(gameID).whiteUsername() != null){
-                throw new GameTakenException("Error: already taken");
+                throw new AlreadyTakenException();
             }
         }
         if (playerColor.equals("BLACK")){
             if (dao.getGame(gameID).blackUsername() != null){
-                throw new GameTakenException("Error: already taken");
+                throw new AlreadyTakenException();
             }
         }
         //need to finish method
