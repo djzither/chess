@@ -4,6 +4,7 @@ import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UserNameTakenException;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
+import server.service.requestobjects.ErrorResponseResult;
 import server.service.requestobjects.RegisterRequest;
 import server.service.requestobjects.RegisterLoginResult;
 import server.service.UserService;
@@ -28,13 +29,16 @@ public class Registration implements Handler{
             context.result(new Gson().toJson(result));
 
         } catch (BadCreationRequest e){
-            context.status(400).result(new Gson().toJson(e.getMessage()));
+            context.status(400);
+            context.json(new ErrorResponseResult(e.getMessage()));
         } catch (UserNameTakenException e) {
-            context.status(403).result(new Gson().toJson(e.getMessage()));
+            context.status(403);
+            context.json(new ErrorResponseResult(e.getMessage()));
             //this works
 
         } catch(DataAccessException e){
-            context.status(500).result(new Gson().toJson(e.getMessage()));
+            context.status(500);
+            context.json(new ErrorResponseResult(e.getMessage()));
         }
 
     }

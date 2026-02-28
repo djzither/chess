@@ -6,7 +6,7 @@ import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
 import io.javalin.http.Context;
 import server.service.GameService;
-import server.service.requestobjects.CreateGameRequest;
+import server.service.requestobjects.ErrorResponseResult;
 import server.service.requestobjects.JoinGameRequest;
 
 public class JoinGame {
@@ -26,11 +26,14 @@ public class JoinGame {
             context.result("{}");
 
         }catch (BadCreationRequest e) {
-            context.status(400).result(new Gson().toJson(e.getMessage()));
+            context.status(400);
+            context.json(new ErrorResponseResult(e.getMessage()));
         }catch (UnauthorizedException e){
-            context.status(401).result(new Gson().toJson(e.getMessage()));
+            context.status(401);
+            context.json(new ErrorResponseResult(e.getMessage()));
         }catch(DataAccessException e){
-            context.status(500).result(new Gson().toJson(e.getMessage()));
+            context.status(500);
+            context.json(new ErrorResponseResult(e.getMessage()));
         }
 
 

@@ -8,6 +8,7 @@ import io.javalin.http.Handler;
 import model.GameData;
 import server.service.GameService;
 import server.service.requestobjects.AuthTokenRequest;
+import server.service.requestobjects.ErrorResponseResult;
 import server.service.requestobjects.ListGamesResult;
 
 import java.util.List;
@@ -29,10 +30,11 @@ public class ListGames implements Handler{
             context.result(new Gson().toJson(gamesObj));
 
         }catch (UnauthorizedException e){
-            context.status(401).result(new Gson().toJson(e.getMessage()));
-
+            context.status(401);
+            context.json(new ErrorResponseResult(e.getMessage()));
         }catch(DataAccessException e){
-            context.status(500).result(new Gson().toJson(e.getMessage()));
+            context.status(500);
+            context.json(new ErrorResponseResult(e.getMessage()));
         }
 
     }

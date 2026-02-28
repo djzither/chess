@@ -7,6 +7,7 @@ import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import server.service.UserService;
 import server.service.requestobjects.AuthTokenRequest;
+import server.service.requestobjects.ErrorResponseResult;
 
 
 public class Logout implements Handler {
@@ -28,9 +29,11 @@ public class Logout implements Handler {
 
 
         }catch (UnauthorizedException e){
-            context.status(401).result(new Gson().toJson(e.getMessage()));
+            context.status(401);
+            context.json(new ErrorResponseResult(e.getMessage()));
         }catch(DataAccessException e){
-            context.status(500).result(new Gson().toJson(e.getMessage()));
+            context.status(500);
+            context.json(new ErrorResponseResult(e.getMessage()));
         }
     }
 

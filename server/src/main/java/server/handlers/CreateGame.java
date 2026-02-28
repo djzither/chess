@@ -9,6 +9,7 @@ import model.GameData;
 import server.service.GameService;
 import server.service.requestobjects.CreateGameRequest;
 import server.service.requestobjects.CreateGameResult;
+import server.service.requestobjects.ErrorResponseResult;
 import server.service.requestobjects.ListGamesResult;
 
 import java.lang.reflect.Type;
@@ -33,12 +34,15 @@ public class CreateGame {
             context.status(200).result(new Gson().toJson(gamesObj));
 
         }catch (BadCreationRequest e){
-            context.status(400).result(new Gson().toJson(e.getMessage()));
+            context.status(400);
+            context.json(new ErrorResponseResult(e.getMessage()));
         }catch(UnauthorizedException e) {
-            context.status(401).result(new Gson().toJson(e.getMessage()));
+            context.status(401);
+            context.json(new ErrorResponseResult(e.getMessage()));
         }
         catch(DataAccessException e) {
-            context.status(500).result(new Gson().toJson(e.getMessage()));
+            context.status(500);
+            context.json(new ErrorResponseResult(e.getMessage()));
         }
     }
 
