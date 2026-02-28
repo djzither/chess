@@ -17,7 +17,7 @@ public class ClearApplication implements Handler {
         context.status(200);
 
         context.status(200);
-        context.json(new Gson().toJson(""));
+        context.json(new Gson().toJson(""));//
 
 
     }
