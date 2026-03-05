@@ -29,9 +29,9 @@ public class MySqlDataAccess implements DataAccess {
 
     @Override
     public void createUser(UserData user) throws DataAccessException {
-        var statement = "INSERT INTO users (username, password) VALUES (?, ?, ?)";
+        var statement = "INSERT INTO users (username, password) VALUES (?, ?)";
         String json = new Gson().toJson(user);
-        int id = executeUpdate(statement, user.username(), user.password(), json);
+        executeUpdate(statement, user.username(), user.password(), json);
 
 
     }
