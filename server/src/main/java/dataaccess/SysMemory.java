@@ -1,6 +1,5 @@
 package dataaccess;
 
-import dataaccess.exceptions.DataAccessException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -27,6 +26,7 @@ public class SysMemory implements DataAccess {
     public void createUser(UserData user) {
 
         users.put(user.username(), user);
+
     }
     @Override
     public UserData getUser(String userName) {
