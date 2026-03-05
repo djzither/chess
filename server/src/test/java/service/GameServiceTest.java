@@ -87,10 +87,6 @@ class GameServiceTest {
     void createGameNeg() throws BadRequestException, AlreadyTakenException, DataAccessException, UnauthorizedException {
 
 
-
-
-
-
         LoginRequest loginRequest = new LoginRequest(userName, password);
 
         RegisterLoginResult loginResult = userService.login(loginRequest);
@@ -111,8 +107,6 @@ class GameServiceTest {
         int gameID = gameService.createGame(authToken, gameName);
 
         // did we actually make it
-        GameData createdGame = dao.getGame(gameID);
-
         gameService.joinGame(authToken, "BLACK", gameID);
 
 
