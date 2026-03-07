@@ -31,8 +31,7 @@ public class MySqlDataAccess implements DataAccess {
     @Override
     public void createUser(UserData user) throws DataAccessException {
         var statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
-        String json = new Gson().toJson(user);
-        executeUpdate(statement, user.username(), user.password(), user.email(), json);
+        executeUpdate(statement, user.username(), user.password(), user.email());
 
 
     }
@@ -62,14 +61,32 @@ public class MySqlDataAccess implements DataAccess {
 
     @Override
     public void createGame(GameData game) throws DataAccessException {
-        String statement = "INSERT INTO games (data) VALUES (?)";
+        var statement = "INSERT INTO games (data) VALUES (?)";
         String json = new Gson().toJson(game);
         executeUpdate(statement, json);
     }
 
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
-        return null;
+        try (Connection conn = DatabaseManager.getConnection()){
+            var statement = "SELECT data FROM games WHERE game_id=?";
+            try (PreparedStatement ps = conn.prepareStatement(statement)){
+                ps.setInt(1, gameID);
+                try (ResultSet rs = ps.executeQuery()){
+                    if (rs.next()){
+                        String json = rs.getString("data");
+                        GameData game = new Gson().fromJson(json, GameData.class);
+                        return game;
+                    }
+                    else{
+                        return null;
+                    }
+                }
+            }
+        }catch (SQLException e){
+            throw new DataAccessException("unable to query game", e);
+        }
+
     }
 
     @Override
