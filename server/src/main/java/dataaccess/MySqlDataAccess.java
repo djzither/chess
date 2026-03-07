@@ -7,6 +7,7 @@ import model.AuthData;
 import model.GameData;
 import model.UserData;
 
+import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,7 +39,25 @@ public class MySqlDataAccess implements DataAccess {
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
-        return null;
+        try (Connection conn = DatabaseManager.getConnection()){
+            var statement = "SELECT username, password, email FROM users WHERE username=?";
+            try (PreparedStatement ps = conn.prepareStatement(statement)){
+                ps.setString(1, username);
+                try (ResultSet rs = ps.executeQuery()){
+                    if (rs.next()){
+                        return new UserData(
+                                rs.getString("username"),
+                                rs.getString("password"),
+                                rs.getString("email"));
+                    }
+                    else{
+                        return null;
+                    }
+                }
+            }
+        }catch (SQLException e){
+            throw new DataAccessException("Unable to query user", e);
+        }
     }
 
     @Override
@@ -94,7 +113,6 @@ public class MySqlDataAccess implements DataAccess {
                     if (param instanceof String p) ps.setString(i + 1, p);
                     else if (param instanceof Integer p) ps.setInt(i + 1, p);
                     else if (param == null) ps.setNull(i + 1, NULL);
-                    else throw new DataAccessException("bad parameters");
                 }
                 ps.executeUpdate();
 
@@ -108,5 +126,9 @@ public class MySqlDataAccess implements DataAccess {
         } catch (SQLException e) {
             throw new DataAccessException("unable to update database");
         }
+
+        //gonna want a query one as well, idk but I can't find it in the petshop example
     }
+
+
 }
