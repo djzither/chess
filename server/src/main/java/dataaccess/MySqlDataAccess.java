@@ -30,9 +30,9 @@ public class MySqlDataAccess implements DataAccess {
 
     @Override
     public void createUser(UserData user) throws DataAccessException {
-        var statement = "INSERT INTO users (username, password) VALUES (?, ?)";
+        var statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
         String json = new Gson().toJson(user);
-        executeUpdate(statement, user.username(), user.password(), json);
+        executeUpdate(statement, user.username(), user.password(), user.email(), json);
 
 
     }
@@ -62,7 +62,9 @@ public class MySqlDataAccess implements DataAccess {
 
     @Override
     public void createGame(GameData game) throws DataAccessException {
-
+        String statement = "INSERT INTO games (data) VALUES (?)";
+        String json = new Gson().toJson(game);
+        executeUpdate(statement, json);
     }
 
     @Override
