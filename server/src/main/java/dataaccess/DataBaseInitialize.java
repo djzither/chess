@@ -23,6 +23,7 @@ public class DataBaseInitialize {
                         id INT NOT NULL AUTO_INCREMENT,
                         username varchar(256) NOT NULL,
                         password varchar(256) NOT NULL,
+                        email varchar(256) NOT NULL,
                         PRIMARY KEY ('id'),
                         )
                         """;
@@ -30,7 +31,7 @@ public class DataBaseInitialize {
 
                 String games = """
                         CREATE TABLE IF NOT EXISTS games (
-                        game_id INT PRIMARY KEY,
+                        game_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                         data TEXT NOT NULL
                         )
                         """;
