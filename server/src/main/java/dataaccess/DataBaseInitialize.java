@@ -2,7 +2,7 @@ package dataaccess;
 
 import dataaccess.exceptions.DataAccessException;
 
-import javax.xml.crypto.Data;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -24,7 +24,7 @@ public class DataBaseInitialize {
                         username varchar(256) NOT NULL,
                         password varchar(256) NOT NULL,
                         email varchar(256) NOT NULL,
-                        PRIMARY KEY ('id'),
+                        PRIMARY KEY (`id`)
                         )
                         """;
                 chess.executeUpdate(users);
