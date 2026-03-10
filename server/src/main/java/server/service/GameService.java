@@ -48,9 +48,9 @@ public class GameService {
 
 
 
-        dao.createGame(gameData);
 
-        return gameID;
+
+        return gameId;
 
     }
 
