@@ -35,9 +35,10 @@ public class SysMemory implements DataAccess {
     }
     //game stuff
     @Override
-    public void createGame(GameData game) {
+    public int createGame(GameData game) {
         games.put(game.gameId(), game);
 
+        return 0;
     }
 
     @Override
@@ -81,11 +82,6 @@ public class SysMemory implements DataAccess {
 
     }
 
-    @Override
-    public int generateGameID() {
-        gameID += 1;
-        return gameID;
-    }
 
 
 }
