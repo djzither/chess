@@ -20,7 +20,7 @@ public interface DataAccess {
     UserData getUser(String username) throws DataAccessException;
 
     //game
-    void createGame(GameData game) throws DataAccessException;
+    int createGame(GameData game) throws DataAccessException;
     GameData getGame(int gameID) throws DataAccessException;
     List<GameData> listGames() throws DataAccessException;
     void updateGame(GameData game) throws DataAccessException;
@@ -30,8 +30,6 @@ public interface DataAccess {
     void deleteAuth(String authToken) throws DataAccessException;
     String authToUsername(String authToken) throws DataAccessException;
 ;
-    int generateGameID() throws DataAccessException;
-
 
 
 
