@@ -32,8 +32,8 @@ public class DataBaseInitialize {
                 String games = """
                         CREATE TABLE IF NOT EXISTS games (
                         gameId INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                        whiteUsername VARCHAR(256) NOT NULL,
-                        blackUsername VARCHAR(256) NOT NULL,
+                        whiteUsername VARCHAR(256),
+                        blackUsername VARCHAR(256),
                         gameName VARCHAR(256) NOT NULL,
                         game TEXT NOT NULL
                         )
