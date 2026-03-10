@@ -160,7 +160,24 @@ public class MySqlDataAccess implements DataAccess {
 
     @Override
     public AuthData getAuth(String authToken) throws DataAccessException {
-        return null;
+        try (Connection connection = DatabaseManager.getConnection()){
+            var statement = """
+                    SELECT authToken, username FROM authToken WHERE authToken = (?)""";
+            try (PreparedStatement ps = connection.prepareStatement(statement)){
+                ps.setString(1, authToken);
+                try (ResultSet rs = ps.executeQuery()){
+                    if (rs.next()){
+                        return new AuthData(rs.getString("authToken"),
+                                            rs.getString("username"));
+                    }
+                    else{
+                        return null;
+                    }
+                }
+            }
+        }catch (SQLException e){
+            throw new DataAccessException("couldn't query username");
+        }
     }
 
     @Override
