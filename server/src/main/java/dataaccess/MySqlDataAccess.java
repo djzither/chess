@@ -103,14 +103,34 @@ public class MySqlDataAccess implements DataAccess {
                     throw new DataAccessException("unable to query game", e);
                 }
 
+            }
+
+            @Override
+            public List<GameData> listGames() throws DataAccessException {
+                List<GameData> result = new ArrayList<>();
+
+                try (Connection conn = DatabaseManager.getConnection()){
+                    var statement = "SELECT  gameId, whiteUsername, blackUsername, gameName, game FROM games";
+                    try (PreparedStatement preparedStatement = conn.prepareStatement(statement)){
+                        try (ResultSet rs = preparedStatement.executeQuery()){
+                            while (rs.next()){
+                                ChessGame game = new Gson().fromJson(rs.getString("game"), ChessGame.class);
+                                result.add(new GameData(
+                                        rs.getInt("gameId"),
+                                        rs.getString("whiteUsername"),
+                                        rs.getString("blackUsername"),
+                                        rs.getString("gameName"),
+                                        game
+                                ));
+                            }
+                        }
+                    }
+                }catch (SQLException e){
+                    throw new DataAccessException("unable to query games", e);
+
+            }
+            return result;
     }
-
-    @Override
-    public List<GameData> listGames() throws DataAccessException {
-        return List.of();
-    }
-
-
 
     @Override
     public void updateGame(GameData game) throws DataAccessException {
