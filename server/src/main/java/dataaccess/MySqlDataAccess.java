@@ -9,6 +9,7 @@ import model.GameData;
 import model.UserData;
 
 
+import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,7 +35,7 @@ public class MySqlDataAccess implements DataAccess {
     }
 
     @Override
-    public void createUser(UserData user) throws DataAccessException {
+    public void createUser(UserData user) throws DataAccessException {// i need to do special password stuff
         var statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
         executeUpdate(statement, user.username(), user.password(), user.email());
 
@@ -44,6 +45,7 @@ public class MySqlDataAccess implements DataAccess {
     @Override
     public UserData getUser(String username) throws DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()){
+            //more special password stuff
             var statement = "SELECT username, password, email FROM users WHERE username=?";
             try (PreparedStatement ps = conn.prepareStatement(statement)){
                 ps.setString(1, username);
@@ -180,9 +182,14 @@ public class MySqlDataAccess implements DataAccess {
         }
     }
 
+
+
+
     @Override
     public void deleteAuth(String authToken) throws DataAccessException {
-
+        var statement = """
+                DELETE FROM authToken WHERE authToken = ?""";
+        executeUpdate(statement, authToken);
     }
 
     @Override
