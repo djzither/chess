@@ -218,7 +218,7 @@ public class MySqlDataAccess implements DataAccess {
                 }
             }
         }catch (SQLException e){
-            throw new DataAccessException("couldn't get username with password");
+            throw new DataAccessException("couldn't get username with the given auth");
         }
     }
 
@@ -239,7 +239,7 @@ public class MySqlDataAccess implements DataAccess {
 
             }
         }catch (SQLException e) {
-            throw new DataAccessException("Unable to get next game id", e);
+            throw new DataAccessException("Unable to get next game id");
         }
     }
 
