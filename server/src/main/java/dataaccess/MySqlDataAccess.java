@@ -36,7 +36,10 @@ public class MySqlDataAccess implements DataAccess {
 
     @Override
     public void createUser(UserData user) throws DataAccessException {// i need to do special password stuff
-        var statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
+        var statement = """
+                            INSERT INTO users (username, password, email) 
+                            VALUES (?, ?, ?)
+                            """;
         executeUpdate(statement, user.username(), user.password(), user.email());
 
 
