@@ -1,6 +1,7 @@
 package dataaccess;
 
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.exceptions.DataAccessException;
 import model.AuthData;
@@ -65,9 +66,9 @@ public class MySqlDataAccess implements DataAccess {
 
     @Override
     public void createGame(GameData game) throws DataAccessException {
-        var statement = "INSERT INTO games (data) VALUES (?)";
-        String json = new Gson().toJson(game);
-        executeUpdate(statement, json);
+        var statement = "INSERT INTO games (whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?)";
+        String json = new Gson().toJson(game.game());
+        executeUpdate(statement, null, null, game.gameName(), json);
         //i think that my generate id is in here but shoudl be later
     }
 
