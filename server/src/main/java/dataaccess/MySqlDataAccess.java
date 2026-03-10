@@ -68,7 +68,8 @@ public class MySqlDataAccess implements DataAccess {
     public void createGame(GameData game) throws DataAccessException {
         var statement = "INSERT INTO games (whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?)";
         String json = new Gson().toJson(game.game());
-        executeUpdate(statement, null, null, game.gameName(), json);
+        executeUpdate(statement, game.whiteUsername(), game.blackUsername(),
+                        game.gameName(), json);
         //i think that my generate id is in here but shoudl be later
     }
 
