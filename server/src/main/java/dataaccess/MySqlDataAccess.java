@@ -7,11 +7,12 @@ import model.AuthData;
 import model.GameData;
 import model.UserData;
 
-import javax.xml.crypto.Data;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
@@ -67,6 +68,7 @@ public class MySqlDataAccess implements DataAccess {
         var statement = "INSERT INTO games (data) VALUES (?)";
         String json = new Gson().toJson(game);
         executeUpdate(statement, json);
+        //i think that my generate id is in here but shoudl be later
     }
 
     @Override
@@ -96,6 +98,8 @@ public class MySqlDataAccess implements DataAccess {
     public List<GameData> listGames() throws DataAccessException {
         return List.of();
     }
+
+
 
     @Override
     public void updateGame(GameData game) throws DataAccessException {
