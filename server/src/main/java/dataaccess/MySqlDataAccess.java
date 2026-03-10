@@ -25,6 +25,9 @@ public class MySqlDataAccess implements DataAccess {
 
     @Override
     public void clear() throws DataAccessException {
+        executeUpdate("TRUNCATE TABLE users");
+        executeUpdate("TRUNCATE TABLE games");
+        executeUpdate("TRUNCATE TABLE authToken");
 
     }
 
