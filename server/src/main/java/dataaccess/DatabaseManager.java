@@ -51,7 +51,7 @@ public class DatabaseManager {
             return conn;
         } catch (SQLException ex) {
             throw new DataAccessException("failed to get connection", ex);
-        }
+        }//i need to push
     }
 
     private static void loadPropertiesFromResources() {
