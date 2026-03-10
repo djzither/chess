@@ -3,7 +3,7 @@ package dataaccess.exceptions;
 /**
  * Indicates there was an error connecting to the database
  */
-public class DataAccessException extends Exception{
+public class DataAccessException extends ServiceException{
     public DataAccessException(String message) {
         super(message);
     }
