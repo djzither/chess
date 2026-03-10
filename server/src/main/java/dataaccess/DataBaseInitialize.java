@@ -49,7 +49,7 @@ public class DataBaseInitialize {
                         )""";
                 chess.executeUpdate(auth);
             }
-        } catch (DataAccessException | SQLException e) {
+        } catch (SQLException e) {
             throw new DataAccessException("Didn't initialize database" + e.getMessage(), e);
         }
 
