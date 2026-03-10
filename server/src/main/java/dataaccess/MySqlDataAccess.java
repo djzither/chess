@@ -27,10 +27,11 @@ public class MySqlDataAccess implements DataAccess {
     public MySqlDataAccess() {
         try {
             DataBaseInitialize.initialize();
-        } catch (ServiceException e) {
+        } catch (DataAccessException e) {
             throw new RuntimeException("Failed to initialize database", e);
         }
     }
+
 
     @Override
     public void clear() throws DataAccessException {
