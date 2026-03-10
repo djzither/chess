@@ -30,7 +30,7 @@ public class MySqlDataAccess implements DataAccess {
     public void clear() throws DataAccessException {
         executeUpdate("TRUNCATE TABLE users");
         executeUpdate("TRUNCATE TABLE games");
-        executeUpdate("TRUNCATE TABLE authToken");
+        executeUpdate("TRUNCATE TABLE auth");
 
     }
 
@@ -162,7 +162,7 @@ public class MySqlDataAccess implements DataAccess {
 
     @Override
     public void createAuth(AuthData auth) throws DataAccessException {
-        var statement = "INSERT INTO authToken (authToken, username) VALUES (?, ?)";
+        var statement = "INSERT INTO auth (authToken, username) VALUES (?, ?)";
         executeUpdate(statement, auth.authToken(), auth.userName());
     }
 
