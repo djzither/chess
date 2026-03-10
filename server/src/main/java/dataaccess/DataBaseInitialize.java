@@ -44,7 +44,7 @@ public class DataBaseInitialize {
 
                 String auth = """
                         CREATE TABLE IF NOT EXISTS auth (
-                        auth_token VARCHAR(256) PRIMARY KEY,
+                        authToken VARCHAR(256) PRIMARY KEY,
                         username VARCHAR(256) NOT NULL
                         )""";
                 chess.executeUpdate(auth);
