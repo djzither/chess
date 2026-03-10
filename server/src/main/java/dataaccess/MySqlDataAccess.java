@@ -188,14 +188,33 @@ public class MySqlDataAccess implements DataAccess {
     @Override
     public void deleteAuth(String authToken) throws DataAccessException {
         var statement = """
-                DELETE FROM authToken WHERE authToken = ?""";
+                DELETE FROM authToken WHERE authToken = (?)""";
         executeUpdate(statement, authToken);
     }
 
     @Override
     public String authToUsername(String authToken) throws DataAccessException {
-        return "";
+        try (Connection connection = DatabaseManager.getConnection()){
+            var statement = """
+                    SELECT username FROM authToken WHERE authToken = (?)""";
+            try (PreparedStatement ps = connection.prepareStatement(statement)){
+                ps.setString(1, authToken);
+                try (ResultSet rs = ps.executeQuery()){
+                    if (rs.next()){
+                        return rs.getString("username");
+                    }
+                    else{
+                        return null;
+                    }
+
+                }
+            }
+        }catch (SQLException e){
+            throw new DataAccessException("couldnt get username with password");
+        }
     }
+
+
 
     @Override
     public int generateGameID() throws DataAccessException {
