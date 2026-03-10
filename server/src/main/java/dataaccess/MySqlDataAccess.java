@@ -4,10 +4,11 @@ package dataaccess;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.exceptions.DataAccessException;
+import dataaccess.exceptions.ServiceException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
-
+import org.mindrot.jbcrypt.BCrypt;
 
 
 import java.sql.Connection;
@@ -22,8 +23,13 @@ import static java.sql.Types.NULL;
 
 public class MySqlDataAccess implements DataAccess {
 
-    public MySqlDataAccess() throws DataAccessException{
-        DataBaseInitialize.initialize();
+
+    public MySqlDataAccess() {
+        try {
+            DataBaseInitialize.initialize();
+        } catch (ServiceException e) {
+            throw new RuntimeException("Failed to initialize database", e);
+        }
     }
 
     @Override
@@ -35,12 +41,14 @@ public class MySqlDataAccess implements DataAccess {
     }
 
     @Override
-    public void createUser(UserData user) throws DataAccessException {// i need to do special password stuff
+    public void createUser(UserData user) throws DataAccessException {
+
+        String hash = BCrypt.hashpw(user.password(), BCrypt.gensalt());
         var statement = """
                             INSERT INTO users (username, password, email) 
                             VALUES (?, ?, ?)
                             """;
-        executeUpdate(statement, user.username(), user.password(), user.email());
+        executeUpdate(statement, user.username(), hash, user.email());
 
 
     }
@@ -172,7 +180,7 @@ public class MySqlDataAccess implements DataAccess {
     public AuthData getAuth(String authToken) throws DataAccessException {
         try (Connection connection = DatabaseManager.getConnection()){
             var statement = """
-                    SELECT authToken, username FROM authToken WHERE authToken = (?)""";
+                    SELECT authToken, username FROM auth WHERE authToken = ?""";
             try (PreparedStatement ps = connection.prepareStatement(statement)){
                 ps.setString(1, authToken);
                 try (ResultSet rs = ps.executeQuery()){
@@ -186,7 +194,7 @@ public class MySqlDataAccess implements DataAccess {
                 }
             }
         }catch (SQLException e){
-            throw new DataAccessException("couldn't query username");
+            throw new DataAccessException("couldn't query username", e);
         }
     }
 
@@ -196,7 +204,7 @@ public class MySqlDataAccess implements DataAccess {
     @Override
     public void deleteAuth(String authToken) throws DataAccessException {
         var statement = """
-                DELETE FROM authToken WHERE authToken = (?)""";
+                DELETE FROM auth WHERE authToken = ?""";
         executeUpdate(statement, authToken);
     }
 
@@ -204,7 +212,7 @@ public class MySqlDataAccess implements DataAccess {
     public String authToUsername(String authToken) throws DataAccessException {
         try (Connection connection = DatabaseManager.getConnection()){
             var statement = """
-                    SELECT username FROM authToken WHERE authToken = (?)""";
+                    SELECT username FROM auth WHERE authToken = ?""";
             try (PreparedStatement ps = connection.prepareStatement(statement)){
                 ps.setString(1, authToken);
                 try (ResultSet rs = ps.executeQuery()){
@@ -218,7 +226,7 @@ public class MySqlDataAccess implements DataAccess {
                 }
             }
         }catch (SQLException e){
-            throw new DataAccessException("couldn't get username with the given auth");
+            throw new DataAccessException("couldn't get username with the given auth", e);
         }
     }
 
@@ -239,7 +247,7 @@ public class MySqlDataAccess implements DataAccess {
 
             }
         }catch (SQLException e) {
-            throw new DataAccessException("Unable to get next game id");
+            throw new DataAccessException("Unable to get next game id", e);
         }
     }
 
@@ -262,7 +270,7 @@ public class MySqlDataAccess implements DataAccess {
                 return 0;
             }
         } catch (SQLException e) {
-            throw new DataAccessException("unable to update database");
+            throw new DataAccessException("unable to update database", e);
         }
 
         //gonna want a query one as well, idk but I can't find it in the petshop example
