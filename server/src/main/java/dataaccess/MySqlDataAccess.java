@@ -4,7 +4,6 @@ package dataaccess;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.exceptions.DataAccessException;
-import dataaccess.exceptions.ServiceException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
