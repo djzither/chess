@@ -43,9 +43,8 @@ public class GameService {
         ChessGame newGame = new ChessGame();
         String userName = dao.authToUsername(authToken);
 
-        int gameID = dao.generateGameID();
-        GameData gameData =
-                new GameData(gameID, null, null, gameName, newGame);
+        GameData gameData = new GameData(0, null, null, gameName, newGame);
+        int gameId = dao.createGame(gameData);
 
 
 
