@@ -218,7 +218,7 @@ public class MySqlDataAccess implements DataAccess {
                 }
             }
         }catch (SQLException e){
-            throw new DataAccessException("couldnt get username with password");
+            throw new DataAccessException("couldn't get username with password");
         }
     }
 
