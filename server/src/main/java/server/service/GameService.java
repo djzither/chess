@@ -17,7 +17,7 @@ public class GameService {
 
     public List<GameData> listGames(String authToken) throws
             UnauthorizedException, DataAccessException {
-        if (authToken.isEmpty()) {
+        if (authToken == null || authToken.isEmpty()) {
             throw new UnauthorizedException();
         }
         if (dao.getAuth(authToken) == null){
