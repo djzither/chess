@@ -5,6 +5,7 @@ import dataaccess.exceptions.*;
 
 import model.UserData;
 import model.AuthData;
+import org.mindrot.jbcrypt.BCrypt;
 import server.service.requestobjects.LoginRequest;
 import server.service.requestobjects.AuthTokenRequest;
 import server.service.requestobjects.RegisterRequest;
@@ -64,10 +65,11 @@ public class UserService {
         if (user == null){
             throw new UnauthorizedException();
         }
-        if (!user.password().equals(loginRequest.password()))
-        {
+        if (!BCrypt.checkpw(loginRequest.password(), user.password())) {
             throw new UnauthorizedException();
         }
+
+
         dao.getUser(loginRequest.username());
 
 
