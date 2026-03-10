@@ -46,7 +46,12 @@ public class MySqlDataAccess implements DataAccess {
     public UserData getUser(String username) throws DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()){
             //more special password stuff
-            var statement = "SELECT username, password, email FROM users WHERE username=?";
+            var statement = """
+                            SELECT username, password, email 
+                            FROM users 
+                            WHERE username=?
+                            """;
+
             try (PreparedStatement ps = conn.prepareStatement(statement)){
                 ps.setString(1, username);
                 try (ResultSet rs = ps.executeQuery()){
