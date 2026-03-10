@@ -74,23 +74,34 @@ public class MySqlDataAccess implements DataAccess {
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()){
-            var statement = "SELECT data FROM games WHERE game_id=?";
-            try (PreparedStatement ps = conn.prepareStatement(statement)){
-                ps.setInt(1, gameID);
-                try (ResultSet rs = ps.executeQuery()){
-                    if (rs.next()){
-                        String json = rs.getString("data");
-                        GameData game = new Gson().fromJson(json, GameData.class);
-                        return game;
+            var statement = """
+                SELECT gameId, whiteUsername, blackUsername, gameName, game
+                FROM games
+                WHERE gameId=?
+                """;
+                    try (PreparedStatement ps = conn.prepareStatement(statement)){
+                        ps.setInt(1, gameID);
+                        try (ResultSet rs = ps.executeQuery()){
+                            if (rs.next()){
+
+
+                                ChessGame game = new Gson().fromJson(rs.getString("game"), ChessGame.class);
+                                return new GameData(
+                                        rs.getInt("gameId"),
+                                        rs.getString("whiteUsername"),
+                                        rs.getString("blackUsername"),
+                                        rs.getString("gameName"),
+                                        game
+                                );
+                            }
+                            else{
+                                return null;
+                            }
+                        }
                     }
-                    else{
-                        return null;
-                    }
+                }catch (SQLException e){
+                    throw new DataAccessException("unable to query game", e);
                 }
-            }
-        }catch (SQLException e){
-            throw new DataAccessException("unable to query game", e);
-        }
 
     }
 
