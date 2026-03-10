@@ -149,10 +149,14 @@ public class MySqlDataAccess implements DataAccess {
 
     }
 
+
     @Override
     public void createAuth(AuthData auth) throws DataAccessException {
-
+        var statement = "INSERT INTO authToken (authToken, username) VALUES (?, ?)";
+        executeUpdate(statement, auth.authToken(), auth.userName());
     }
+
+
 
     @Override
     public AuthData getAuth(String authToken) throws DataAccessException {
