@@ -226,7 +226,21 @@ public class MySqlDataAccess implements DataAccess {
 
     @Override
     public int generateGameID() throws DataAccessException {
-        return 0;
+        try (Connection connection = DatabaseManager.getConnection()) {
+            var statement = """
+                    SELECT MAX(gameId) FROM games""";
+            try (PreparedStatement ps = connection.prepareStatement(statement)) {
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    return rs.getInt(1) + 1;
+                } else {
+                    return 1;
+                }
+
+            }
+        }catch (SQLException e) {
+            throw new DataAccessException("Unable to get next game id", e);
+        }
     }
 
     private int executeUpdate(String statement, Object... params) throws DataAccessException {
