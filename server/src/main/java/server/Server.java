@@ -1,6 +1,8 @@
 package server;
 import dataaccess.DataAccess;
+import dataaccess.MySqlDataAccess;
 import dataaccess.SysMemory;
+import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.ServiceException;
 import io.javalin.*;
 import server.handlers.*;
@@ -20,7 +22,7 @@ public class Server {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
 
         // Register your endpoints and exception handlers here.
-        DataAccess dao = new SysMemory();
+        DataAccess dao = new MySqlDataAccess();
         UserService userService = new UserService(dao);
         Registration registration = new Registration(userService);
         javalin.post("/user", registration::handle);
@@ -56,6 +58,7 @@ public class Server {
 
 
         javalin.exception(ServiceException.class, new ErrorHandler());
+
 
 
 
