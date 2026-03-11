@@ -257,5 +257,10 @@ public class MySqlDataAccess implements DataAccess {
         //gonna want a query one as well, idk but I can't find it in the petshop example
     }
 
+    @Override
+    public boolean verifyPassword(UserData user, String providedPassword) {
+        return BCrypt.checkpw(providedPassword, user.password());
+    }
+
 
 }

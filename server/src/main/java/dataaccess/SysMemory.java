@@ -81,6 +81,11 @@ public class SysMemory implements DataAccess {
         return authData.userName();
 
     }
+    @Override
+    //don't do stuff with passwords here
+    public boolean verifyPassword(UserData user, String providedPassword) {
+        return user.password().equals(providedPassword); // plain-text comparison
+    }
 
 
 

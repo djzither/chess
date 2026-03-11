@@ -29,6 +29,7 @@ public interface DataAccess {
     AuthData getAuth(String authToken) throws DataAccessException;
     void deleteAuth(String authToken) throws DataAccessException;
     String authToUsername(String authToken) throws DataAccessException;
+    boolean verifyPassword(UserData user, String providedClearTextPassword)
 ;
 
 

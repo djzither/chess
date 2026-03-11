@@ -65,9 +65,8 @@ public class UserService {
         if (user == null){
             throw new UnauthorizedException();
         }
-        if (!BCrypt.checkpw(loginRequest.password(), user.password())) {
-            throw new UnauthorizedException();
-        }
+        boolean valid = dao.verifyPassword(user, loginRequest.getPassword());
+        if (!valid) throw new UnauthorizedException();
 
 
         dao.getUser(loginRequest.username());
