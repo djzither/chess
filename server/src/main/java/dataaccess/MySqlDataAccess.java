@@ -96,7 +96,7 @@ public class MySqlDataAccess implements DataAccess {
     }
 
     @Override
-    public GameData getGame(int gameID) throws DataAccessException {
+    public GameData getGame(Integer gameID) throws DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()){
             var statement = """
             SELECT gameId, whiteUsername, blackUsername, gameName, game
