@@ -99,61 +99,58 @@ public class MySqlDataAccess implements DataAccess {
     public GameData getGame(int gameID) throws DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()){
             var statement = """
-                SELECT gameId, whiteUsername, blackUsername, gameName, game
-                FROM games
-                WHERE gameId=?
-                """;
-                    try (PreparedStatement ps = conn.prepareStatement(statement)){
-                        ps.setInt(1, gameID);
-                        try (ResultSet rs = ps.executeQuery()){
-                            if (rs.next()){
-
-
-                                ChessGame game = new Gson().fromJson(rs.getString("game"), ChessGame.class);
-                                return new GameData(
-                                        rs.getInt("gameId"),
-                                        rs.getString("whiteUsername"),
-                                        rs.getString("blackUsername"),
-                                        rs.getString("gameName"),
-                                        game
-                                );
-                            }
-                            else{
-                                return null;
-                            }
-                        }
+            SELECT gameId, whiteUsername, blackUsername, gameName, game
+            FROM games
+            WHERE gameId=?""";
+            try (PreparedStatement ps = conn.prepareStatement(statement)){
+                ps.setInt(1, gameID);
+                try (ResultSet rs = ps.executeQuery()){
+                    if (rs.next()){
+                        ChessGame game = new Gson().fromJson(rs.getString("game"), ChessGame.class);
+                        return new GameData(
+                                rs.getInt("gameId"),
+                                rs.getString("whiteUsername"),
+                                rs.getString("blackUsername"),
+                                rs.getString("gameName"),
+                                game
+                        );
+                    } else {
+                        return null;
                     }
-                }catch (SQLException e){
-                    throw new DataAccessException("unable to query game", e);
                 }
-
             }
+        } catch (SQLException e) {
+            throw new DataAccessException("unable to query game", e);
+        }
+    }
 
-            @Override
-            public List<GameData> listGames() throws DataAccessException {
-                List<GameData> result = new ArrayList<>();
 
-                try (Connection conn = DatabaseManager.getConnection()){
-                    var statement = "SELECT  gameId, whiteUsername, blackUsername, gameName, game FROM games";
-                    try (PreparedStatement preparedStatement = conn.prepareStatement(statement)){
-                        try (ResultSet rs = preparedStatement.executeQuery()){
-                            while (rs.next()){
-                                ChessGame game = new Gson().fromJson(rs.getString("game"), ChessGame.class);
-                                result.add(new GameData(
-                                        rs.getInt("gameId"),
-                                        rs.getString("whiteUsername"),
-                                        rs.getString("blackUsername"),
-                                        rs.getString("gameName"),
-                                        game
-                                ));
-                            }
-                        }
+
+
+    @Override
+    public List<GameData> listGames() throws DataAccessException {
+        List<GameData> result = new ArrayList<>();
+
+        try (Connection conn = DatabaseManager.getConnection()){
+            var statement = "SELECT gameId, whiteUsername, blackUsername, gameName, game FROM games";
+
+            try (PreparedStatement preparedStatement = conn.prepareStatement(statement)){
+                try (ResultSet rs = preparedStatement.executeQuery()){
+                    while (rs.next()){
+                        ChessGame game = new Gson().fromJson(rs.getString("game"), ChessGame.class);
+                        result.add(new GameData(
+                                rs.getInt("gameId"), rs.getString("whiteUsername"), rs.getString("blackUsername"),
+                                rs.getString("gameName"),
+                                game
+                        ));
                     }
-                }catch (SQLException e){
-                    throw new DataAccessException("unable to query games", e);
-
+                }
             }
-            return result;
+        } catch (SQLException e){
+            throw new DataAccessException("unable to query games", e);
+        }
+
+        return result;
     }
 
     @Override
