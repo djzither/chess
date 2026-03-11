@@ -66,7 +66,9 @@ public class UserService {
             throw new UnauthorizedException();
         }
         boolean valid = dao.verifyPassword(user, loginRequest.getPassword());
-        if (!valid) throw new UnauthorizedException();
+        if (!valid) {
+            throw new UnauthorizedException();
+        }
 
 
         dao.getUser(loginRequest.username());
