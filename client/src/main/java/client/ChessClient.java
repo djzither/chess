@@ -44,17 +44,20 @@ public class ChessClient {
     private String help() {
         if (state == State.SIGNEDOUT){
             return """
-                    - help
                     - signIn <your usrname> <password>
                     - register <your usrname> <password> <email>
                     - quit
+                    - help 
                     """;
         } if (state == State.SIGNEDIN){
             return """
+                    - create <NAME> - a game
+                    - list - games
+                    - join <ID> [WHITE|BLACK] - a game
+                    - observe <ID> - a game
+                    - logout - when you are done
+                    - quite - playing chess
                     - help
-                    - logout <> <password>
-                    - register <> <password> <email>
-                    - quit
                     """;
         }
 
