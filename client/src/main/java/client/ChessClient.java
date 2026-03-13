@@ -13,12 +13,14 @@ public class ChessClient {
     private final ServerFacad server;
     private State state = State.SIGNEDOUT;
 
+
+
     public ChessClient(ServerFacad server) {
         this.server = server;
     }
 
     public void runfirstScreen() {
-        System.out.println("WECOME TO MY CHESS SERVER. TYPER HELP TO GET STARTED!");
+        System.out.println("WECOME TO MY CHESS SERVER! TYPE HELP TO GET STARTED!");
         System.out.println(help());
 
         Scanner scanner = new Scanner(System.in);
@@ -29,7 +31,7 @@ public class ChessClient {
             String line = scanner.nextLine();
 
             try {
-                result.eval(line);
+                result = eval(line);
                 System.out.print(result);
 
             }catch(Throwable e){
@@ -39,7 +41,7 @@ public class ChessClient {
         }
         System.out.println();
 
-    }/
+    }
 
     private String help() {
         if (state == State.SIGNEDOUT){
@@ -49,7 +51,7 @@ public class ChessClient {
                     - quit
                     - help 
                     """;
-        } if (state == State.SIGNEDIN){
+        } else{
             return """
                     - create <NAME> - a game
                     - list - games
