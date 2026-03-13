@@ -39,7 +39,7 @@ public class ChessClient {
         }
         System.out.println();
 
-    }
+    }/
 
     private String help() {
         if (state == State.SIGNEDOUT){
