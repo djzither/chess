@@ -89,7 +89,27 @@ public class ChessClient {
 
             return ex.getMessage();
         }
+
     }
+    public String signIn(String...params) throws BadRequestException, UnauthorizedException, DataAccessException{
+        if (params.length != 2) {
+            return("Expected 2 strings, got different number");
+        }
+        //i'm not super sure but I need to handle bad input somewhere, maybe here???
+        String userName;
+        String password;
+        userName = params[0];
+        password = params[1];
+
+        ServerFacad.login(userName, password);
+        state = State.SIGNEDIN;
+        return String.format("you signed in as %s.", userName);
+
+    }
+
+
+
+
 
 
 }
