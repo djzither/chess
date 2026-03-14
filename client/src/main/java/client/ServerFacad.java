@@ -1,21 +1,19 @@
 package client;
 
-import chess.ChessGame;
 import model.GameData;
-
-import java.util.List;
+import server.service.requestobjects.*;
 
 public class ServerFacad {
-    public static void login(String userName, String password) {
+
+
+    public static RegisterLoginResult register(RegisterRequest request) {
     }
 
-    public static void register(String userName, String password, String email) {
+    public static CreateGameResult createGame(CreateGameRequest gameName) {
+        return null;
     }
 
-    public static void createGame(String gameName) {
-    }
-
-    public static List<GameData> listGames() {
+    public static String listGames() {
         return null;
     }
 
@@ -28,6 +26,11 @@ public class ServerFacad {
     public static void logout() {
     }
 
-    public static void joinGame(int gameId, ChessGame.TeamColor color) {
+
+    public static RegisterLoginResult login(LoginRequest loginRequest) {
+        return null;
+    }
+
+    public static void joinGame(JoinGameRequest joinGameRequest) {
     }
 }
