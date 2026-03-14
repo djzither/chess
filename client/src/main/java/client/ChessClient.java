@@ -80,8 +80,10 @@ public class ChessClient {
         }
 
     }
-    private void printPrompt(){
-        System.out.print("\n" + RESET + ">>>>" + GREEN)
+
+
+    private void printPrompt() {
+        System.out.print("\n" + RESET + ">>> " + GREEN);
     }
 
     private enum State {
@@ -107,7 +109,7 @@ public class ChessClient {
 
             };
 
-        }catch (BadRequestException | UnauthorizedException | DataAccessException ex){
+        }catch (BadRequestException | UnauthorizedException | DataAccessException | AlreadyTakenException ex){
 
             return ex.getMessage();
         }
@@ -213,7 +215,7 @@ public class ChessClient {
     private String observe(String...params) throws UnauthorizedException, DataAccessException, AlreadyTakenException, BadRequestException {
         assertSignedIn();
         if (params.length != 1){
-            throw new BadRequestException("needs to have <gameID>")
+            throw new BadRequestException("needs to have <gameID>");
         }
         int gameId;
         try {
