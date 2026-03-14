@@ -17,6 +17,14 @@ public class ServerFacad {
     public static List<GameData> listGames() {
         return null;
     }
+
     public static void joinGame(String[] params) {
+    }
+
+    public static GameData getGame(int gameId) {
+        return null;
+    }
+
+    public static void logout() {
     }
 }

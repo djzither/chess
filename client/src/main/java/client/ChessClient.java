@@ -8,6 +8,7 @@ import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
 import model.GameData;
+import ui.MakeBoard;
 
 
 import java.util.Arrays;
@@ -176,7 +177,6 @@ public class ChessClient {
 
 
     }
-    private String joinGame(String...params) throws UnauthorizedException, DataAccessException, AlreadyTakenException{
     private String joinGame(String...params) throws UnauthorizedException, DataAccessException, AlreadyTakenException, BadRequestException {
         assertSignedIn();
         if (params.length != 2) {
@@ -199,9 +199,36 @@ public class ChessClient {
         ServerFacad.joinGame(params);
         return String.format("joined '%s' as team color %s", gameId, color);
     }
-    private String observe(String...params) throws UnauthorizedException, DataAccessException, AlreadyTakenException{
+
+    private String observe(String...params) throws UnauthorizedException, DataAccessException, AlreadyTakenException, BadRequestException {
+        assertSignedIn();
+        if (params.length != 1){
+            throw new BadRequestException("needs to have <gameID>")
+        }
+        int gameId;
+        try {
+            gameId = Integer.parseInt(params[0]);
+        } catch (NumberFormatException e) {
+            throw new BadRequestException("id must be number");
+        }
+
+        GameData game = ServerFacad.getGame(gameId);
+        if (game == null){
+            throw new BadRequestException("there isn't game associated with said id, sorry");
+        }
+
+        //also make board? i think this is the make board class
+
+        MakeBoard board = new MakeBoard(game, "observer");
+
+        return board.makeBoard(game.game(), "observe");
+
     }
     private String logout(String...params) throws UnauthorizedException, DataAccessException{
+        assertSignedIn();
+        state = State.SIGNEDOUT;
+        ServerFacad.logout();
+        return "You are logged out";
     }
 
 
@@ -210,6 +237,7 @@ public class ChessClient {
         if (state == State.SIGNEDOUT){
             throw new UnauthorizedException();
         }
+
     }
 
 
