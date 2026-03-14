@@ -8,7 +8,8 @@ import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
 import model.GameData;
-import server.ServerFacad;
+import server.ServerFacade;
+
 import server.service.requestobjects.*;
 import ui.EscapeSequences;
 import ui.MakeBoard;
@@ -21,7 +22,7 @@ import java.util.Scanner;
 
 
 public class ChessClient {
-    private final ServerFacad server;
+    private final ServerFacade server;
     private State state = State.SIGNEDOUT;
     private String userName;
     private String authToken;
@@ -30,7 +31,7 @@ public class ChessClient {
 
 
 
-    public ChessClient(ServerFacad server, String userName) {
+    public ChessClient(ServerFacade server, String userName) {
         this.server = server;
     }
 
@@ -134,7 +135,7 @@ public class ChessClient {
         LoginRequest loginRequest = new LoginRequest(params[0], params[1]);
 
 
-        RegisterLoginResult registerLoginResult = ServerFacad.login(loginRequest);
+        RegisterLoginResult registerLoginResult = server.login(loginRequest);
         authToken = registerLoginResult.authToken();
         userName = registerLoginResult.username();
         state = State.SIGNEDIN;
@@ -148,7 +149,7 @@ public class ChessClient {
             throw new BadRequestException("Expected 3 strings, got different num");
         }
         RegisterRequest registerRequest = new RegisterRequest(params[0], params[1], params[2]);
-        RegisterLoginResult registerLoginResult = ServerFacad.register(registerRequest);
+        RegisterLoginResult registerLoginResult = server.register(registerRequest);
         authToken = registerLoginResult.authToken();
         userName = registerLoginResult.username();
 
@@ -165,7 +166,7 @@ public class ChessClient {
         String gameName = params[0];
         CreateGameRequest createGameRequest = new CreateGameRequest(gameName, authToken);
 
-        CreateGameResult createGameResult = ServerFacad.createGame(createGameRequest);
+        CreateGameResult createGameResult = server.createGame(createGameRequest);
         //gonna need weird stuff with game id i think based on insturctions
         return String.format("created '%s' as a game", gameName);
 
@@ -174,7 +175,7 @@ public class ChessClient {
 
     private String listGames() throws UnauthorizedException, DataAccessException{
         assertSignedIn();
-        String games = ServerFacad.listGames();
+        String games = server.listGames();
         gamesListed = List.of(new Gson().fromJson(games, GameData[].class));
 
         if (gamesListed.isEmpty()){
@@ -214,7 +215,7 @@ public class ChessClient {
 
 
         JoinGameRequest joinGameRequest = new JoinGameRequest(color, game.gameId());
-        ServerFacad.joinGame(joinGameRequest);
+        server.joinGame(joinGameRequest);
 
 
         MakeBoard board;
@@ -248,7 +249,7 @@ public class ChessClient {
         GameData game = gamesListed.get(idx);
 
         JoinGameRequest joinGameRequest = new JoinGameRequest("WHITE", game.gameId());
-        ServerFacad.joinGame(joinGameRequest);
+        server.joinGame(joinGameRequest);
 
 
         //also make board? i think this is the make board class
@@ -261,7 +262,7 @@ public class ChessClient {
     private String logout(String...params) throws UnauthorizedException, DataAccessException{
         assertSignedIn();
         state = State.SIGNEDOUT;
-        ServerFacad.logout();
+        server.logout();
         return "You are logged out";
     }
 
