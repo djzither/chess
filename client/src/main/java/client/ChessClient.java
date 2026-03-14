@@ -8,6 +8,7 @@ import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
 import model.GameData;
+import ui.EscapeSequences;
 import ui.MakeBoard;
 
 
@@ -65,7 +66,7 @@ public class ChessClient {
                     - signIn <your usrname> <password>
                     - register <your usrname> <password> <email>
                     - quit
-                    - help 
+                    - help
                     """;
         } else{
             return """
@@ -83,7 +84,7 @@ public class ChessClient {
 
 
     private void printPrompt() {
-        System.out.print("\n" + RESET + ">>> " + GREEN);
+        System.out.print("\n" + EscapeSequences.SET_TEXT_COLOR_GREEN + ">>> " + EscapeSequences.RESET_TEXT_COLOR);
     }
 
     private enum State {
