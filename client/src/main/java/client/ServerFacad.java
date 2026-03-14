@@ -1,5 +1,6 @@
 package client;
 
+import chess.ChessGame;
 import model.GameData;
 
 import java.util.List;
@@ -18,13 +19,15 @@ public class ServerFacad {
         return null;
     }
 
-    public static void joinGame(String[] params) {
-    }
+
 
     public static GameData getGame(int gameId) {
         return null;
     }
 
     public static void logout() {
+    }
+
+    public static void joinGame(int gameId, ChessGame.TeamColor color) {
     }
 }

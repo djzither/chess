@@ -196,8 +196,18 @@ public class ChessClient {
         } catch (IllegalArgumentException e) {
             throw new BadRequestException("game color must be WHITE or BLACK");
         }
-        ServerFacad.joinGame(params);
-        return String.format("joined '%s' as team color %s", gameId, color);
+
+        ServerFacad.joinGame(gameId, color);
+        GameData game = ServerFacad.getGame(gameId);
+        MakeBoard board;
+        if (color == ChessGame.TeamColor.WHITE) {
+            board = new MakeBoard(game, ChessGame.TeamColor.WHITE);
+        }
+        else{
+            board = new MakeBoard(game, ChessGame.TeamColor.BLACK);
+        }
+
+        return board.makeBoard(game.game(), "play");
     }
 
     private String observe(String...params) throws UnauthorizedException, DataAccessException, AlreadyTakenException, BadRequestException {
@@ -219,7 +229,7 @@ public class ChessClient {
 
         //also make board? i think this is the make board class
 
-        MakeBoard board = new MakeBoard(game, "observer");
+        MakeBoard board = new MakeBoard(game, ChessGame.TeamColor.WHITE);
 
         return board.makeBoard(game.game(), "observe");
 
