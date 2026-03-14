@@ -13,15 +13,23 @@ import java.util.Scanner;
 public class ChessClient {
     private final ServerFacad server;
     private State state = State.SIGNEDOUT;
+    private String userName;
 
 
 
-    public ChessClient(ServerFacad server) {
+    public ChessClient(ServerFacad server, String userName) {
         this.server = server;
     }
 
     public void runfirstScreen() {
-        System.out.println("WECOME TO MY CHESS SERVER! TYPE HELP TO GET STARTED!");
+        if (state == State.SIGNEDOUT){
+            System.out.println("WECOME TO MY CHESS SERVER! TYPE HELP TO GET STARTED!");
+
+        }
+        else{
+            System.out.println("You are logged in as " + userName);
+        }
+
         System.out.println(help());
 
         Scanner scanner = new Scanner(System.in);
@@ -43,29 +51,6 @@ public class ChessClient {
         System.out.println();
     }
 
-    public void runSecondScreen() {
-        System.out.println("WECOME TO MY CHESS SERVER! TYPE HELP TO GET STARTED!");
-        System.out.println(help());
-
-        Scanner scanner = new Scanner(System.in);
-        var result = "";
-
-        while (!result.equals("quit")){
-            printPrompt();
-            String line = scanner.nextLine();
-
-            try {
-                result = eval(line);
-                System.out.print(result);
-
-            }catch(Throwable e){
-                var msg = e.toString();
-                System.out.print(msg);
-            }
-        }
-        System.out.println();
-
-    }
 
     private String help() {
         if (state == State.SIGNEDOUT){
@@ -120,7 +105,7 @@ public class ChessClient {
             return("Expected 2 strings, got different number");
         }
         //i'm not super sure but I need to handle bad input somewhere, maybe here???
-        String userName;
+
         String password;
         userName = params[0];
         password = params[1];
@@ -147,4 +132,6 @@ public class ChessClient {
         state = State.SIGNEDIN;
         return String.format("you registered as %s.", userName);
     }
+
+
 }
