@@ -41,6 +41,29 @@ public class ChessClient {
             }
         }
         System.out.println();
+    }
+
+    public void runSecondScreen() {
+        System.out.println("WECOME TO MY CHESS SERVER! TYPE HELP TO GET STARTED!");
+        System.out.println(help());
+
+        Scanner scanner = new Scanner(System.in);
+        var result = "";
+
+        while (!result.equals("quit")){
+            printPrompt();
+            String line = scanner.nextLine();
+
+            try {
+                result = eval(line);
+                System.out.print(result);
+
+            }catch(Throwable e){
+                var msg = e.toString();
+                System.out.print(msg);
+            }
+        }
+        System.out.println();
 
     }
 
@@ -81,7 +104,7 @@ public class ChessClient {
             return switch (cmd) {
                 case "signin" -> signIn(params);
                 case "register" -> register(params);
-                case "quit" -> quit(params);
+                case "quit" -> "quit";
                 default -> help();
 
             };
@@ -109,7 +132,7 @@ public class ChessClient {
     }
 
 
-    public String register(String...params) throws BadRequestException, AlreadyTakenException, DataAccessException{
+    public String register(String...params) throws BadRequestException, DataAccessException{
         if (params.length != 3){
             return("Expected 3 strings, got different num");
         }
