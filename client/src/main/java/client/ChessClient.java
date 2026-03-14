@@ -177,6 +177,27 @@ public class ChessClient {
 
     }
     private String joinGame(String...params) throws UnauthorizedException, DataAccessException, AlreadyTakenException{
+    private String joinGame(String...params) throws UnauthorizedException, DataAccessException, AlreadyTakenException, BadRequestException {
+        assertSignedIn();
+        if (params.length != 2) {
+            throw new BadRequestException("needs to have <gameId> [WHITE|BLACK");
+        }
+        int gameId;
+        try {
+            gameId = Integer.parseInt(params[0]);
+        } catch (NumberFormatException e) {
+            throw new BadRequestException("id must be number");
+        }
+        //i declare here bc thats how i use it later i guess? not inside try
+        ChessGame.TeamColor color;
+        try {
+            color = ChessGame.TeamColor.valueOf(params[1]);
+
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("game color must be WHITE or BLACK");
+        }
+        ServerFacad.joinGame(params);
+        return String.format("joined '%s' as team color %s", gameId, color);
     }
     private String observe(String...params) throws UnauthorizedException, DataAccessException, AlreadyTakenException{
     }
