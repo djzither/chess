@@ -1,6 +1,7 @@
 package client;
 
 
+import dataaccess.exceptions.AlreadyTakenException;
 import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
@@ -108,8 +109,19 @@ public class ChessClient {
     }
 
 
+    public String register(String...params) throws BadRequestException, AlreadyTakenException, DataAccessException{
+        if (params.length != 3){
+            return("Expected 3 strings, got different num");
+        }
+        String userName;
+        String password;
+        String email;
+        userName = params[0];
+        password = params[1];
+        email = params[2];
 
-
-
-
+        ServerFacad.register(userName, password, email);
+        state = State.SIGNEDIN;
+        return String.format("you registered as %s.", userName);
+    }
 }
