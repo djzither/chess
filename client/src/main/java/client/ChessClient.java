@@ -8,12 +8,14 @@ import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
 import model.GameData;
+import server.service.requestobjects.*;
 import ui.EscapeSequences;
 import ui.MakeBoard;
 
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 
@@ -21,6 +23,8 @@ public class ChessClient {
     private final ServerFacad server;
     private State state = State.SIGNEDOUT;
     private String userName;
+    private String authToken;
+    private List<GameData> gamesListed;
     //I might want to use gamelist to join???
 
 
@@ -101,7 +105,7 @@ public class ChessClient {
                 case "register" -> register(params);
                 case "quit" -> "quit";
                 case "create" -> createGame(params);
-                case "list" -> listGames(params);
+                case "list" -> listGames();
                 case "join" -> joinGame(params);
                 case "observe" -> observe(params);
                 case "logout" -> logout(params);
@@ -125,11 +129,13 @@ public class ChessClient {
         }
         //i'm not super sure but I need to handle bad input somewhere, maybe here???
 
-        String password;
-        userName = params[0];
-        password = params[1];
 
-        ServerFacad.login(userName, password);
+        LoginRequest loginRequest = new LoginRequest(params[0], params[1]);
+
+
+        RegisterLoginResult registerLoginResult = ServerFacad.login(loginRequest);
+        authToken = registerLoginResult.authToken();
+        userName = registerLoginResult.username();
         state = State.SIGNEDIN;
         return String.format("you signed in as %s.", userName);
 
@@ -140,12 +146,10 @@ public class ChessClient {
         if (params.length != 3){
             throw new BadRequestException("Expected 3 strings, got different num");
         }
-        String userName;
-        String password;
-        String email;
-        userName = params[0];
-        password = params[1];
-        email = params[2];
+        RegisterRequest registerRequest = new RegisterRequest(params[0], params[1], params[2]);
+        RegisterLoginResult registerLoginResult = ServerFacad.register(registerRequest);
+        authToken = registerLoginResult.authToken();
+        userName = registerLoginResult.username();
 
         ServerFacad.register(userName, password, email);
         state = State.SIGNEDIN;
@@ -157,9 +161,12 @@ public class ChessClient {
         if (params.length != 1) {
             throw new BadRequestException();
         }
-        String gameName = params[0];
-        ServerFacad.createGame(gameName);
 
+        String gameName = params[0];
+        CreateGameRequest createGameRequest = new CreateGameRequest(gameName, authToken);
+
+        CreateGameResult createGameResult = ServerFacad.createGame(createGameRequest);
+        //gonna need weird stuff with game id i think based on insturctions
         return String.format("created '%s' as a game", gameName);
 
 
