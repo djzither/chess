@@ -134,7 +134,7 @@ public class ChessClient {
 
     public String register(String...params) throws BadRequestException, DataAccessException{
         if (params.length != 3){
-            return("Expected 3 strings, got different num");
+            throw new BadRequestException("Expected 3 strings, got different num");
         }
         String userName;
         String password;
