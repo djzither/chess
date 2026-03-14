@@ -151,7 +151,6 @@ public class ChessClient {
         authToken = registerLoginResult.authToken();
         userName = registerLoginResult.username();
 
-        ServerFacad.register(userName, password, email);
         state = State.SIGNEDIN;
         return String.format("you registered as %s.", userName);
     }
@@ -172,16 +171,20 @@ public class ChessClient {
 
     }
 
-    private String listGames(String...params) throws UnauthorizedException, DataAccessException{
+    private String listGames() throws UnauthorizedException, DataAccessException{
         assertSignedIn();
-        List<GameData> games = ServerFacad.listGames();
-        if (games.isEmpty()){
+        String games = ServerFacad.listGames();
+        gamesListed = List.of(new Gson().fromJson(games, GameData[].class));
+
+        if (gamesListed.isEmpty()){
             return "there are no games created";
         }
+
         var result = new StringBuilder();
-        var gson = new Gson();
-        for (GameData game : games){
-            result.append(gson.toJson(game)).append("\n");
+
+        for (int i = 0; i < gamesListed.size(); i++){
+            GameData game = gamesListed.get(i);
+            result.append(i + 1).append(" ").append(game.gameName()).append("\n");
         }
         return result.toString();
 
@@ -192,25 +195,29 @@ public class ChessClient {
         if (params.length != 2) {
             throw new BadRequestException("needs to have <gameId> [WHITE|BLACK");
         }
-        int gameId;
+        int idx;
         try {
-            gameId = Integer.parseInt(params[0]);
+            idx = Integer.parseInt(params[0])-1;
         } catch (NumberFormatException e) {
-            throw new BadRequestException("id must be number");
+            throw new BadRequestException("game num must be number");
+        }
+
+        if (idx < 0 || idx >= gamesListed.size()){
+            throw new BadRequestException("bad game num");
         }
         //i declare here bc thats how i use it later i guess? not inside try
-        ChessGame.TeamColor color;
-        try {
-            color = ChessGame.TeamColor.valueOf(params[1]);
 
-        } catch (IllegalArgumentException e) {
-            throw new BadRequestException("game color must be WHITE or BLACK");
-        }
+        GameData game = gamesListed.get(idx);
+        String color = params[1];
 
-        ServerFacad.joinGame(gameId, color);
-        GameData game = ServerFacad.getGame(gameId);
+
+
+        JoinGameRequest joinGameRequest = new JoinGameRequest(color, game.gameId());
+        ServerFacad.joinGame(joinGameRequest);
+
+
         MakeBoard board;
-        if (color == ChessGame.TeamColor.WHITE) {
+        if (Objects.equals(color, "WHITE")) {
             board = new MakeBoard(game, ChessGame.TeamColor.WHITE);
         }
         else{
@@ -225,17 +232,23 @@ public class ChessClient {
         if (params.length != 1){
             throw new BadRequestException("needs to have <gameID>");
         }
-        int gameId;
+        int idx;
         try {
-            gameId = Integer.parseInt(params[0]);
+            idx = Integer.parseInt(params[0])-1;
         } catch (NumberFormatException e) {
-            throw new BadRequestException("id must be number");
+            throw new BadRequestException("game num must be number");
         }
 
-        GameData game = ServerFacad.getGame(gameId);
-        if (game == null){
-            throw new BadRequestException("there isn't game associated with said id, sorry");
+        if (idx < 0 || idx >= gamesListed.size()){
+            throw new BadRequestException("bad game num");
         }
+        //i declare here bc thats how i use it later i guess? not inside try
+
+        GameData game = gamesListed.get(idx);
+
+        JoinGameRequest joinGameRequest = new JoinGameRequest("WHITE", game.gameId());
+        ServerFacad.joinGame(joinGameRequest);
+
 
         //also make board? i think this is the make board class
 
