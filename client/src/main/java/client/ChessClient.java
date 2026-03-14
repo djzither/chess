@@ -8,6 +8,7 @@ import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
 import model.GameData;
+import server.ServerFacad;
 import server.service.requestobjects.*;
 import ui.EscapeSequences;
 import ui.MakeBoard;
