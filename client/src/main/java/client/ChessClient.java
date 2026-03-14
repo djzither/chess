@@ -1,12 +1,17 @@
 package client;
 
 
+import chess.ChessGame;
+import com.google.gson.Gson;
 import dataaccess.exceptions.AlreadyTakenException;
 import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
+import model.GameData;
+
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -14,6 +19,7 @@ public class ChessClient {
     private final ServerFacad server;
     private State state = State.SIGNEDOUT;
     private String userName;
+    //I might want to use gamelist to join???
 
 
 
@@ -90,6 +96,12 @@ public class ChessClient {
                 case "signin" -> signIn(params);
                 case "register" -> register(params);
                 case "quit" -> "quit";
+                case "create" -> createGame(params);
+                case "list" -> listGames(params);
+                case "join" -> joinGame(params);
+                case "observe" -> observe(params);
+                case "logout" -> logout(params);
+
                 default -> help();
 
             };
@@ -100,6 +112,9 @@ public class ChessClient {
         }
 
     }
+
+
+
     public String signIn(String...params) throws BadRequestException, UnauthorizedException, DataAccessException{
         if (params.length != 2) {
             return("Expected 2 strings, got different number");
@@ -131,6 +146,49 @@ public class ChessClient {
         ServerFacad.register(userName, password, email);
         state = State.SIGNEDIN;
         return String.format("you registered as %s.", userName);
+    }
+
+    public String createGame(String...params) throws BadRequestException, UnauthorizedException, DataAccessException{
+        assertSignedIn();
+        if (params.length != 1) {
+            throw new BadRequestException();
+        }
+        String gameName = params[0];
+        ServerFacad.createGame(gameName);
+
+        return String.format("created '%s' as a game", gameName);
+
+
+    }
+
+    private String listGames(String...params) throws UnauthorizedException, DataAccessException{
+        assertSignedIn();
+        List<GameData> games = ServerFacad.listGames();
+        if (games.isEmpty()){
+            return "there are no games created";
+        }
+        var result = new StringBuilder();
+        var gson = new Gson();
+        for (GameData game : games){
+            result.append(gson.toJson(game)).append("\n");
+        }
+        return result.toString();
+
+
+    }
+    private String joinGame(String...params) throws UnauthorizedException, DataAccessException, AlreadyTakenException{
+    }
+    private String observe(String...params) throws UnauthorizedException, DataAccessException, AlreadyTakenException{
+    }
+    private String logout(String...params) throws UnauthorizedException, DataAccessException{
+    }
+
+
+
+    private void assertSignedIn() throws UnauthorizedException{
+        if (state == State.SIGNEDOUT){
+            throw new UnauthorizedException();
+        }
     }
 
 
