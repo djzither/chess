@@ -1,83 +1,113 @@
 package server;
 
 import com.google.gson.Gson;
+
+import dataaccess.exceptions.AlreadyTakenException;
+import dataaccess.exceptions.BadRequestException;
+import dataaccess.exceptions.DataAccessException;
+import dataaccess.exceptions.UnauthorizedException;
+import model.*;
 import server.service.requestobjects.*;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import javax.xml.crypto.Data;import java.net.*;
+import java.net.http.*;
+import java.net.http.HttpRequest.BodyPublisher;
+import java.net.http.HttpRequest.BodyPublishers;
+import java.net.http.HttpResponse.BodyHandlers;
 
-public class ServerFacad {
+public class ServerFacade {
     private final HttpClient client = HttpClient.newHttpClient();
     private final String serverUrl;
 
-    public ServerFacad(String url) {
+    public ServerFacade(String url) {
         serverUrl = url;
     }
 
 
-    public static RegisterLoginResult register(RegisterRequest request) {
-        HttpRequest httpRequest = buildRequest("POST", "/user", request);
-        HttpResponse<String>
-    }
-
-    public static CreateGameResult createGame(CreateGameRequest gameName) {
-        return null;
-    }
-
-    public static String listGames() {
-        return null;
+    public RegisterLoginResult register(RegisterRequest registerRequest)
+            throws BadRequestException, UnauthorizedException, AlreadyTakenException, DataAccessException {
+        var httpRequest = buildRequest("POST", "/user", registerRequest, null);
+        var response = sendRequest(httpRequest);
+        return handleResponse(response, RegisterLoginResult.class);
     }
 
 
-    public static void logout() {
+    public CreateGameResult createGame(CreateGameRequest request)
+            throws UnauthorizedException, DataAccessException {
+
+        var httpRequest = buildRequest("POST", "/game", request, request.authToken());
+        var response = sendRequest(httpRequest);
+        return handleResponse(response, CreateGameResult.class);
     }
 
 
-    public static RegisterLoginResult login(LoginRequest loginRequest) {
-        return null;
+    public ListGamesResult listGames(String authToken)
+            throws UnauthorizedException, DataAccessException {
+
+        var httpRequest = buildRequest("GET", "/game", null, authToken);
+        var response = sendRequest(httpRequest);
+        return handleResponse(response, ListGamesResult.class);
+
+
+    }
+    public void joinGame(JoinGameRequest request, String authToken)
+            throws UnauthorizedException, DataAccessException {
+
+        var httpRequest = buildRequest("PUT", "/game", request, authToken);
+        var response = sendRequest(httpRequest);
+        handleResponse(response, null);
+
+
+    }
+    public void logout(String authToken)
+            throws UnauthorizedException, DataAccessException {
+
+        var httpRequest = buildRequest("DELETE", "/session", null, authToken);
+        var response = sendRequest(httpRequest);
+        handleResponse(response, null);
     }
 
-    public static void joinGame(JoinGameRequest joinGameRequest) {
-    }
 
 
-    private HttpRequest buildRequest(String method, String path, Object body) {
+    private HttpRequest buildRequest(String method, String path, Object body, String authToken) {
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(serverUrl + path))
                 .method(method, makeRequestBody(body));
         if (body != null) {
             request.setHeader("Content-Type", "application/json");
         }
+        if (authToken != null){
+            request.setHeader("auth", authToken);
+        }
         return request.build();
     }
 
-    private HttpRequest.BodyPublisher makeRequestBody(Object request) {
+
+    private BodyPublisher makeRequestBody(Object request) {
         if (request != null) {
-            return HttpRequest.BodyPublishers.ofString(new Gson().toJson(request));
+            return BodyPublishers.ofString(new Gson().toJson(request));
         } else {
-            return HttpRequest.BodyPublishers.noBody();
+            return BodyPublishers.noBody();
         }
     }
 
-    private HttpResponse<String> sendRequest(HttpRequest request) throws ResponseException {
+    private HttpResponse<String> sendRequest(HttpRequest request) throws DataAccessException {
+    // idk if data access exception is correct
         try {
-            return client.send(request, HttpResponse.BodyHandlers.ofString());
+            return client.send(request, BodyHandlers.ofString());
         } catch (Exception ex) {
-            throw new ResponseException(ResponseException.Code.ServerError, ex.getMessage());
+            throw new DataAccessException(ex.getMessage());
         }
     }
 
-    private <T> T handleResponse(HttpResponse<String> response, Class<T> responseClass) throws ResponseException {
+    private <T> T handleResponse(HttpResponse<String> response, Class<T> responseClass) throws DataAccessException {
+
+
         var status = response.statusCode();
         if (!isSuccessful(status)) {
-            var body = response.body();
-            if (body != null) {
-                throw ResponseException.fromJson(body);
-            }
 
-            throw new ResponseException(ResponseException.fromHttpStatusCode(status), "other failure: " + status);
+            throw new DataAccessException(response.body());
+
         }
 
         if (responseClass != null) {
@@ -90,4 +120,10 @@ public class ServerFacad {
     private boolean isSuccessful(int status) {
         return status / 100 == 2;
     }
-}
+
+
+
+
+
+
+
