@@ -6,20 +6,20 @@ import dataaccess.exceptions.AlreadyTakenException;
 import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
-import model.*;
 import server.service.requestobjects.*;
 
-import javax.xml.crypto.Data;import java.net.*;
+
+import java.net.URI;
 import java.net.http.*;
 import java.net.http.HttpRequest.BodyPublisher;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse.BodyHandlers;
 
-public class ServerFacade {
+public class ServerFacad {
     private final HttpClient client = HttpClient.newHttpClient();
     private final String serverUrl;
 
-    public ServerFacade(String url) {
+    public ServerFacad(String url) {
         serverUrl = url;
     }
 
@@ -41,7 +41,7 @@ public class ServerFacade {
     }
 
 
-    public ListGamesResult listGames(String authToken)
+    public ListGamesResult listGames()
             throws UnauthorizedException, DataAccessException {
 
         var httpRequest = buildRequest("GET", "/game", null, authToken);
@@ -50,7 +50,8 @@ public class ServerFacade {
 
 
     }
-    public void joinGame(JoinGameRequest request, String authToken)
+
+    public void joinGame(JoinGameRequest request)
             throws UnauthorizedException, DataAccessException {
 
         var httpRequest = buildRequest("PUT", "/game", request, authToken);
@@ -59,14 +60,14 @@ public class ServerFacade {
 
 
     }
-    public void logout(String authToken)
+
+    public void logout()
             throws UnauthorizedException, DataAccessException {
 
         var httpRequest = buildRequest("DELETE", "/session", null, authToken);
         var response = sendRequest(httpRequest);
         handleResponse(response, null);
     }
-
 
 
     private HttpRequest buildRequest(String method, String path, Object body, String authToken) {
@@ -76,7 +77,7 @@ public class ServerFacade {
         if (body != null) {
             request.setHeader("Content-Type", "application/json");
         }
-        if (authToken != null){
+        if (authToken != null) {
             request.setHeader("auth", authToken);
         }
         return request.build();
@@ -92,7 +93,7 @@ public class ServerFacade {
     }
 
     private HttpResponse<String> sendRequest(HttpRequest request) throws DataAccessException {
-    // idk if data access exception is correct
+        // idk if data access exception is correct
         try {
             return client.send(request, BodyHandlers.ofString());
         } catch (Exception ex) {
@@ -120,6 +121,7 @@ public class ServerFacade {
     private boolean isSuccessful(int status) {
         return status / 100 == 2;
     }
+}
 
 
 

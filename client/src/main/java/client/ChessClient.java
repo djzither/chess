@@ -8,7 +8,7 @@ import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
 import model.GameData;
-import server.ServerFacade;
+import server.ServerFacad;
 
 import server.service.requestobjects.*;
 import ui.EscapeSequences;
@@ -22,7 +22,7 @@ import java.util.Scanner;
 
 
 public class ChessClient {
-    private final ServerFacade server;
+    private final ServerFacad server;
     private State state = State.SIGNEDOUT;
     private String userName;
     private String authToken;
@@ -31,7 +31,7 @@ public class ChessClient {
 
 
 
-    public ChessClient(ServerFacade server, String userName) {
+    public ChessClient(ServerFacad server, String userName) {
         this.server = server;
     }
 
