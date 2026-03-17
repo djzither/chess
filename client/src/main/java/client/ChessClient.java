@@ -15,10 +15,7 @@ import ui.EscapeSequences;
 import ui.MakeBoard;
 
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class ChessClient {
@@ -175,8 +172,17 @@ public class ChessClient {
         assertSignedIn();
         ListGamesResult games = server.listGames();
 
-        gamesListed = List.of(new Gson().fromJson(games, GameData[].class));
-
+        //i think this should work to make a list
+        gamesListed = new ArrayList<>();
+        for (GameParts gameParts : games.games()){
+            gamesListed.add(new GameData(
+                    gameParts.gameID(),
+                    gameParts.whiteUsername(),
+                    gameParts.blackUsername(),
+                    gameParts.gameName(),
+                    null
+            ));
+        }
         if (gamesListed.isEmpty()){
             return "there are no games created";
         }
