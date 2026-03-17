@@ -41,7 +41,7 @@ public class ServerFacad {
     public CreateGameResult createGame(CreateGameRequest request)
             throws UnauthorizedException, DataAccessException, BadRequestException, AlreadyTakenException {
 
-        var httpRequest = buildRequest("POST", "/game", request, request.authToken());
+        var httpRequest = buildRequest("POST", "/game", request, authToken);
         var response = sendRequest(httpRequest);
         return handleResponse(response, CreateGameResult.class);
     }
