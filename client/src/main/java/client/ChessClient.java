@@ -125,7 +125,7 @@ public class ChessClient {
 
 
 
-    public String signIn(String...params) throws BadRequestException, UnauthorizedException, DataAccessException{
+    public String signIn(String...params) throws BadRequestException, UnauthorizedException, DataAccessException, AlreadyTakenException {
         if (params.length != 2) {
             return("Expected 2 strings, got different number");
         }
@@ -157,7 +157,7 @@ public class ChessClient {
         return String.format("you registered as %s.", userName);
     }
 
-    public String createGame(String...params) throws BadRequestException, UnauthorizedException, DataAccessException{
+    public String createGame(String...params) throws BadRequestException, UnauthorizedException, DataAccessException, AlreadyTakenException {
         assertSignedIn();
         if (params.length != 1) {
             throw new BadRequestException();
@@ -171,7 +171,7 @@ public class ChessClient {
         return String.format("created '%s' as a game", gameName);
     }
 
-    private String listGames() throws UnauthorizedException, DataAccessException{
+    private String listGames() throws UnauthorizedException, DataAccessException, BadRequestException, AlreadyTakenException {
         assertSignedIn();
         ListGamesResult games = server.listGames();
 
@@ -258,7 +258,7 @@ public class ChessClient {
         return board.makeBoard(game.game(), "observe");
 
     }
-    private String logout(String...params) throws UnauthorizedException, DataAccessException{
+    private String logout(String...params) throws UnauthorizedException, DataAccessException, BadRequestException, AlreadyTakenException {
         assertSignedIn();
         state = State.SIGNEDOUT;
         server.logout();
