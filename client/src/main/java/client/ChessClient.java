@@ -169,8 +169,6 @@ public class ChessClient {
         CreateGameResult createGameResult = server.createGame(createGameRequest);
         //gonna need weird stuff with game id i think based on insturctions
         return String.format("created '%s' as a game", gameName);
-
-
     }
 
     private String listGames() throws UnauthorizedException, DataAccessException{

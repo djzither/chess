@@ -107,7 +107,7 @@ public class ServerFacad {
         }
     }
 
-    private HttpResponse<String> sendRequest(HttpRequest request) throws DataAccessException {
+    private HttpResponse<String> sendRequest(HttpRequest request) throws AlreadyTakenException, BadRequestException, DataAccessException, UnauthorizedException{
         // idk if data access exception is correct
         try {
             return client.send(request, BodyHandlers.ofString());
@@ -116,7 +116,7 @@ public class ServerFacad {
         }
     }
 
-    private <T> T handleResponse(HttpResponse<String> response, Class<T> responseClass) throws DataAccessException {
+    private <T> T handleResponse(HttpResponse<String> response, Class<T> responseClass) throws AlreadyTakenException, BadRequestException, DataAccessException, UnauthorizedException {
 
 
         var status = response.statusCode();
