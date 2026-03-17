@@ -120,15 +120,29 @@ public class ServerFacad {
 
 
         var status = response.statusCode();
+        //i am going to parse first
+
         if (!isSuccessful(status)) {
+            ErrorResponseResult errorResponseResult = new Gson().fromJson(response.body(), ErrorResponseResult.class);
 
-            throw new DataAccessException(response.body());
+            if (status == 400) {
+                throw new BadRequestException(errorResponseResult.getMessage());
+            }
+            if (status == 401) {
+                throw new UnauthorizedException(errorResponseResult.getMessage());
+            }
+            if (status == 403) {
+                throw new AlreadyTakenException(errorResponseResult.getMessage());
+            }
+            if (status == 500) {
+                throw new DataAccessException(errorResponseResult.getMessage());
 
+            }
         }
-
         if (responseClass != null) {
             return new Gson().fromJson(response.body(), responseClass);
         }
+
 
         return null;
     }
