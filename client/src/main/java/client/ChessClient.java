@@ -136,7 +136,7 @@ public class ChessClient {
 
 
         RegisterLoginResult registerLoginResult = server.login(loginRequest);
-        authToken = registerLoginResult.authToken();
+
         userName = registerLoginResult.username();
         state = State.SIGNEDIN;
         return String.format("you signed in as %s.", userName);
@@ -144,13 +144,13 @@ public class ChessClient {
     }
 
 
-    public String register(String...params) throws BadRequestException, DataAccessException{
+    public String register(String...params) throws BadRequestException, DataAccessException, UnauthorizedException, AlreadyTakenException {
         if (params.length != 3){
             throw new BadRequestException("Expected 3 strings, got different num");
         }
         RegisterRequest registerRequest = new RegisterRequest(params[0], params[1], params[2]);
         RegisterLoginResult registerLoginResult = server.register(registerRequest);
-        authToken = registerLoginResult.authToken();
+
         userName = registerLoginResult.username();
 
         state = State.SIGNEDIN;
@@ -164,7 +164,7 @@ public class ChessClient {
         }
 
         String gameName = params[0];
-        CreateGameRequest createGameRequest = new CreateGameRequest(gameName, authToken);
+        CreateGameRequest createGameRequest = new CreateGameRequest(gameName, null);
 
         CreateGameResult createGameResult = server.createGame(createGameRequest);
         //gonna need weird stuff with game id i think based on insturctions
@@ -175,7 +175,8 @@ public class ChessClient {
 
     private String listGames() throws UnauthorizedException, DataAccessException{
         assertSignedIn();
-        String games = server.listGames();
+        ListGamesResult games = server.listGames();
+
         gamesListed = List.of(new Gson().fromJson(games, GameData[].class));
 
         if (gamesListed.isEmpty()){

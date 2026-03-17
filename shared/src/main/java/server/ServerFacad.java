@@ -6,6 +6,7 @@ import dataaccess.exceptions.AlreadyTakenException;
 import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
+import server.handlers.Login;
 import server.service.requestobjects.*;
 
 
@@ -18,9 +19,12 @@ import java.net.http.HttpResponse.BodyHandlers;
 public class ServerFacad {
     private final HttpClient client = HttpClient.newHttpClient();
     private final String serverUrl;
+    private String authToken;
 
-    public ServerFacad(String url) {
+    public ServerFacad(String url, String authToken) {
         serverUrl = url;
+
+        this.authToken = authToken;
     }
 
 
@@ -28,7 +32,9 @@ public class ServerFacad {
             throws BadRequestException, UnauthorizedException, AlreadyTakenException, DataAccessException {
         var httpRequest = buildRequest("POST", "/user", registerRequest, null);
         var response = sendRequest(httpRequest);
-        return handleResponse(response, RegisterLoginResult.class);
+        var result = handleResponse(response, RegisterLoginResult.class);
+        this.authToken = result.authToken();
+        return result;
     }
 
 
@@ -59,6 +65,15 @@ public class ServerFacad {
         handleResponse(response, null);
 
 
+    }
+
+    public RegisterLoginResult login(LoginRequest loginRequest) throws UnauthorizedException, DataAccessException, BadRequestException {
+        var httpRequest = buildRequest("POST", "/session", loginRequest, null);
+
+        var response = sendRequest(httpRequest);
+        var result = handleResponse(response, RegisterLoginResult.class);
+        this.authToken = result.authToken();
+        return result;
     }
 
     public void logout()
@@ -121,6 +136,8 @@ public class ServerFacad {
     private boolean isSuccessful(int status) {
         return status / 100 == 2;
     }
+
+
 }
 
 
