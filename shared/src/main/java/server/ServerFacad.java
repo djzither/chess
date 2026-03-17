@@ -39,7 +39,7 @@ public class ServerFacad {
 
 
     public CreateGameResult createGame(CreateGameRequest request)
-            throws UnauthorizedException, DataAccessException {
+            throws UnauthorizedException, DataAccessException, BadRequestException, AlreadyTakenException {
 
         var httpRequest = buildRequest("POST", "/game", request, request.authToken());
         var response = sendRequest(httpRequest);
@@ -48,7 +48,7 @@ public class ServerFacad {
 
 
     public ListGamesResult listGames()
-            throws UnauthorizedException, DataAccessException {
+            throws UnauthorizedException, DataAccessException, BadRequestException, AlreadyTakenException {
 
         var httpRequest = buildRequest("GET", "/game", null, authToken);
         var response = sendRequest(httpRequest);
@@ -58,7 +58,7 @@ public class ServerFacad {
     }
 
     public void joinGame(JoinGameRequest request)
-            throws UnauthorizedException, DataAccessException {
+            throws UnauthorizedException, DataAccessException, BadRequestException, AlreadyTakenException {
 
         var httpRequest = buildRequest("PUT", "/game", request, authToken);
         var response = sendRequest(httpRequest);
@@ -67,7 +67,7 @@ public class ServerFacad {
 
     }
 
-    public RegisterLoginResult login(LoginRequest loginRequest) throws UnauthorizedException, DataAccessException, BadRequestException {
+    public RegisterLoginResult login(LoginRequest loginRequest) throws UnauthorizedException, DataAccessException, BadRequestException, AlreadyTakenException {
         var httpRequest = buildRequest("POST", "/session", loginRequest, null);
 
         var response = sendRequest(httpRequest);
@@ -77,7 +77,7 @@ public class ServerFacad {
     }
 
     public void logout()
-            throws UnauthorizedException, DataAccessException {
+            throws UnauthorizedException, DataAccessException, BadRequestException, AlreadyTakenException {
 
         var httpRequest = buildRequest("DELETE", "/session", null, authToken);
         var response = sendRequest(httpRequest);
