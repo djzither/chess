@@ -107,7 +107,7 @@ public class ServerFacad {
         }
     }
 
-    private HttpResponse<String> sendRequest(HttpRequest request) throws AlreadyTakenException, BadRequestException, DataAccessException, UnauthorizedException{
+    private HttpResponse<String> sendRequest(HttpRequest request) throws DataAccessException{
         // idk if data access exception is correct
         try {
             return client.send(request, BodyHandlers.ofString());
