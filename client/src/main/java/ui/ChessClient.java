@@ -1,8 +1,7 @@
-package client;
+package ui;
 
 
 import chess.ChessGame;
-import com.google.gson.Gson;
 import dataaccess.exceptions.AlreadyTakenException;
 import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.DataAccessException;
@@ -11,8 +10,6 @@ import model.GameData;
 import server.ServerFacad;
 
 import server.service.requestobjects.*;
-import ui.EscapeSequences;
-import ui.MakeBoard;
 
 
 import java.util.*;
