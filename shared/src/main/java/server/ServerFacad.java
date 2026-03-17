@@ -93,7 +93,7 @@ public class ServerFacad {
             request.setHeader("Content-Type", "application/json");
         }
         if (authToken != null) {
-            request.setHeader("auth", authToken);
+            request.setHeader("authorization", authToken);
         }
         return request.build();
     }
