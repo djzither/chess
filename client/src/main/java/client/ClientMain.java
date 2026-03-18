@@ -14,7 +14,7 @@ public class ClientMain {
         ChessClient client = new ChessClient(server, null);
 
         client.runfirstScreen();
-
+        //going well
 
     }
 }
