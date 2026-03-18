@@ -220,15 +220,17 @@ public class ChessClient {
         server.joinGame(joinGameRequest);
 
 
-        MakeBoard board;
-        if (Objects.equals(color, "WHITE")) {
-            board = new MakeBoard(game, ChessGame.TeamColor.WHITE);
+        ChessGame.TeamColor playersColor;
+        if (color.equals("WHITE")) {
+            playersColor = ChessGame.TeamColor.WHITE;
         }
         else{
-            board = new MakeBoard(game, ChessGame.TeamColor.BLACK);
+            playersColor = ChessGame.TeamColor.BLACK;
         }
 
-        return board.makeBoard(game.game(), "play");
+        MakeBoard board = new MakeBoard(game, playersColor);
+        board.makeBoard(new ChessGame(), playersColor, null);
+        return "joined game";
     }
 
     private String observe(String...params) throws UnauthorizedException, DataAccessException, AlreadyTakenException, BadRequestException {
@@ -258,8 +260,8 @@ public class ChessClient {
 
         MakeBoard board = new MakeBoard(game, ChessGame.TeamColor.WHITE);
 
-        return board.makeBoard(game.game(), "observe");
-
+        board.makeBoard(new ChessGame(), ChessGame.TeamColor.WHITE, "observe");
+        return "observe game";
     }
     private String logout(String...params) throws UnauthorizedException, DataAccessException, BadRequestException, AlreadyTakenException {
         assertSignedIn();

@@ -28,7 +28,7 @@ public class MakeBoard {
 
         for (int boardRow = 0; boardRow < BOARD_SIZE_IN_SQUARES; boardRow++){
             pieceFirst first = (boardRow % 2 == 0) ? pieceFirst.BLACK_FIRST : pieceFirst.WHITE_FIRST;
-            drawRowOfSquares(out, game, first, isBlackView);
+            drawRowOfSquares(out, first, boardRow, isBlackView);
         }
         drawColHeaders(out, isBlackView);
     }
@@ -41,12 +41,12 @@ public class MakeBoard {
 
         if (!isBlack) {
             for (int i = 0; i < BOARD_SIZE_IN_SQUARES; i++) {
-                drawTopHeaders(out, topHeaders[i]);
+                drawTopHeaders(out, topHeaders[i] + " ");
             }
         }
         else{
             for (int i = BOARD_SIZE_IN_SQUARES - 1; i >= 0; i--){
-                drawTopHeaders(out, topHeaders[i]);
+                drawTopHeaders(out, topHeaders[i] + " ");
             }
         }
         out.println();
@@ -67,53 +67,62 @@ public class MakeBoard {
     }
 
 
-    private static void drawRowOfSquares(PrintStream out, ChessGame game, pieceFirst which_color_first, boolean boardRow) {
-        for (int row = 0; row < SQUARE_SIZE_IN_PADDED_CHARS; row++){
+    private static void drawRowOfSquares(PrintStream out, pieceFirst which_color_first, int boardRow, boolean isBlack) {
+        for (int squareRow = 0; squareRow < SQUARE_SIZE_IN_PADDED_CHARS; squareRow++) {
 
+            int displayRow;
 
-            if (row == SQUARE_SIZE_IN_PADDED_CHARS / 2){
-                out.print((BOARD_SIZE_IN_SQUARES - boardRow) + " ");
-
+            if (!isBlack) {
+                displayRow = BOARD_SIZE_IN_SQUARES - boardRow;
+            } else {
+                displayRow = boardRow + 1;
             }
 
-            else{
-                out.print("   ");
-            }
-            boolean currentSquareWhite = (which_color_first == pieceFirst.WHITE_FIRST);
 
-            for (int col = 0; col < BOARD_SIZE_IN_SQUARES; col++){
-                if (currentSquareWhite){
-                    out.print(SET_BG_COLOR_WHITE);
-                }
-                else {
-                    out.print(SET_BG_COLOR_BLACK);
-                }
-                //we are getting the right base
-                int actualRow = BOARD_SIZE_IN_SQUARES - boardRow;
-                int actualCol = col + 1;
-                if (row == SQUARE_SIZE_IN_PADDED_CHARS / 2){
-                    ChessPiece piece = game.getBoard().getPiece(actualRow, actualCol);
-                }
+            if (squareRow == SQUARE_SIZE_IN_PADDED_CHARS / 2) {
+                out.print(displayRow + " ");
 
-
-
+            } else {
                 out.print(EMPTY);
-                out.print(RESET_BG_COLOR);
+            }
 
-                if (currentSquareWhite){
-                    currentSquareWhite = false;
+            for (int colBoard = 0; colBoard < BOARD_SIZE_IN_SQUARES; colBoard++) {
+                int actualRow;
+                int actualCol;
+
+
+                if (!isBlack) {
+                    actualRow = 8 - boardRow;
+                    actualCol = colBoard + 1;
+                } else {
+                    actualRow = boardRow + 1;
+                    actualCol = 8 - colBoard;
                 }
-                else{
-                    currentSquareWhite = true;
+
+                if ((actualRow + actualCol) % 2 == 0) {
+                    out.print(SET_BG_COLOR_WHITE);
+                } else {
+                    setBlack(out);
+                }
+
+                if (squareRow == SQUARE_SIZE_IN_PADDED_CHARS / 2) {
+                    int beg = SQUARE_SIZE_IN_PADDED_CHARS / 2;
+                    int end = SQUARE_SIZE_IN_PADDED_CHARS - beg - 1;
+
+                    out.print(" ".repeat(beg));
+                    String piece = getPiece(actualRow, actualCol);
+                    out.print(piece);
+                    out.print(" ".repeat(end));
+                } else {
+                    out.print(EMPTY);
                 }
 
             }
-            if (row == SQUARE_SIZE_IN_PADDED_CHARS /2){
-                out.print(" " + (BOARD_SIZE_IN_SQUARES - boardRow) + " ");
-            }
+
 
         }
-        out.println();
+
+
     }
 
     private static String getPiece(int row, int col){
@@ -121,7 +130,7 @@ public class MakeBoard {
             if (col == 1 || col == 8) {
                 return BLACK_ROOK;
             }
-            if (col == 2 || col == 8) {
+            if (col == 2 || col == 7) {
                 return BLACK_KNIGHT;
             }
             if (col == 3 || col == 6) {
@@ -142,7 +151,7 @@ public class MakeBoard {
             if (col == 1 || col == 8) {
                 return WHITE_ROOK;
             }
-            if (col == 2 || col == 8) {
+            if (col == 2 || col == 7) {
                 return WHITE_KNIGHT;
             }
             if (col == 3 || col == 6) {
