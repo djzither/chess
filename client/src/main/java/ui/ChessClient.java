@@ -93,9 +93,10 @@ public class ChessClient {
     }
     public String eval(String input){
         try{
-            String[] tokens = input.toLowerCase().split(" ");
-            String cmd = (tokens.length > 0) ? tokens[0] : "help";
+            String[] tokens = input.split(" ");
+            String cmd = tokens[0].toLowerCase();
             String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
+
             return switch (cmd) {
                 case "signin" -> signIn(params);
                 case "register" -> register(params);
