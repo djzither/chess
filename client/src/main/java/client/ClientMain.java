@@ -11,7 +11,7 @@ public class ClientMain {
 
         String serverUrl = "http://localhost:8080";
         ServerFacad server = new ServerFacad(serverUrl, null);
-        ChessClient client = new ChessClient(server, null);
+        ChessClient client = new ChessClient(server);
 
         client.runfirstScreen();
         //going well

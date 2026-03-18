@@ -20,18 +20,19 @@ public class ChessClient {
     private State state = State.SIGNEDOUT;
     private String userName;
     private String authToken;
-    private List<GameData> gamesListed;
+    private List<GameData> gamesListed = new ArrayList<>();
+
     //I might want to use gamelist to join???
 
 
 
-    public ChessClient(ServerFacad server, String userName) {
+    public ChessClient(ServerFacad server) {
         this.server = server;
     }
 
     public void runfirstScreen() {
         if (state == State.SIGNEDOUT){
-            System.out.println("WECOME TO MY CHESS SERVER! TYPE HELP TO GET STARTED!");
+            System.out.println("WELCOME TO MY CHESS SERVER! TYPE HELP TO GET STARTED!");
 
         }
         else{
@@ -197,6 +198,7 @@ public class ChessClient {
     }
     private String joinGame(String...params) throws UnauthorizedException, DataAccessException, AlreadyTakenException, BadRequestException {
         assertSignedIn();
+
         if (params.length != 2) {
             throw new BadRequestException("needs to have <gameId> [WHITE|BLACK");
         }
@@ -206,7 +208,9 @@ public class ChessClient {
         } catch (NumberFormatException e) {
             throw new BadRequestException("game num must be number");
         }
-
+        if (gamesListed.isEmpty()){
+            throw new BadRequestException("must list games first");
+        }
         if (idx < 0 || idx >= gamesListed.size()){
             throw new BadRequestException("bad game num");
         }
