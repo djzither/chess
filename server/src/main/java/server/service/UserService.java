@@ -5,11 +5,10 @@ import dataaccess.exceptions.*;
 
 import model.UserData;
 import model.AuthData;
-import org.mindrot.jbcrypt.BCrypt;
-import server.service.requestobjects.LoginRequest;
-import server.service.requestobjects.AuthTokenRequest;
-import server.service.requestobjects.RegisterRequest;
-import server.service.requestobjects.RegisterLoginResult;
+import requestobjects.LoginRequest;
+import requestobjects.AuthTokenRequest;
+import requestobjects.RegisterRequest;
+import requestobjects.RegisterLoginResult;
 
 
 // still have to do a lot of work with errors, getting which ones but I'm doing better

@@ -1,4 +1,4 @@
-package server.service.requestobjects;
+package requestobjects;
 
 public record LoginRequest(String username, String password) {
     public String getUserName() {

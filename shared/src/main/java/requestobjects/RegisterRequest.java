@@ -1,4 +1,4 @@
-package server.service.requestobjects;
+package requestobjects;
 
 public record RegisterRequest(String username, String password, String email) {
     public String getUserName(){

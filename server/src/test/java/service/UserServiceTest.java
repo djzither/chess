@@ -8,10 +8,10 @@ import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
 import org.junit.jupiter.api.Test;
 import server.service.UserService;
-import server.service.requestobjects.AuthTokenRequest;
-import server.service.requestobjects.LoginRequest;
-import server.service.requestobjects.RegisterLoginResult;
-import server.service.requestobjects.RegisterRequest;
+import requestobjects.AuthTokenRequest;
+import requestobjects.LoginRequest;
+import requestobjects.RegisterLoginResult;
+import requestobjects.RegisterRequest;
 
 import static org.junit.jupiter.api.Assertions.*;
 

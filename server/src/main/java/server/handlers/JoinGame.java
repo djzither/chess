@@ -1,13 +1,11 @@
 package server.handlers;
 
-import chess.ChessGame;
-import chess.ChessGame.TeamColor;
 import com.google.gson.Gson;
 import dataaccess.exceptions.*;
 import io.javalin.http.Context;
 import server.service.GameService;
-import server.service.requestobjects.ErrorResponseResult;
-import server.service.requestobjects.JoinGameRequest;
+import requestobjects.ErrorResponseResult;
+import requestobjects.JoinGameRequest;
 
 public class JoinGame {
     private final GameService gameService;

@@ -7,10 +7,9 @@ import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import model.GameData;
 import server.service.GameService;
-import server.service.requestobjects.AuthTokenRequest;
-import server.service.requestobjects.ErrorResponseResult;
-import server.service.requestobjects.GameParts;
-import server.service.requestobjects.ListGamesResult;
+import requestobjects.ErrorResponseResult;
+import requestobjects.GameParts;
+import requestobjects.ListGamesResult;
 
 import java.util.List;
 

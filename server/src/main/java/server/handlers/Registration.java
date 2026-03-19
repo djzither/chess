@@ -4,9 +4,9 @@ import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.AlreadyTakenException;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
-import server.service.requestobjects.ErrorResponseResult;
-import server.service.requestobjects.RegisterRequest;
-import server.service.requestobjects.RegisterLoginResult;
+import requestobjects.ErrorResponseResult;
+import requestobjects.RegisterRequest;
+import requestobjects.RegisterLoginResult;
 import server.service.UserService;
 import com.google.gson.Gson;
 

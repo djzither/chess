@@ -11,9 +11,9 @@ import org.junit.jupiter.api.Test;
 import server.service.ClearService;
 import server.service.GameService;
 import server.service.UserService;
-import server.service.requestobjects.LoginRequest;
-import server.service.requestobjects.RegisterLoginResult;
-import server.service.requestobjects.RegisterRequest;
+import requestobjects.LoginRequest;
+import requestobjects.RegisterLoginResult;
+import requestobjects.RegisterRequest;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

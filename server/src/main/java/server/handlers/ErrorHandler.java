@@ -8,7 +8,7 @@ import dataaccess.exceptions.UnauthorizedException;
 import io.javalin.http.Context;
 import io.javalin.http.ExceptionHandler;
 import org.jetbrains.annotations.NotNull;
-import server.service.requestobjects.ErrorResponseResult;
+import requestobjects.ErrorResponseResult;
 
 public class ErrorHandler implements ExceptionHandler<ServiceException> {
 

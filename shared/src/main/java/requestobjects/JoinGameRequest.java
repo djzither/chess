@@ -1,4 +1,4 @@
-package server.service.requestobjects;
+package requestobjects;
 
 public record JoinGameRequest(String playerColor, int gameID) {
     public String getPlayerColor() {

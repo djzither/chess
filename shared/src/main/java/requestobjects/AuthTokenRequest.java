@@ -1,4 +1,4 @@
-package server.service.requestobjects;
+package requestobjects;
 
 public record AuthTokenRequest(String authToken) {
 

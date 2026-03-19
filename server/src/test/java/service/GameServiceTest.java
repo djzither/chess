@@ -9,11 +9,12 @@ import dataaccess.exceptions.UnauthorizedException;
 import model.GameData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import requestobjects.LoginRequest;
+import requestobjects.RegisterLoginResult;
+import requestobjects.RegisterRequest;
 import server.service.GameService;
 import server.service.UserService;
-import server.service.requestobjects.*;
 
-import javax.xml.crypto.Data;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;

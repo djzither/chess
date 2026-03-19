@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 
 
 import exception.ResponseException;
-import server.service.requestobjects.*;
+import requestobjects.*;
 
 
 import java.net.URI;

@@ -1,6 +1,4 @@
-package server.service.requestobjects;
-
-import model.GameData;
+package requestobjects;
 
 import java.util.List;
 

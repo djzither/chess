@@ -7,9 +7,9 @@ import dataaccess.exceptions.UnauthorizedException;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import server.service.UserService;
-import server.service.requestobjects.ErrorResponseResult;
-import server.service.requestobjects.LoginRequest;
-import server.service.requestobjects.RegisterLoginResult;
+import requestobjects.ErrorResponseResult;
+import requestobjects.LoginRequest;
+import requestobjects.RegisterLoginResult;
 
 public class Login implements Handler{
     private final UserService userService;

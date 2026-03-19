@@ -1,4 +1,4 @@
-package server.service.requestobjects;
+package requestobjects;
 
 public record CreateGameRequest(String gameName, String authToken) {
     public String getGameName(){

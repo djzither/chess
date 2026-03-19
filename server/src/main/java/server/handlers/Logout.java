@@ -6,8 +6,8 @@ import dataaccess.exceptions.UnauthorizedException;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import server.service.UserService;
-import server.service.requestobjects.AuthTokenRequest;
-import server.service.requestobjects.ErrorResponseResult;
+import requestobjects.AuthTokenRequest;
+import requestobjects.ErrorResponseResult;
 
 
 public class Logout implements Handler {
