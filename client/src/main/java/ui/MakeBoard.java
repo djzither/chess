@@ -101,6 +101,8 @@ public class MakeBoard {
 
             out.print(" " + getPiece(actualRow, actualCol) + " ");
         }
+        setBlack(out);
+        out.print(" " + displayRow + " ");
 
         out.print(RESET_BG_COLOR);
         out.print(RESET_TEXT_COLOR);

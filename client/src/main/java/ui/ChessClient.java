@@ -7,14 +7,14 @@ import chess.ChessGame;
 import exception.ResponseException;
 import model.GameData;
 import requestobjects.*;
-import server.ServerFacad;
+import server.ServerFacade;
 
 
 import java.util.*;
 
 
 public class ChessClient {
-    private final ServerFacad server;
+    private final ServerFacade server;
     private State state = State.SIGNEDOUT;
     private String userName;
     private String authToken;
@@ -25,7 +25,7 @@ public class ChessClient {
 
 
 
-    public ChessClient(ServerFacad server) {
+    public ChessClient(ServerFacade server) {
         this.server = server;
     }
 
@@ -55,10 +55,11 @@ public class ChessClient {
                 var msg = e.toString();
                 System.out.print(msg);
             }
+            System.out.println(help());
         }
         System.out.println();
     }
-
+//
 
     private String help() {
         if (state == State.SIGNEDOUT){
@@ -253,18 +254,24 @@ public class ChessClient {
             throw new ResponseException(ResponseException.Code.ClientError,"bad game num");
         }
         //i declare here bc thats how i use it later i guess? not inside try
-
         GameData game = gamesListed.get(idx);
 
-        JoinGameRequest joinGameRequest = new JoinGameRequest("WHITE", game.gameId());
-        server.joinGame(joinGameRequest);
 
+        if (game.game() != null) {
+            currentGame = game.game();
+        } else {
+            currentGame = new ChessGame();
+        }
 
-        //also make board? i think this is the make board class
-        currentGame = new ChessGame();
         MakeBoard board = new MakeBoard(currentGame);
         board.makeBoard(ChessGame.TeamColor.WHITE, "observe");
-        return "observe game";
+
+        return String.format("observing game '%s' between %s white and %s black.",
+                game.gameName(),
+                game.whiteUsername(),
+                game.blackUsername());
+
+
     }
     private String logout(String...params) throws ResponseException {
         assertSignedIn();

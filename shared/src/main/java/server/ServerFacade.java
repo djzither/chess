@@ -13,15 +13,16 @@ import java.net.http.HttpRequest.BodyPublisher;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse.BodyHandlers;
 //
-public class ServerFacad {
+public class ServerFacade {
     private final HttpClient client = HttpClient.newHttpClient();
     private final String serverUrl;
     private String authToken;
 
-    public ServerFacad(String url, String authToken) {
-        serverUrl = url;
+    public ServerFacade(int port) {
 
-        this.authToken = authToken;
+        this.serverUrl = "http://localhost:" + port;
+
+        this.authToken = null;
     }
 
 
@@ -76,6 +77,12 @@ public class ServerFacad {
     public void logout()
             throws ResponseException{
         var httpRequest = buildRequest("DELETE", "/session", null, authToken);
+        var response = sendRequest(httpRequest);
+        handleResponse(response, null);
+    }
+
+    public void clear() throws ResponseException {
+        var httpRequest = buildRequest("DELETE", "/db", null, null);
         var response = sendRequest(httpRequest);
         handleResponse(response, null);
     }
