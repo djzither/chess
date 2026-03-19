@@ -190,7 +190,8 @@ public class ChessClient {
 
         for (int i = 0; i < gamesListed.size(); i++){
             GameData game = gamesListed.get(i);
-            result.append(i + 1).append(" ").append(game.gameName()).append("\n");
+            result.append(i + 1).append(" ").append(game.gameName()).append("\n").append(" WHITE USERNAME ").
+                    append(game.whiteUsername()).append(" BLACK USERNAME").append(game.blackUsername());
         }
         return result.toString();
 
