@@ -1,7 +1,7 @@
 package client;
 
 import chess.*;
-import server.ServerFacad;
+import server.ServerFacade;
 import ui.ChessClient;
 
 public class ClientMain {
@@ -10,7 +10,7 @@ public class ClientMain {
         System.out.println("♕ 240 Chess Client: " + piece);
 
         String serverUrl = "http://localhost:8080";
-        ServerFacad server = new ServerFacad(serverUrl, null);
+        ServerFacade server = new ServerFacade(serverUrl, null);
         ChessClient client = new ChessClient(server);
 
         client.runfirstScreen();

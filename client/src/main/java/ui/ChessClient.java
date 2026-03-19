@@ -7,14 +7,14 @@ import chess.ChessGame;
 import exception.ResponseException;
 import model.GameData;
 import requestobjects.*;
-import server.ServerFacad;
+import server.ServerFacade;
 
 
 import java.util.*;
 
 
 public class ChessClient {
-    private final ServerFacad server;
+    private final ServerFacade server;
     private State state = State.SIGNEDOUT;
     private String userName;
     private String authToken;
@@ -25,7 +25,7 @@ public class ChessClient {
 
 
 
-    public ChessClient(ServerFacad server) {
+    public ChessClient(ServerFacade server) {
         this.server = server;
     }
 
