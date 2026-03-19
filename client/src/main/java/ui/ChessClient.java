@@ -20,6 +20,7 @@ public class ChessClient {
     private State state = State.SIGNEDOUT;
     private String userName;
     private String authToken;
+    private ChessGame currentGame;
     private List<GameData> gamesListed = new ArrayList<>();
 
     //I might want to use gamelist to join???
@@ -76,7 +77,7 @@ public class ChessClient {
                     - join <ID> [WHITE|BLACK] - a game
                     - observe <ID> - a game
                     - logout - when you are done
-                    - quite - playing chess
+                    - quit - playing chess
                     - help
                     """;
         }
@@ -232,9 +233,9 @@ public class ChessClient {
         else{
             playersColor = ChessGame.TeamColor.BLACK;
         }
-
-        MakeBoard board = new MakeBoard(game, playersColor);
-        board.makeBoard(new ChessGame(), playersColor, null);
+        currentGame = new ChessGame();
+        MakeBoard board = new MakeBoard(currentGame);
+        board.makeBoard(playersColor, null);
         return "joined game";
     }
 
@@ -262,10 +263,9 @@ public class ChessClient {
 
 
         //also make board? i think this is the make board class
-
-        MakeBoard board = new MakeBoard(game, ChessGame.TeamColor.WHITE);
-
-        board.makeBoard(new ChessGame(), ChessGame.TeamColor.WHITE, "observe");
+        currentGame = new ChessGame();
+        MakeBoard board = new MakeBoard(currentGame);
+        board.makeBoard(ChessGame.TeamColor.WHITE, "observe");
         return "observe game";
     }
     private String logout(String...params) throws UnauthorizedException, DataAccessException, BadRequestException, AlreadyTakenException {

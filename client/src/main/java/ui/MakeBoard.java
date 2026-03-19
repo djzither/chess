@@ -2,7 +2,8 @@ package ui;
 
 import chess.ChessGame;
 import chess.ChessPiece;
-import model.GameData;
+import chess.ChessPosition;
+
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
@@ -11,14 +12,14 @@ import static ui.EscapeSequences.*;
 
 public class MakeBoard {
     private static final int BOARD_SIZE_IN_SQUARES = 8;
-    private static final int SQUARE_SIZE_IN_PADDED_CHARS = 3;
 
-    private static final String EMPTY = EscapeSequences.EMPTY;
+    private final ChessGame game;
 
-    public MakeBoard(GameData game, ChessGame.TeamColor playerType) {
+    public MakeBoard(ChessGame game) {
+        this.game = game;
     }
 
-    public void makeBoard(ChessGame game, ChessGame.TeamColor playerColor, String observe) {
+    public void makeBoard(ChessGame.TeamColor playerColor, String observe) {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(ERASE_SCREEN);
 
@@ -27,8 +28,7 @@ public class MakeBoard {
         drawColHeaders(out, isBlackView);
 
         for (int boardRow = 0; boardRow < BOARD_SIZE_IN_SQUARES; boardRow++){
-            pieceFirst first = (boardRow % 2 == 0) ? pieceFirst.BLACK_FIRST : pieceFirst.WHITE_FIRST;
-            drawRowOfSquares(out, first, boardRow, isBlackView);
+            drawRowOfSquares(out, boardRow, isBlackView);
         }
         drawColHeaders(out, isBlackView);
     }
@@ -61,32 +61,41 @@ public class MakeBoard {
         out.print(RESET_TEXT_COLOR);
     }
 
-    public enum pieceFirst {
-
-        BLACK_FIRST,
-        WHITE_FIRST
-    }
-
-    private static void drawRowOfSquares(PrintStream out, pieceFirst which_color_first, int boardRow, boolean isBlack) {
-        int displayRow = !isBlack ? BOARD_SIZE_IN_SQUARES - boardRow : boardRow + 1;
-
+    private void drawRowOfSquares(PrintStream out, int boardRow, boolean isBlack) {
+        int displayRow;
+        if (!isBlack) {
+            displayRow = BOARD_SIZE_IN_SQUARES - boardRow;
+        } else {
+            displayRow = boardRow + 1;
+        }
         setBlack(out);
         out.print(" " + displayRow + " ");
 
         for (int colBoard = 0; colBoard < BOARD_SIZE_IN_SQUARES; colBoard++) {
-            int actualRow = !isBlack ? 8 - boardRow : boardRow + 1;
-            int actualCol = !isBlack ? colBoard + 1 : 8 - colBoard;
+            int actualRow;
+            int actualCol;
+            //handles my board inverse logic
+            if (!isBlack) {
+                actualRow = 8 - boardRow;
+                actualCol = colBoard + 1;
+            } else {
+                actualRow = boardRow + 1;
+                actualCol = 8 - colBoard;
+            }
+
 
             if ((actualRow + actualCol) % 2 == 0) {
                 out.print(SET_BG_COLOR_LIGHT_GREY);
             } else {
                 out.print(SET_BG_COLOR_BLUE);
             }
-
-            if (actualRow == 1 || actualRow == 2) {
-                out.print(SET_TEXT_COLOR_WHITE);
-            } else {
-                out.print(SET_TEXT_COLOR_BLACK);
+            ChessPiece piece = game.getBoard().getPiece(new ChessPosition(actualRow, actualCol));
+            if (piece != null) {
+                if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                    out.print(SET_TEXT_COLOR_WHITE);
+                } else {
+                    out.print(SET_TEXT_COLOR_BLACK);
+                }
             }
 
             out.print(" " + getPiece(actualRow, actualCol) + " ");
@@ -97,29 +106,26 @@ public class MakeBoard {
         out.println();
     }
 
-    private static String getPiece(int row, int col){
-        if (row == 8 || row == 1) {
-            if (col == 1 || col == 8) {
-                return "R";
-            }
-            if (col == 2 || col == 7) {
-                return "N";
-            }
-            if (col == 3 || col == 6) {
-                return "B";
-            }
-            if (col == 4) {
-                return "Q";
-            }
-            if (col == 5) {
-                return "K";
-            }
+    private String getPiece(int row, int col) {
+        ChessPiece piece = game.getBoard().getPiece(new ChessPosition(row, col));
+        if (piece == null) {
+            return " ";
         }
-        if (row == 7 || row == 2){
-            return "P";
-        }
-        return " ";
 
+        String pieceType = switch (piece.getPieceType()) {
+            case KING -> "k";
+            case QUEEN -> "q";
+            case ROOK -> "r";
+            case BISHOP -> "b";
+            case KNIGHT -> "n";
+            case PAWN -> "p";
+        };
+
+        if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+            pieceType = pieceType.toUpperCase();
+        }
+
+        return pieceType;
     }
 
     private static void setBlack(PrintStream out){
