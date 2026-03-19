@@ -18,10 +18,11 @@ public class ServerFacade {
     private final String serverUrl;
     private String authToken;
 
-    public ServerFacade(String url, String authToken) {
-        serverUrl = url;
+    public ServerFacade(int port) {
 
-        this.authToken = authToken;
+        this.serverUrl = "http://localhost:" + port;
+
+        this.authToken = null;
     }
 
 
@@ -76,6 +77,12 @@ public class ServerFacade {
     public void logout()
             throws ResponseException{
         var httpRequest = buildRequest("DELETE", "/session", null, authToken);
+        var response = sendRequest(httpRequest);
+        handleResponse(response, null);
+    }
+
+    public void clear() throws ResponseException {
+        var httpRequest = buildRequest("DELETE", "/db", null, null);
         var response = sendRequest(httpRequest);
         handleResponse(response, null);
     }
