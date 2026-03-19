@@ -55,7 +55,7 @@ public class ChessClient {
                 var msg = e.toString();
                 System.out.print(msg);
             }
-            System.out.println(help());
+
         }
         System.out.println();
     }
@@ -191,7 +191,7 @@ public class ChessClient {
         for (int i = 0; i < gamesListed.size(); i++){
             GameData game = gamesListed.get(i);
             result.append(i + 1).append(" ").append(game.gameName()).append("\n").append(" WHITE USERNAME ").
-                    append(game.whiteUsername()).append(" BLACK USERNAME").append(game.blackUsername());
+                    append(game.whiteUsername()).append(" BLACK USERNAME ").append(game.blackUsername()).append("\n");
         }
         return result.toString();
 
