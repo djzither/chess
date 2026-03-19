@@ -2,10 +2,9 @@ package ui;
 
 
 import chess.ChessGame;
-import dataaccess.exceptions.AlreadyTakenException;
+
 import dataaccess.exceptions.BadRequestException;
-import dataaccess.exceptions.DataAccessException;
-import dataaccess.exceptions.UnauthorizedException;
+import exception.ResponseException;
 import model.GameData;
 import server.ServerFacad;
 
@@ -113,7 +112,7 @@ public class ChessClient {
 
             };
 
-        }catch (BadRequestException | UnauthorizedException | DataAccessException | AlreadyTakenException ex){
+        }catch (ResponseException ex){
 
             return ex.getMessage();
         }
@@ -122,7 +121,7 @@ public class ChessClient {
 
 
 
-    public String signIn(String...params) throws BadRequestException, UnauthorizedException, DataAccessException, AlreadyTakenException {
+    public String signIn(String...params) throws ResponseException {
         if (params.length != 2) {
             return("Expected 2 strings, got different number");
         }
@@ -141,9 +140,9 @@ public class ChessClient {
     }
 
 
-    public String register(String...params) throws BadRequestException, DataAccessException, UnauthorizedException, AlreadyTakenException {
+    public String register(String...params) throws ResponseException{
         if (params.length != 3){
-            throw new BadRequestException("Expected 3 strings, got different num");
+            throw new ResponseException(ResponseException.Code.ClientError, "Expected 3 strings, got different num");
         }
         RegisterRequest registerRequest = new RegisterRequest(params[0], params[1], params[2]);
         RegisterLoginResult registerLoginResult = server.register(registerRequest);
@@ -154,10 +153,10 @@ public class ChessClient {
         return String.format("you registered as %s.", userName);
     }
 
-    public String createGame(String...params) throws BadRequestException, UnauthorizedException, DataAccessException, AlreadyTakenException {
+    public String createGame(String...params) throws ResponseException {
         assertSignedIn();
         if (params.length != 1) {
-            throw new BadRequestException();
+            throw new ResponseException(ResponseException.Code.ClientError, "params len must be 1");
         }
 
         String gameName = params[0];
@@ -168,7 +167,7 @@ public class ChessClient {
         return String.format("created '%s' as a game", gameName);
     }
 
-    private String listGames() throws UnauthorizedException, DataAccessException, BadRequestException, AlreadyTakenException {
+    private String listGames() throws ResponseException{
         assertSignedIn();
         ListGamesResult games = server.listGames();
 
@@ -197,23 +196,23 @@ public class ChessClient {
 
 
     }
-    private String joinGame(String...params) throws UnauthorizedException, DataAccessException, AlreadyTakenException, BadRequestException {
+    private String joinGame(String...params) throws ResponseException{
         assertSignedIn();
 
         if (params.length != 2) {
-            throw new BadRequestException("needs to have <gameId> [WHITE|BLACK");
+            throw new ResponseException(ResponseException.Code.ClientError,"needs to have <gameId> [WHITE|BLACK");
         }
         int idx;
         try {
             idx = Integer.parseInt(params[0])-1;
         } catch (NumberFormatException e) {
-            throw new BadRequestException("game num must be number");
+            throw new ResponseException(ResponseException.Code.ClientError,"game num must be number");
         }
         if (gamesListed.isEmpty()){
-            throw new BadRequestException("must list games first");
+            throw new ResponseException(ResponseException.Code.ClientError,"must list games first");
         }
         if (idx < 0 || idx >= gamesListed.size()){
-            throw new BadRequestException("bad game num");
+            throw new ResponseException(ResponseException.Code.ClientError,"bad game num");
         }
         //i declare here bc thats how i use it later i guess? not inside try
 
@@ -239,20 +238,20 @@ public class ChessClient {
         return "joined game";
     }
 
-    private String observe(String...params) throws UnauthorizedException, DataAccessException, AlreadyTakenException, BadRequestException {
+    private String observe(String...params) throws ResponseException {
         assertSignedIn();
         if (params.length != 1){
-            throw new BadRequestException("needs to have <gameID>");
+            throw new ResponseException(ResponseException.Code.ClientError,"needs to have <gameID>");
         }
         int idx;
         try {
             idx = Integer.parseInt(params[0])-1;
         } catch (NumberFormatException e) {
-            throw new BadRequestException("game num must be number");
+            throw new ResponseException(ResponseException.Code.ClientError,"game num must be number");
         }
 
         if (idx < 0 || idx >= gamesListed.size()){
-            throw new BadRequestException("bad game num");
+            throw new ResponseException(ResponseException.Code.ClientError,"bad game num");
         }
         //i declare here bc thats how i use it later i guess? not inside try
 
@@ -268,7 +267,7 @@ public class ChessClient {
         board.makeBoard(ChessGame.TeamColor.WHITE, "observe");
         return "observe game";
     }
-    private String logout(String...params) throws UnauthorizedException, DataAccessException, BadRequestException, AlreadyTakenException {
+    private String logout(String...params) throws ResponseException {
         assertSignedIn();
         state = State.SIGNEDOUT;
         server.logout();
@@ -277,9 +276,9 @@ public class ChessClient {
 
 
 
-    private void assertSignedIn() throws UnauthorizedException{
+    private void assertSignedIn() throws ResponseException{
         if (state == State.SIGNEDOUT){
-            throw new UnauthorizedException();
+            throw new ResponseException(ResponseException.Code.ClientError,"");
         }
 
     }

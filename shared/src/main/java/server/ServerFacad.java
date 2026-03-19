@@ -2,11 +2,8 @@ package server;
 
 import com.google.gson.Gson;
 
-import dataaccess.exceptions.AlreadyTakenException;
-import dataaccess.exceptions.BadRequestException;
-import dataaccess.exceptions.DataAccessException;
-import dataaccess.exceptions.UnauthorizedException;
-import server.handlers.Login;
+
+import exception.ResponseException;
 import server.service.requestobjects.*;
 
 
@@ -29,7 +26,7 @@ public class ServerFacad {
 
 
     public RegisterLoginResult register(RegisterRequest registerRequest)
-            throws BadRequestException, UnauthorizedException, AlreadyTakenException, DataAccessException {
+            throws ResponseException {
         var httpRequest = buildRequest("POST", "/user", registerRequest, null);
         var response = sendRequest(httpRequest);
         var result = handleResponse(response, RegisterLoginResult.class);
@@ -39,7 +36,7 @@ public class ServerFacad {
 
 
     public CreateGameResult createGame(CreateGameRequest request)
-            throws UnauthorizedException, DataAccessException, BadRequestException, AlreadyTakenException {
+            throws ResponseException {
 
         var httpRequest = buildRequest("POST", "/game", request, authToken);
         var response = sendRequest(httpRequest);
@@ -48,7 +45,7 @@ public class ServerFacad {
 
 
     public ListGamesResult listGames()
-            throws UnauthorizedException, DataAccessException, BadRequestException, AlreadyTakenException {
+            throws ResponseException {
 
         var httpRequest = buildRequest("GET", "/game", null, authToken);
         var response = sendRequest(httpRequest);
@@ -58,7 +55,7 @@ public class ServerFacad {
     }
 
     public void joinGame(JoinGameRequest request)
-            throws UnauthorizedException, DataAccessException, BadRequestException, AlreadyTakenException {
+            throws ResponseException {
 
         var httpRequest = buildRequest("PUT", "/game", request, authToken);
         var response = sendRequest(httpRequest);
@@ -67,7 +64,7 @@ public class ServerFacad {
 
     }
 
-    public RegisterLoginResult login(LoginRequest loginRequest) throws UnauthorizedException, DataAccessException, BadRequestException, AlreadyTakenException {
+    public RegisterLoginResult login(LoginRequest loginRequest) throws ResponseException{
         var httpRequest = buildRequest("POST", "/session", loginRequest, null);
 
         var response = sendRequest(httpRequest);
@@ -77,8 +74,7 @@ public class ServerFacad {
     }
 
     public void logout()
-            throws UnauthorizedException, DataAccessException, BadRequestException, AlreadyTakenException {
-
+            throws ResponseException{
         var httpRequest = buildRequest("DELETE", "/session", null, authToken);
         var response = sendRequest(httpRequest);
         handleResponse(response, null);
@@ -107,38 +103,28 @@ public class ServerFacad {
         }
     }
 
-    private HttpResponse<String> sendRequest(HttpRequest request) throws DataAccessException{
+    private HttpResponse<String> sendRequest(HttpRequest request) throws ResponseException{
         // idk if data access exception is correct
         try {
             return client.send(request, BodyHandlers.ofString());
         } catch (Exception ex) {
-            throw new DataAccessException(ex.getMessage());
+            throw new ResponseException(ResponseException.Code.ServerError, ex.getMessage());
         }
     }
 
-    private <T> T handleResponse(HttpResponse<String> response, Class<T> responseClass) throws AlreadyTakenException, BadRequestException, DataAccessException, UnauthorizedException {
+    private <T> T handleResponse(HttpResponse<String> response, Class<T> responseClass) throws ResponseException {
 
 
         var status = response.statusCode();
         //i am going to parse first
-
         if (!isSuccessful(status)) {
+            // Convert server error to ResponseException
             ErrorResponseResult errorResponseResult = new Gson().fromJson(response.body(), ErrorResponseResult.class);
-
-            if (status == 400) {
-                throw new BadRequestException(errorResponseResult.getMessage());
-            }
-            if (status == 401) {
-                throw new UnauthorizedException(errorResponseResult.getMessage());
-            }
-            if (status == 403) {
-                throw new AlreadyTakenException(errorResponseResult.getMessage());
-            }
-            if (status == 500) {
-                throw new DataAccessException(errorResponseResult.getMessage());
-
-            }
+            ResponseException.Code code = ResponseException.fromHttpStatusCode(status);
+            throw new ResponseException(code, errorResponseResult.getMessage());
         }
+
+
         if (responseClass != null) {
             return new Gson().fromJson(response.body(), responseClass);
         }
