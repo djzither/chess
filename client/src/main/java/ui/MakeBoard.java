@@ -89,7 +89,8 @@ public class MakeBoard {
             } else {
                 out.print(SET_BG_COLOR_BLUE);
             }
-            ChessPiece piece = game.getBoard().getPiece(new ChessPosition(actualRow, actualCol));
+            ChessPosition pos = new ChessPosition(actualRow, actualCol);
+            ChessPiece piece = game.getBoard().getPiece(pos);
             if (piece != null) {
                 if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
                     out.print(SET_TEXT_COLOR_WHITE);
@@ -112,14 +113,28 @@ public class MakeBoard {
             return " ";
         }
 
-        String pieceType = switch (piece.getPieceType()) {
-            case KING -> "k";
-            case QUEEN -> "q";
-            case ROOK -> "r";
-            case BISHOP -> "b";
-            case KNIGHT -> "n";
-            case PAWN -> "p";
-        };
+        String pieceType = "";
+
+        switch (piece.getPieceType()) {
+            case KING:
+                pieceType = "k";
+                break;
+            case QUEEN:
+                pieceType = "q";
+                break;
+            case ROOK:
+                pieceType = "r";
+                break;
+            case BISHOP:
+                pieceType = "b";
+                break;
+            case KNIGHT:
+                pieceType = "n";
+                break;
+            case PAWN:
+                pieceType = "p";
+                break;
+        }
 
         if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
             pieceType = pieceType.toUpperCase();
