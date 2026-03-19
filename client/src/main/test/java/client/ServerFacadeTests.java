@@ -99,6 +99,33 @@ public class ServerFacadeTests {
     }
 
     @Test
+    public void listPos() throws ResponseException{
+        facade.createGame(new CreateGameRequest("test", authToken));
+        var result = facade.listGames();
+        assertNotNull(result);
+    }
+
+    @Test
+    public void listneg() throws ResponseException{
+        facade.createGame(new CreateGameRequest("test", authToken));
+        facade.clear();
+        assertThrows(ResponseException.class, () -> {
+            facade.listGames();
+        });
+    }
+
+    @Test
+    public void joinPos() throws ResponseException{
+        facade.createGame(new CreateGameRequest("test", authToken));
+        facade.joinGame(new JoinGameRequest("WHITE", 1));
+    }
+
+    @Test
+    public void joinNeg() throws ResponseException{
+        assertThrows(ResponseException.class, ()->{
+            facade.joinGame(new JoinGameRequest("WHITE", 12));
+        });
+    }
 
 
     @AfterAll
