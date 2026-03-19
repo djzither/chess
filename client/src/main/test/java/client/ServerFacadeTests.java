@@ -18,7 +18,7 @@ public class ServerFacadeTests {
     private static Server server;
     private static ServerFacade facade;
     private String authToken;
-
+    //so i can pus
 
     @BeforeAll
     public static void init() {
