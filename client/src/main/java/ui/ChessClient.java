@@ -6,6 +6,7 @@ import chess.ChessGame;
 
 import exception.ResponseException;
 import model.GameData;
+import org.eclipse.jetty.server.Response;
 import requestobjects.*;
 import server.ServerFacade;
 
@@ -116,6 +117,67 @@ public class ChessClient {
 
             return ex.getMessage();
         }
+
+    }
+
+    private void gameCommands(ChessGame.TeamColor playerColor){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Joined game "+ "\n Type 'help' for commands.");
+        boolean running = true;
+
+        while (running){
+            printPrompt();
+            String input = scanner.nextLine().trim();
+            try {
+                String[] tokens = input.split(" ");
+                String cmd = tokens[0];
+                String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
+
+                switch (cmd) {
+                    case "move":
+                        wsClient.sendMove(params[0], params[1]);
+                        break;
+                    case "resign":
+
+                        wsClient.resign();
+                        running = false;
+                        break;
+
+                    case "leave":
+                        wsClient.leavegame();
+                        running = false;
+                        break;
+                    case "redraw":
+                        MakeBoard board = new MakeBoard(currentGame);
+                        board.makeBoard(playerColor, null);
+                        break;
+                    case "legalmoves":
+                        break;
+                    default:
+                        gameHelp();
+
+
+                }
+            }catch(Throwable e){
+                var msg = e.toString();
+                System.out.print(msg);
+            }
+
+
+
+        }
+
+    }
+
+    public String gameHelp() throws ResponseException{
+        return """
+                    - help -> displays this menu
+                    - redraw -> redraws the chessboard
+                    - leave -> removes usr form game
+                    - move <E5> <E4> -> make a move
+                    - legalmoves -> gives legal moves
+                    - resign -> you resign and loose
+                    """;
 
     }
 
