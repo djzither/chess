@@ -69,7 +69,13 @@ public class WSClient {
 
     }
     private String help() {
-
+        return """
+                    - redraw -> will redraw chessboard
+                    - leave -> will leave game
+                    - move -> <A5> <B4>
+                    - resign -> will forefit game
+                    - legalMoves <B4> -> will highlight legal moves for selected piece
+                    """;
     }
 
     private String legalMoves(String[] params) {
