@@ -20,7 +20,7 @@ public class ChessClient {
     private String authToken;
     private ChessGame currentGame;
     private List<GameData> gamesListed = new ArrayList<>();
-
+    private WSClient wsClient;
     //I might want to use gamelist to join???
 
 
@@ -84,7 +84,7 @@ public class ChessClient {
     }
 
 
-    private void printPrompt() {
+    public void printPrompt() {
         System.out.print("\n" + EscapeSequences.SET_TEXT_COLOR_GREEN + ">>> " + EscapeSequences.RESET_TEXT_COLOR);
     }
 
@@ -236,6 +236,8 @@ public class ChessClient {
         currentGame = new ChessGame();
         MakeBoard board = new MakeBoard(currentGame);
         board.makeBoard(playersColor, null);
+        wsClient = new WSClient(game.gameId(), currentGame);
+        wsClient.connect();
         return "joined game";
     }
 
@@ -266,6 +268,9 @@ public class ChessClient {
 
         MakeBoard board = new MakeBoard(currentGame);
         board.makeBoard(ChessGame.TeamColor.WHITE, "observe");
+
+        wsClient = new WSClient(game.gameId(), currentGame);
+        wsClient.connect();
 
         return String.format("observing game '%s' between %s white and %s black.",
                 game.gameName(),
