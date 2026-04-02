@@ -92,7 +92,9 @@ public class WSClient {
 
 
 
-    private String redraw(String[] params) {
+    private void redraw(String[] params) {
+        MakeBoard board = new MakeBoard(game);
+        board.makeBoard(playerColor, null);
     }
 
 }
