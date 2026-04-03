@@ -10,12 +10,10 @@ import websocket.messages.ServerMessage;
 import exception.ResponseException;
 
 
-import javax.management.Notification;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.Scanner;
+
 
 
 public class WSClient {
