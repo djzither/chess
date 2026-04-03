@@ -3,7 +3,8 @@ package ui;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import jakarta.websocket.*;
-import org.eclipse.jetty.websocket.api.WebSocketContainer;
+import jakarta.websocket.Session;
+
 import websocket.commands.MoveCommand;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
@@ -18,6 +19,7 @@ import java.net.URISyntaxException;
 
 public class WSClient {
     private Session session;
+
     private final ChessGame game;
     private final Integer gameId;
     private final String authToken;
@@ -73,13 +75,8 @@ public class WSClient {
 
     public void connect(ChessGame.TeamColor color) throws ResponseException{
         this.playerColor = color;
-        sendCommand(new UserGameCommand(UserGameCommand.CommandType.CONNECT, authToken, gameId))
+        sendCommand(new UserGameCommand(UserGameCommand.CommandType.CONNECT, authToken, gameId));
 
-    }
-
-    public void connectToGame(ChessGame.TeamColor color) throws ResponseException{
-        this.playerColor = color;
-        sendCommand(new UserGameCommand((UserGameCommand.CommandType.CONNECT, authToken, gameId)))
     }
 
     public void sendMove(String from, String to) throws ResponseException{
@@ -88,7 +85,7 @@ public class WSClient {
     }
 
     public void resign() throws ResponseException{
-        sendCommand(new UserGameCommand((UserGameCommand.CommandType.RESIGN, authToken, gameId)));
+        sendCommand(new UserGameCommand((UserGameCommand.CommandType.RESIGN, authToken, gameId));
 
     }
 
