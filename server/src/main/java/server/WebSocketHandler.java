@@ -46,7 +46,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
     }
     private void handleConnect(UserGameCommand cmd, Session session) throws IOException{
         connections.add(session, cmd.getUsername(), cmd.getGameID(), cmd.isPlayer(), cmd.getColor());
-        var notif = new Notification(Notification.Type.NOTIFICATION,
+        var notif = new Notification(
                 cmd.getUsername() + (cmd.isPlayer() ? " joined as " + cmd.getColor():
                 "is observering"));
         connections.broadcast(session, notif, cmd.getGameID());
@@ -55,19 +55,19 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
     }
     private void handleLeave(UserGameCommand cmd, Session session) throws IOException{
         connections.remove(session);
-        var notif = new Notification(Notification.Type.NOTIFICATION,
+        var notif = new Notification(
                 cmd.getUsername() + " left the game");
         connections.broadcast(session, notif, cmd.getGameID());
     }
 
     private void handleResign(UserGameCommand cmd, Session session) throws IOException{
 
-        var notif = new Notification(Notification.Type.NOTIFICATION,
+        var notif = new Notification(
                 cmd.getUsername() + " resigned");
         connections.broadcast(null, notif, cmd.getGameID());
     }
     private void handleMakeMove(MoveCommand cmd, Session session) throws IOException{
-        var notif = new Notification(Notification.Type.NOTIFICATION,
+        var notif = new Notification(
                 cmd.getUsername() + " made move");
         connections.broadcast(null, notif, cmd.getGameID());
     }
