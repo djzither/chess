@@ -16,10 +16,15 @@ public class UserGameCommand {
 
     private final Integer gameID;
 
+    private String username;
+    private boolean isPlayer;
+    private String color;
+
     public UserGameCommand(CommandType commandType, String authToken, Integer gameID) {
         this.commandType = commandType;
         this.authToken = authToken;
         this.gameID = gameID;
+
     }
 
     public enum CommandType {
@@ -39,6 +44,36 @@ public class UserGameCommand {
 
     public Integer getGameID() {
         return gameID;
+    }
+
+    public String getUsername(){
+        return username;
+    }
+
+    public void setUsername(String username){
+        this.username = username;
+    }
+
+    public boolean isPlayer(){
+        return isPlayer;
+    }
+    public void setPlayer(boolean isPlayer){
+        this.isPlayer = isPlayer;
+
+    }
+
+    public String getColor(){
+        return color;
+    }
+    public void setColor(String color){
+        this.color = color;
+    }
+
+    public boolean isMoveCommand(){
+        return this.commandType == CommandType.MAKE_MOVE;
+    }
+    public boolean isConnectCommand(){
+        return this.commandType == CommandType.CONNECT;
     }
 
     @Override
