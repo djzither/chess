@@ -17,7 +17,7 @@ import java.net.URISyntaxException;
 
 
 
-public class WSClient {
+public class WSClient extends Endpoint{
     private Session session;
 
     private final ChessGame game;
@@ -27,7 +27,7 @@ public class WSClient {
     private final Gson gson = new Gson();
 
 
-    public WSClient(String serverUrl, Integer gameId, ChessGame currentGame, String authToken) {
+    public WSClient(String serverUrl, Integer gameId, ChessGame currentGame, String authToken) throws ResponseException {
         try {
 
 
@@ -85,12 +85,12 @@ public class WSClient {
     }
 
     public void resign() throws ResponseException{
-        sendCommand(new UserGameCommand((UserGameCommand.CommandType.RESIGN, authToken, gameId));
+        sendCommand(new UserGameCommand(UserGameCommand.CommandType.RESIGN, authToken, gameId));
 
     }
 
     public void leavegame() throws ResponseException{
-        sendCommand(new UserGameCommand((UserGameCommand.CommandType.LEAVE, authToken, gameId));
+        sendCommand(new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, gameId));
         try{
             session.close();
         } catch (IOException ex){
@@ -106,4 +106,5 @@ public class WSClient {
             throw new ResponseException(ResponseException.Code.ServerError, e.getMessage());
         }
     }
+}
 
