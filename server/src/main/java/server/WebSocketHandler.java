@@ -2,17 +2,16 @@ package server;
 
 import com.google.gson.Gson;
 import io.javalin.websocket.*;
-import org.eclipse.jetty.server.session.Session;
+import org.eclipse.jetty.websocket.api.Session;
+import websocket.commands.MoveCommand;
 import websocket.commands.UserGameCommand;
 
-import javax.management.Notification;
+import websocket.messages.Notification;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsCloseHandler {
     private final ConnectionManager connections = new ConnectionManager();
-    private Object Notificaitn;
+
 
     @Override
     public void handleConnect(WsConnectContext ctx) {
@@ -21,16 +20,19 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
     }
 
     @Override
-    public void handleMessage(WsMessageContext ctx) {
+    public void handleMessage(WsMessageContext ctx) throws IOException {
         try {
             UserGameCommand command = new Gson().fromJson(ctx.message(), UserGameCommand.class);
             switch (command.getCommandType()) {
                 case CONNECT -> handleConnect(command, ctx.session);
                 case LEAVE -> handleLeave(command, ctx.session);
                 case RESIGN -> handleResign(command, ctx.session);
-                case MAKE_MOVE -> handleMakeMove(cmd, ctx.session);
-
+                case MAKE_MOVE ->{
+                    MoveCommand moveCmd = new Gson().fromJson(ctx.message(), MoveCommand.class);
+                    handleMakeMove(moveCmd, ctx.session);
+                }
             }
+
         } catch (IOException ex) {
             ex.printStackTrace();
             //might need to be better with notification
@@ -42,30 +44,31 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         System.out.println("websocket closed");
 
     }
-    private handleConnectCommand(UserGameCommand cmd, Session session) throws IOException{
+    private void handleConnect(UserGameCommand cmd, Session session) throws IOException{
         connections.add(session, cmd.username, cmd.getGameID(), cmd.isPlayer, cmd.color);
-        var Notification = new Notification((Notification.Type.NOTIFICATION, cmd.username + (cmd.isPlayer ? " joined as " + cmd.color:
+        var notif = new Notification(Notification.Type.NOTIFICATION,
+                cmd.username + (cmd.isPlayer ? " joined as " + cmd.color:
                 "is observering")));
-        connections.bradcast(session, notificiation, cmd.gameID);
+        connections.broadcast(session, notif, cmd.gameID);
 
 
     }
     private void handleLeave(UserGameCommand cmd, Session session) throws IOException{
         connections.remove(session);
-        var Notification = new Notification(Notificaitn.Type.NOTIFICIATION,
+        var notif = new Notification(Notification.Type.NOTIFICATION,
                 cmd.username + " left the game");
-        connections.bradcast(session, Notification, cmd.getGameID());
+        connections.broadcast(session, notif, cmd.getGameID());
     }
 
     private void handleResign(UserGameCommand cmd, Session session) throws IOException{
 
-        var Notification = new Notification(Notificaitn.Type.NOTIFICIATION,
+        var notif = new Notification(Notification.Type.NOTIFICATION,
                 cmd.username + " resigned");
-        connections.bradcast(null, Notification, cmd.getGameID());
+        connections.broadcast(null, notif, cmd.getGameID());
     }
-    private void handleMakeMove(UserGameCommand cmd, Session session) throws IOException{
-        var Notification = new Notification(Notificaitn.Type.NOTIFICIATION,
+    private void handleMakeMove(MoveCommand cmd, Session session) throws IOException{
+        var notif = new Notification(Notification.Type.NOTIFICATION,
                 cmd.username + " made move");
-        connections.bradcast(null, Notification, cmd.getGameID());
+        connections.broadcast(null, notif, cmd.getGameID());
     }
 }
