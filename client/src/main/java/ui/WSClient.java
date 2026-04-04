@@ -7,6 +7,9 @@ import jakarta.websocket.Session;
 
 import websocket.commands.MoveCommand;
 import websocket.commands.UserGameCommand;
+import websocket.messages.ErrorMessages;
+import websocket.messages.LoadGame;
+import websocket.messages.Notification;
 import websocket.messages.ServerMessage;
 import exception.ResponseException;
 
@@ -60,14 +63,18 @@ public class WSClient extends Endpoint{
     private void handleServerMessage(ServerMessage msg){
         switch (msg.getServerMessageType()){
             case LOAD_GAME -> {
+                //type casts are cool
+                LoadGame loadMsg = (LoadGame) msg;
                 MakeBoard board = new MakeBoard(game);
-                board.makeBoard(playerColor, null);
+                board.makeBoard(playerColor, loadMsg.getBoardinJson());
             }
             case NOTIFICATION -> {
-                System.out.println("Notification! " + msg);
+                Notification notification = (Notification) msg;
+                System.out.println("Notification! " + notification.getMessage());
             }
             case ERROR -> {
-                System.err.println("Error! "+ msg);
+                ErrorMessages errorMessages = (ErrorMessages) msg;
+                System.err.println("Error! "+ errorMessages.getErrorText());
 
             }
         }
