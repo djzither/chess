@@ -22,12 +22,14 @@ public class ChessClient {
     private ChessGame currentGame;
     private List<GameData> gamesListed = new ArrayList<>();
     private WSClient wsClient;
+    private final String serverUrl;
     //I might want to use gamelist to join???
 
 
 
-    public ChessClient(ServerFacade server) {
+    public ChessClient(ServerFacade server, String serverUrl) {
         this.server = server;
+        this.serverUrl = serverUrl;
     }
 
     public void runfirstScreen() {
@@ -295,11 +297,14 @@ public class ChessClient {
         else{
             playersColor = ChessGame.TeamColor.BLACK;
         }
+
         currentGame = new ChessGame();
-        MakeBoard board = new MakeBoard(currentGame);
-        board.makeBoard(playersColor, null);
-        wsClient = new WSClient(game.gameId(), currentGame);
-        wsClient.connect();
+
+
+        wsClient = new WSClient(serverUrl, game.gameId(), currentGame, authToken);
+        wsClient.connect(playersColor);
+
+        gameCommands(playersColor);
         return "joined game";
     }
 
@@ -328,11 +333,11 @@ public class ChessClient {
             currentGame = new ChessGame();
         }
 
-        MakeBoard board = new MakeBoard(currentGame);
-        board.makeBoard(ChessGame.TeamColor.WHITE, "observe");
 
-        wsClient = new WSClient(game.gameId(), currentGame);
-        wsClient.connect();
+        wsClient = new WSClient(serverUrl, game.gameId(),currentGame, authToken);
+        wsClient.connect(null);
+
+        gameCommands(null);
 
         return String.format("observing game '%s' between %s white and %s black.",
                 game.gameName(),

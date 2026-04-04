@@ -11,7 +11,7 @@ public class ClientMain {
 
         int port = 8080;
         ServerFacade server = new ServerFacade(port);
-        ChessClient client = new ChessClient(server);
+        ChessClient client = new ChessClient(server, "http://localhost" + port);
 
         client.runfirstScreen();
         //going well
