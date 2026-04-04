@@ -23,7 +23,7 @@ import java.net.URISyntaxException;
 public class WSClient extends Endpoint{
     private Session session;
 
-    private final ChessGame game;
+    private ChessGame game;
     private final Integer gameId;
     private final String authToken;
     private ChessGame.TeamColor playerColor;
@@ -45,7 +45,7 @@ public class WSClient extends Endpoint{
                 @Override
                 public void onMessage(String message) {
                     ServerMessage serverMessage = gson.fromJson(message, ServerMessage.class);
-                    handleServerMessage(serverMessage);
+                    handleServerMessage(serverMessage, message);
 
                 }
             });
@@ -60,20 +60,21 @@ public class WSClient extends Endpoint{
 
     }
 
-    private void handleServerMessage(ServerMessage msg){
+    private void handleServerMessage(ServerMessage msg, String rawJson){
         switch (msg.getServerMessageType()){
             case LOAD_GAME -> {
                 //type casts are cool
-                LoadGame loadMsg = (LoadGame) msg;
+                LoadGame loadMsg = gson.fromJson(rawJson, LoadGame.class);
+                game = loadMsg.getGame();
                 MakeBoard board = new MakeBoard(game);
                 board.makeBoard(playerColor, loadMsg.getBoardinJson());
             }
             case NOTIFICATION -> {
-                Notification notification = (Notification) msg;
+                Notification notification = gson.fromJson(rawJson, Notification.class);
                 System.out.println("Notification! " + notification.getMessage());
             }
             case ERROR -> {
-                ErrorMessages errorMessages = (ErrorMessages) msg;
+                ErrorMessages errorMessages = gson.fromJson(rawJson, ErrorMessages.class);
                 System.err.println("Error! "+ errorMessages.getErrorText());
 
             }
