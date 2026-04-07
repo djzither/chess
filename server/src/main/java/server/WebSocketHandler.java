@@ -1,15 +1,25 @@
 package server;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPosition;
+import chess.InvalidMoveException;
 import com.google.gson.Gson;
+import dataaccess.exceptions.DataAccessException;
+import dataaccess.exceptions.UnauthorizedException;
 import io.javalin.websocket.*;
+import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
+import requestobjects.GameParts;
 import server.service.GameService;
 import websocket.commands.MoveCommand;
 import websocket.commands.UserGameCommand;
 
+import websocket.messages.LoadGame;
 import websocket.messages.Notification;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsCloseHandler {
     private final ConnectionManager connections = new ConnectionManager();
@@ -21,6 +31,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
 
     @Override
     public void handleConnect(WsConnectContext ctx) {
+
         System.out.println("Websocket Connected (can delete in Websocket handler if annoying");
 
         ctx.enableAutomaticPings();
@@ -41,7 +52,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
                 }
             }
 
-        } catch (IOException ex) {
+        } catch (IOException | DataAccessException ex) {
             ex.printStackTrace();
 
             //might need to be better with notification
@@ -54,10 +65,18 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         System.out.println("websocket closed");
         connections.remove(ctx.session);
     }
-    private void handleConnect(UserGameCommand cmd, Session session) throws IOException{
-        connections.add(session, cmd.getUsername(), cmd.getGameID(), cmd.isPlayer(), cmd.getColor());
+    private void handleConnect(UserGameCommand cmd, Session session) throws IOException, DataAccessException {
+        connections.add(session, cmd.getUsername(), cmd.getGameID(), cmd.isPlayer(), cmd.getColor(), cmd.getAuthToken());
 
-        var game = gameService.get
+
+        GameData gameData = gameService.getGame(cmd.getGameID());
+
+        ChessGame game = gameData.game();
+        //certain types
+        LoadGame loadGame = new LoadGame(new Gson().toJson(game));
+        //sends to client
+        session.getRemote().sendString(new Gson().toJson(loadGame));
+
         var notif = new Notification(
                 cmd.getUsername() + (cmd.isPlayer() ? " joined as " + cmd.getColor():
                 "is observering"));
