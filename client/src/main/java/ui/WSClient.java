@@ -63,7 +63,6 @@ public class WSClient extends Endpoint{
     private void handleServerMessage(ServerMessage msg, String rawJson){
         switch (msg.getServerMessageType()){
             case LOAD_GAME -> {
-                //type casts are cool
                 LoadGame loadMsg = gson.fromJson(rawJson, LoadGame.class);
                 game = loadMsg.getGame();
                 MakeBoard board = new MakeBoard(game);
