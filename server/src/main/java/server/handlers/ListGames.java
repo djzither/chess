@@ -32,7 +32,8 @@ public class ListGames implements Handler{
                         g.gameId(),
                         g.whiteUsername(),
                         g.blackUsername(),
-                        g.gameName()
+                        g.gameName(),
+                        g.game()
                 ));
             }
 
