@@ -1,5 +1,6 @@
 package ui;
 
+import chess.ChessBoard;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import jakarta.websocket.*;
@@ -30,7 +31,9 @@ public class WSClient extends Endpoint{
     private final Gson gson = new Gson();
 
 
+
     public WSClient(String serverUrl, Integer gameId, ChessGame currentGame, String authToken) throws ResponseException {
+
         try {
 
 
@@ -64,7 +67,10 @@ public class WSClient extends Endpoint{
         switch (msg.getServerMessageType()){
             case LOAD_GAME -> {
                 LoadGame loadMsg = gson.fromJson(rawJson, LoadGame.class);
-                game = loadMsg.getGame();
+                String boardJson = loadMsg.getBoardinJson();
+
+                game = gson.fromJson(boardJson, ChessGame.class);
+
                 MakeBoard board = new MakeBoard(game);
                 board.makeBoard(playerColor, loadMsg.getBoardinJson());
             }
