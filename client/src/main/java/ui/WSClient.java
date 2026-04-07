@@ -101,6 +101,7 @@ public class WSClient extends Endpoint{
             move = new MoveCommand(authToken, gameId, from, to, null);
 
         }
+        //
 
 
         sendCommand(move);
