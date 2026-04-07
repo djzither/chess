@@ -86,8 +86,17 @@ public class WSClient extends Endpoint{
 
     }
 
-    public void sendMove(String from, String to) throws ResponseException{
-        MoveCommand move = new MoveCommand(authToken, gameId, from, to);
+    public void sendMove(String from, String to, String promotion) throws ResponseException{
+        MoveCommand move;
+        if (promotion != null && !promotion.isEmpty()){
+            move = new MoveCommand(authToken, gameId, from, to, promotion.toUpperCase());
+
+        }else{
+            move = new MoveCommand(authToken, gameId, from, to, null);
+
+        }
+
+
         sendCommand(move);
     }
 
