@@ -5,18 +5,24 @@ import java.util.Objects;
 public class MoveCommand extends UserGameCommand{
     private final String from;
     private final String to;
+    private final String promotion;
 
-    public MoveCommand(String authToken, Integer gameId, String from, String to){
+    public MoveCommand(String authToken, Integer gameId, String from, String to, String promotion){
         super(CommandType.MAKE_MOVE, authToken, gameId);
         this.from = from;
         this.to = to;
+        this.promotion = promotion;
 
     }
     public String getFrom(){
+
         return from;
     }
     public String getTo(){
         return to;
+    }
+    public String getPromotion(){
+        return promotion;
     }
 
     @Override
