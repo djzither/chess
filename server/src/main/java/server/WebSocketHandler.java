@@ -84,8 +84,28 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
 
 
     }
-    private void handleLeave(UserGameCommand cmd, Session session) throws IOException{
+    private void handleLeave(UserGameCommand cmd, Session session) throws IOException, DataAccessException {
         connections.remove(session);
+        GameData gameData = gameService.getGame(cmd.getGameID());
+        if (cmd.isPlayer()) {
+            gameData = new GameData(
+                    gameData.gameId(),
+                    null,
+                    gameData.blackUsername(),
+                    gameData.gameName(),
+                    gameData.game()
+            );
+        }else{
+            new GameData(
+                    gameData.gameId(),
+                    gameData.whiteUsername(),
+                    null,
+
+                    gameData.gameName(),
+                    gameData.game()
+            );
+
+        }
         var notif = new Notification(
                 cmd.getUsername() + " left the game");
         connections.broadcast(session, notif, cmd.getGameID());
