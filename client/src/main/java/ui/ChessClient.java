@@ -198,6 +198,7 @@ public class ChessClient {
         RegisterLoginResult registerLoginResult = server.login(loginRequest);
 
         userName = registerLoginResult.username();
+        authToken = registerLoginResult.authToken();
         state = State.SIGNEDIN;
         return String.format("you signed in as %s.", userName);
 
