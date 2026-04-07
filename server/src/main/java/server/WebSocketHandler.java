@@ -17,6 +17,7 @@ import websocket.messages.Notification;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsCloseHandler {
     private final ConnectionManager connections = new ConnectionManager();
@@ -108,7 +109,21 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         connections.broadcast(session, notif, cmd.getGameID());
     }
 
-    private void handleResign(UserGameCommand cmd, Session session) throws IOException{
+    private void handleResign(UserGameCommand cmd, Session session) throws IOException, DataAccessException {
+        GameData gameData = gameService.getGame(cmd.getGameID());
+        ChessGame game = gameData.game();
+        ChessGame.TeamColor color = ChessGame.TeamColor.valueOf(cmd.getColor());
+        game.resign(color);
+        GameData updatedGame = new GameData(
+                gameData.gameId(),
+                gameData.whiteUsername(),
+                gameData.blackUsername(),
+                gameData.gameName(),
+                game
+        );
+        gameService.updateGame(updatedGame);
+        LoadGame loadGame = new LoadGame(new Gson().toJson(game));
+        connections.broadcast(null, loadGame, cmd.getGameID());
 
         var notif = new Notification(
                 cmd.getUsername() + " resigned");
