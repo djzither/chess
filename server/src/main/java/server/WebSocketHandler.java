@@ -117,8 +117,28 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
                 cmd.getUsername() + " resigned");
         connections.broadcast(null, notif, cmd.getGameID());
     }
-    private void handleMakeMove(MoveCommand cmd, Session session) throws IOException{
-        ChessGame game = GameService.
+    private void handleMakeMove(MoveCommand cmd, Session session) throws IOException, DataAccessException, InvalidMoveException {
+        GameData gameData = gameService.getGame(cmd.getGameID());
+        ChessGame game = gameData.game();
+
+        ChessPosition startPos = ChessPosition.fromString(cmd.getFrom());
+        ChessPosition endPos = ChessPosition.fromString(cmd.getTo());
+        //idk how to do promotion
+        ChessMove move = new ChessMove(startPos, endPos, null);
+        game.makeMove(move);
+
+        GameData updatedGame = new GameData(
+                gameData.gameId(),
+                gameData.whiteUsername(),
+                gameData.blackUsername(),
+                gameData.gameName(),
+                game
+        );
+        gameService.updateGame(updatedGame);
+        //get the game and send to players
+        LoadGame loadGame = new LoadGame(new Gson().toJson(game));
+        connections.broadcast(null, loadGame, cmd.getGameID());
+
         var notif = new Notification(
                 cmd.getUsername() + " made move");
         connections.broadcast(null, notif, cmd.getGameID());
