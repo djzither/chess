@@ -1,9 +1,6 @@
 package server;
 
-import chess.ChessGame;
-import chess.ChessMove;
-import chess.ChessPosition;
-import chess.InvalidMoveException;
+import chess.*;
 import com.google.gson.Gson;
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
@@ -120,12 +117,27 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
     private void handleMakeMove(MoveCommand cmd, Session session) throws IOException, DataAccessException, InvalidMoveException {
         GameData gameData = gameService.getGame(cmd.getGameID());
         ChessGame game = gameData.game();
-
+        boolean promotionRow;
+        ChessMove move;
         ChessPosition startPos = ChessPosition.fromString(cmd.getFrom());
         ChessPosition endPos = ChessPosition.fromString(cmd.getTo());
-        //idk how to do promotion
-        ChessMove move = new ChessMove(startPos, endPos, null);
-        game.makeMove(move);
+        ChessPiece piece = game.getBoard().getPiece(startPos);
+        if (piece.getPieceType() == ChessPiece.PieceType.PAWN) {
+            promotionRow = (piece.getTeamColor() == ChessGame.TeamColor.WHITE && endPos.getRow() == 1)
+                    || (piece.getTeamColor() == ChessGame.TeamColor.BLACK && endPos.getRow() == 8);
+            if (promotionRow) {
+
+                ChessPiece.PieceType promoteTo = ChessPiece.PieceType.valueOf(cmd.getPromotion());
+                move = new ChessMove(startPos, endPos, promoteTo);
+                game.makeMove(move);
+            }
+        }
+        else {
+
+            move = new ChessMove(startPos, endPos, null);
+            game.makeMove(move);
+        }
+
 
         GameData updatedGame = new GameData(
                 gameData.gameId(),
