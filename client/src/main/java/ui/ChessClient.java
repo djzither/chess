@@ -137,7 +137,7 @@ public class ChessClient {
 
                 switch (cmd) {
                     case "move":
-                        wsClient.sendMove(params[0], params[1]);
+                        wsClient.sendMove(params[0], params[1], params[2]);
                         break;
                     case "resign":
 
