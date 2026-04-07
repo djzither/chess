@@ -226,7 +226,8 @@ public class ChessClient {
         String gameName = params[0];
         CreateGameRequest createGameRequest = new CreateGameRequest(gameName, null);
 
-        CreateGameResult createGameResult = server.createGame(createGameRequest);
+        server.createGame(createGameRequest);
+
         //gonna need weird stuff with game id i think based on insturctions
         return String.format("created '%s' as a game", gameName);
     }
@@ -243,7 +244,7 @@ public class ChessClient {
                     gameParts.whiteUsername(),
                     gameParts.blackUsername(),
                     gameParts.gameName(),
-                    null
+                    gameParts.game()
             ));
         }
         if (gamesListed.isEmpty()){
@@ -298,7 +299,14 @@ public class ChessClient {
             playersColor = ChessGame.TeamColor.BLACK;
         }
 
-        currentGame = new ChessGame();
+        //chess game
+
+        currentGame = gamesListed.get(idx).game();
+        if (game.game() != null) {
+            currentGame = game.game();
+        } else {
+            currentGame = new ChessGame();
+        }
 
 
         wsClient = new WSClient(serverUrl, game.gameId(), currentGame, authToken);
@@ -332,6 +340,7 @@ public class ChessClient {
         } else {
             currentGame = new ChessGame();
         }
+
 
 
         wsClient = new WSClient(serverUrl, game.gameId(),currentGame, authToken);
