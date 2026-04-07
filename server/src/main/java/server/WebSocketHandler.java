@@ -1,8 +1,10 @@
 package server;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import io.javalin.websocket.*;
 import org.eclipse.jetty.websocket.api.Session;
+import server.service.GameService;
 import websocket.commands.MoveCommand;
 import websocket.commands.UserGameCommand;
 
@@ -11,12 +13,18 @@ import java.io.IOException;
 
 public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsCloseHandler {
     private final ConnectionManager connections = new ConnectionManager();
+    private final GameService gameService;
 
+    public WebSocketHandler(GameService gameService) {
+        this.gameService = gameService;
+    }
 
     @Override
     public void handleConnect(WsConnectContext ctx) {
         System.out.println("Websocket Connected (can delete in Websocket handler if annoying");
+
         ctx.enableAutomaticPings();
+
     }
 
     @Override
@@ -35,17 +43,21 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
 
         } catch (IOException ex) {
             ex.printStackTrace();
+
             //might need to be better with notification
 
         }
     }
     @Override
     public void handleClose(WsCloseContext ctx){
-        System.out.println("websocket closed");
 
+        System.out.println("websocket closed");
+        connections.remove(ctx.session);
     }
     private void handleConnect(UserGameCommand cmd, Session session) throws IOException{
         connections.add(session, cmd.getUsername(), cmd.getGameID(), cmd.isPlayer(), cmd.getColor());
+
+        var game = gameService.get
         var notif = new Notification(
                 cmd.getUsername() + (cmd.isPlayer() ? " joined as " + cmd.getColor():
                 "is observering"));
@@ -67,6 +79,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         connections.broadcast(null, notif, cmd.getGameID());
     }
     private void handleMakeMove(MoveCommand cmd, Session session) throws IOException{
+        ChessGame game = GameService.
         var notif = new Notification(
                 cmd.getUsername() + " made move");
         connections.broadcast(null, notif, cmd.getGameID());

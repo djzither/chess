@@ -42,7 +42,6 @@ public class Server {
         javalin.delete("/session", logout::handle);
 
 
-
         //game service
         GameService gameService = new GameService(dao);
         javalin.get("/game", new ListGames(gameService));
@@ -58,6 +57,13 @@ public class Server {
 
 
         javalin.exception(ServiceException.class, new ErrorHandler());
+
+        WebSocketHandler webSocketHandler = new WebSocketHandler();
+        javalin.ws("/ws", ws -> {
+            ws.onConnect(webSocketHandler);
+            ws.onMessage(webSocketHandler);
+            ws.onClose(webSocketHandler);
+        });
 
 
 
