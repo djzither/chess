@@ -58,7 +58,7 @@ public class Server {
 
         javalin.exception(ServiceException.class, new ErrorHandler());
 
-        WebSocketHandler webSocketHandler = new WebSocketHandler();
+        WebSocketHandler webSocketHandler = new WebSocketHandler(gameService);
         javalin.ws("/ws", ws -> {
             ws.onConnect(webSocketHandler);
             ws.onMessage(webSocketHandler);
