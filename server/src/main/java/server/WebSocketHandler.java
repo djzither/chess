@@ -50,11 +50,11 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
                 }
             }
 
-        } catch (IOException | DataAccessException ex) {
+        } catch (IOException | DataAccessException | InvalidMoveException ex ) {
             ex.printStackTrace();
 
-            //might need to be better with notification
-
+            Notification notif = new Notification("Error" + ex.getMessage());
+            ctx.session.getRemote().sendString(new Gson().toJson(notif));
         }
     }
     @Override
@@ -104,6 +104,10 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             );
 
         }
+        gameService.updateGame(gameData);
+        LoadGame loadGame = new LoadGame(new Gson().toJson(gameData));
+        connections.broadcast(null, loadGame, cmd.getGameID());
+
         var notif = new Notification(
                 cmd.getUsername() + " left the game");
         connections.broadcast(session, notif, cmd.getGameID());
