@@ -10,12 +10,22 @@ import java.util.*;
  */
 public class ChessGame {
     private ChessBoard board;
+    private boolean gameOver = false;
+    private TeamColor winner = null;
 //no mor ecomments
     private TeamColor currentTurn;
         public ChessGame() {
         this.board = new ChessBoard();
         this.board.resetBoard();
         this.currentTurn = TeamColor.WHITE;
+    }
+
+    public void resign(TeamColor resignTeam){
+            this.gameOver = true;
+            winner = (resignTeam == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
+    }
+    public boolean isGameOver(){
+            return gameOver;
     }
 
     //finished, finished
@@ -58,6 +68,7 @@ public class ChessGame {
         BLACK
     }
 
+
     /**
      * Gets a valid moves for a piece at the given location
      *
@@ -95,6 +106,9 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
+        if (gameOver){
+            throw new InvalidMoveException("Game over, can't move");
+        }
         ChessPosition start = move.getStartPosition();
         ChessPosition end = move.getEndPosition();
 
