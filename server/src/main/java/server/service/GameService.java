@@ -121,4 +121,10 @@ public class GameService {
         //or I could get the game by auth token so then I can use it
 
     }
+    public GameData getGame(int gameId) throws DataAccessException{
+        return dao.getGame(gameId);
+    }
+    public void updateGame(GameData gamedata) throws DataAccessException{
+        dao.updateGame(gamedata);
+    }
 }
