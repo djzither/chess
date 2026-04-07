@@ -17,27 +17,29 @@ public class ConnectionManager {
         int gameId;
         boolean isPlayer;
         String color;
+        String authToken;
 
-        public ClientInfo(Session session, String username, int gameId, boolean isPlayer, String color) {
+        public ClientInfo(Session session, String username, int gameId, boolean isPlayer, String color, String authToken) {
             this.session = session;
             this.username = username;
             this.gameId = gameId;
             this.isPlayer = isPlayer;
             this.color = color;
+            this.authToken = authToken;
         }
     }
     private final ConcurrentHashMap<Session, ClientInfo> connects = new ConcurrentHashMap<>();
 
-    public void add(Session session, String username, int gameId, boolean isPlayer, String color){
-        connects.put(session, new ClientInfo(session, username, gameId, isPlayer, color));
+    public void add(Session session, String username, int gameId, boolean isPlayer, String color, String authToken){
+        connects.put(session, new ClientInfo(session, username, gameId, isPlayer, color, authToken));
     }
 
     public void remove(Session session){
         connects.remove(session);
     }
 
-    public void broadcast(Session excludeSession, Notification notification, int gameId) throws IOException{
-        String msg = new Gson().toJson(notification);
+    public void broadcast(Session excludeSession, Object messageObject, int gameId) throws IOException{
+        String msg = new Gson().toJson(messageObject);
         for (ClientInfo client : connects.values()){
             if(client.session.isOpen() && client.gameId == gameId){
                 if(!client.session.equals(excludeSession)){
@@ -47,12 +49,5 @@ public class ConnectionManager {
         }
     }
 
-    public void broadcastAll(Notification notification, int gameId) throws IOException{
-        String msg = new Gson().toJson(notification);
-        for (ClientInfo client : connects.values()){
-            if (client.session.isOpen() && client.gameId == gameId){
-                client.session.getRemote().sendString(msg);
-            }
-        }
-    }
+
 }
