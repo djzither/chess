@@ -14,7 +14,4 @@ public class LoadGame extends ServerMessage{
         return boardinJson;
     }
 
-    public ChessGame getGame() {
-        return getGame();
-    }
 }
