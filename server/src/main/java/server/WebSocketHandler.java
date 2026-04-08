@@ -12,6 +12,7 @@ import server.service.GameService;
 import websocket.commands.MoveCommand;
 import websocket.commands.UserGameCommand;
 
+import websocket.messages.ErrorMessages;
 import websocket.messages.LoadGame;
 import websocket.messages.Notification;
 import java.io.IOException;
@@ -68,6 +69,11 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
 
 
         GameData gameData = gameService.getGame(cmd.getGameID());
+        if (gameData == null){
+            var err = new ErrorMessages("Error this game id doesn't exist");
+            session.getRemote().sendString(new Gson().toJson(err));
+            return;
+        }
 
         ChessGame game = gameData.game();
         //certain types
