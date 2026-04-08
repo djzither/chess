@@ -99,7 +99,9 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
     private void handleLeave(UserGameCommand cmd, Session session) throws IOException, DataAccessException {
         connections.remove(session);
         GameData gameData = gameService.getGame(cmd.getGameID());
-        if (cmd.isPlayer()) {
+
+        String username = userService.getUsernameFromAuth(cmd.getAuthToken());
+        if (username == gameData.whiteUsername()) {
             gameData = new GameData(
                     gameData.gameId(),
                     null,
