@@ -5,13 +5,14 @@ import com.google.gson.Gson;
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
 import io.javalin.websocket.*;
+import model.AuthData;
 import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import requestobjects.GameParts;
 import server.service.GameService;
 import websocket.commands.MoveCommand;
 import websocket.commands.UserGameCommand;
-
+import server.service.UserService;
 import websocket.messages.ErrorMessages;
 import websocket.messages.LoadGame;
 import websocket.messages.Notification;
@@ -23,9 +24,11 @@ import java.util.Locale;
 public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsCloseHandler {
     private final ConnectionManager connections = new ConnectionManager();
     private final GameService gameService;
+    private final UserService userService;
 
-    public WebSocketHandler(GameService gameService) {
+    public WebSocketHandler(GameService gameService, UserService userService) {
         this.gameService = gameService;
+        this.userService = userService;
     }
 
     @Override
@@ -65,8 +68,11 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         connections.remove(ctx.session);
     }
     private void handleConnect(UserGameCommand cmd, Session session) throws IOException, DataAccessException {
-        connections.add(session, cmd.getUsername(), cmd.getGameID(), cmd.isPlayer(), cmd.getColor(), cmd.getAuthToken());
-
+        if (!userService.isValidAuthToken(cmd.getAuthToken())){
+            var err = new ErrorMessages("invalid or missing auth");
+            session.getRemote().sendString(new Gson().toJson(err));
+            return;
+        }
 
         GameData gameData = gameService.getGame(cmd.getGameID());
         if (gameData == null){
@@ -74,6 +80,8 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             session.getRemote().sendString(new Gson().toJson(err));
             return;
         }
+
+        connections.add(session, cmd.getUsername(), cmd.getGameID(), cmd.isPlayer(), cmd.getColor(), cmd.getAuthToken());
 
         ChessGame game = gameData.game();
         //certain types

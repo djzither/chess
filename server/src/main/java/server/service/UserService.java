@@ -99,4 +99,18 @@ public class UserService {
 
         dao.deleteAuth(authTokenRequest.authToken());
     }
+    public boolean isValidAuthToken(String authToken) throws DataAccessException{
+        if (authToken == null){
+            return false;
+        }
+        AuthData authData = dao.getAuth(authToken);
+        if (authData != null){
+            return true;
+
+        }else{
+            return false;
+        }
+
+
+    }
 }
