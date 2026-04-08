@@ -113,4 +113,8 @@ public class UserService {
 
 
     }
+
+    public String getUsernameFromAuth(String authToken) throws DataAccessException {
+        return dao.authToUsername(authToken);
+    }
 }
