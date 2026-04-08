@@ -121,8 +121,6 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
 
         }
         gameService.updateGame(gameData);
-        LoadGame loadGame = new LoadGame(gameData.game());
-        connections.broadcast(null, loadGame, cmd.getGameID());
 
         var notif = new Notification(
                 cmd.getUsername() + " left the game");
@@ -167,37 +165,44 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
                 game
         );
         gameService.updateGame(updatedGame);
-        LoadGame loadGame = new LoadGame(updatedGame.game());
-        connections.broadcast(null, loadGame, cmd.getGameID());
 
         var notif = new Notification(
-                cmd.getUsername() + " resigned");
+                username + " resigned");
         connections.broadcast(null, notif, cmd.getGameID());
     }
+
     private void handleMakeMove(MoveCommand cmd, Session session) throws IOException, DataAccessException, InvalidMoveException {
         GameData gameData = gameService.getGame(cmd.getGameID());
         ChessGame game = gameData.game();
-        boolean promotionRow;
-        ChessMove move;
-        ChessPosition startPos = ChessPosition.fromString(cmd.getFrom());
-        ChessPosition endPos = ChessPosition.fromString(cmd.getTo());
-        ChessPiece piece = game.getBoard().getPiece(startPos);
-        if (piece.getPieceType() == ChessPiece.PieceType.PAWN) {
-            promotionRow = (piece.getTeamColor() == ChessGame.TeamColor.WHITE && endPos.getRow() == 1)
-                    || (piece.getTeamColor() == ChessGame.TeamColor.BLACK && endPos.getRow() == 8);
-            if (promotionRow) {
+        ChessMove move = cmd.getMove();
+        String username = userService.getUsernameFromAuth(cmd.getAuthToken());
 
-                ChessPiece.PieceType promoteTo = ChessPiece.PieceType.valueOf(cmd.getPromotion());
-                move = new ChessMove(startPos, endPos, promoteTo);
-                game.makeMove(move);
+        ChessGame.TeamColor playerColor = null;
+
+        if (username != null) {
+            if (username.equals(gameData.whiteUsername())) {
+                playerColor = ChessGame.TeamColor.WHITE;
+            } else if (username.equals(gameData.blackUsername())) {
+                playerColor = ChessGame.TeamColor.BLACK;
             }
         }
-        else {
 
-            move = new ChessMove(startPos, endPos, null);
-            game.makeMove(move);
+        if (playerColor == null || game.getTeamTurn() != playerColor) {
+            var err = new ErrorMessages("Not your turn");
+            session.getRemote().sendString(new Gson().toJson(err));
+            return;
         }
 
+        game.makeMove(move);
+
+        if (game.isInCheckmate(game.getTeamTurn())){
+            var gameOver= new Notification("Checkmate: Game Over");
+            connections.broadcast(null, gameOver, cmd.getGameID());
+
+        }else if(game.isInStalemate(game.getTeamTurn())){
+            var gameOver = new Notification("Stalemate: Game Over");
+            connections.broadcast(null, gameOver, cmd.getGameID());
+        }
 
         GameData updatedGame = new GameData(
                 gameData.gameId(),
@@ -213,6 +218,6 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
 
         var notif = new Notification(
                 cmd.getUsername() + " made move");
-        connections.broadcast(null, notif, cmd.getGameID());
+        connections.broadcast(session, notif, cmd.getGameID());
     }
 }
