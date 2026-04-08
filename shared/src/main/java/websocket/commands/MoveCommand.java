@@ -1,44 +1,22 @@
 package websocket.commands;
 
+import chess.ChessMove;
+
 import java.util.Objects;
 
 public class MoveCommand extends UserGameCommand{
-    private final String from;
-    private final String to;
-    private final String promotion;
+    private ChessMove move;
 
-    public MoveCommand(String authToken, Integer gameId, String from, String to, String promotion){
+    public MoveCommand() {
+        super(CommandType.MAKE_MOVE, null, null);
+
+    }
+    public MoveCommand(String authToken, Integer gameId, ChessMove move){
         super(CommandType.MAKE_MOVE, authToken, gameId);
-        this.from = from;
-        this.to = to;
-        this.promotion = promotion;
-
-    }
-    public String getFrom(){
-
-        return from;
-    }
-    public String getTo(){
-        return to;
-    }
-    public String getPromotion(){
-        return promotion;
+        this.move = move;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-        MoveCommand that = (MoveCommand) o;
-        return Objects.equals(from, that.from) && Objects.equals(to, that.to);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), from, to);
+    public ChessMove getMove() {
+        return move;
     }
 }
