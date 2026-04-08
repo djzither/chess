@@ -57,7 +57,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         } catch (IOException | DataAccessException | InvalidMoveException ex ) {
             ex.printStackTrace();
 
-            Notification notif = new Notification("Error" + ex.getMessage());
+            var notif = new ErrorMessages("got error: " + ex.getMessage());
             ctx.session.getRemote().sendString(new Gson().toJson(notif));
         }
     }
