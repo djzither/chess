@@ -10,11 +10,11 @@ import java.util.Objects;
  */
 public class UserGameCommand {
 
-    private final CommandType commandType;
+    private CommandType commandType;
 
-    private final String authToken;
+    private String authToken;
 
-    private final Integer gameID;
+    private Integer gameID;
 
     private String username;
     private boolean isPlayer;
