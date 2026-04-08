@@ -132,8 +132,33 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
     private void handleResign(UserGameCommand cmd, Session session) throws IOException, DataAccessException {
         GameData gameData = gameService.getGame(cmd.getGameID());
         ChessGame game = gameData.game();
-        ChessGame.TeamColor color = ChessGame.TeamColor.valueOf(cmd.getColor());
-        game.resign(color);
+
+        String username = userService.getUsernameFromAuth(cmd.getAuthToken());
+
+        ChessGame.TeamColor playerColor = null;
+
+        if (username != null) {
+            if (username.equals(gameData.whiteUsername())) {
+                playerColor = ChessGame.TeamColor.WHITE;
+            } else if (username.equals(gameData.blackUsername())) {
+                playerColor = ChessGame.TeamColor.BLACK;
+            }
+        }
+
+        if(playerColor== null){
+            var error = new ErrorMessages("You are observer and cant resign...");
+            session.getRemote().sendString(new Gson().toJson(error));
+            return;
+        }
+        if (game.isGameOver()){
+            var error = new ErrorMessages("Game is already over");
+            session.getRemote().sendString(new Gson().toJson(error));
+            return;
+        }
+
+
+        game.resign(playerColor);
+
         GameData updatedGame = new GameData(
                 gameData.gameId(),
                 gameData.whiteUsername(),
