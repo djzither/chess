@@ -3,15 +3,16 @@ package websocket.messages;
 import chess.ChessGame;
 
 public class LoadGame extends ServerMessage{
-    private final String boardinJson;
+    private final ChessGame game;
 
-    public LoadGame(String boardinJson){
+    public LoadGame(ChessGame game){
         super(ServerMessageType.LOAD_GAME);
-        this.boardinJson = boardinJson;
+        this.game = game;
     }
 
-    public String getBoardinJson(){
-        return boardinJson;
+    public ChessGame getBoardinJson(){
+
+        return game;
     }
 
 }

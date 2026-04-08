@@ -67,12 +67,12 @@ public class WSClient extends Endpoint{
         switch (msg.getServerMessageType()){
             case LOAD_GAME -> {
                 LoadGame loadMsg = gson.fromJson(rawJson, LoadGame.class);
-                String boardJson = loadMsg.getBoardinJson();
+                game = loadMsg.getBoardinJson();
 
-                game = gson.fromJson(boardJson, ChessGame.class);
+
 
                 MakeBoard board = new MakeBoard(game);
-                board.makeBoard(playerColor, loadMsg.getBoardinJson());
+                board.makeBoard(playerColor, game.toString());
             }
             case NOTIFICATION -> {
                 Notification notification = gson.fromJson(rawJson, Notification.class);

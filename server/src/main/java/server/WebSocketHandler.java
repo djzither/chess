@@ -71,7 +71,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
 
         ChessGame game = gameData.game();
         //certain types
-        LoadGame loadGame = new LoadGame(new Gson().toJson(game));
+        LoadGame loadGame = new LoadGame(game);
         //sends to client
         session.getRemote().sendString(new Gson().toJson(loadGame));
 
@@ -105,7 +105,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
 
         }
         gameService.updateGame(gameData);
-        LoadGame loadGame = new LoadGame(new Gson().toJson(gameData));
+        LoadGame loadGame = new LoadGame(gameData.game());
         connections.broadcast(null, loadGame, cmd.getGameID());
 
         var notif = new Notification(
@@ -126,7 +126,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
                 game
         );
         gameService.updateGame(updatedGame);
-        LoadGame loadGame = new LoadGame(new Gson().toJson(game));
+        LoadGame loadGame = new LoadGame(updatedGame.game());
         connections.broadcast(null, loadGame, cmd.getGameID());
 
         var notif = new Notification(
@@ -167,7 +167,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         );
         gameService.updateGame(updatedGame);
         //get the game and send to players
-        LoadGame loadGame = new LoadGame(new Gson().toJson(game));
+        LoadGame loadGame = new LoadGame(updatedGame.game());
         connections.broadcast(null, loadGame, cmd.getGameID());
 
         var notif = new Notification(
