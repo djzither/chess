@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsCloseHandler {
     private final ConnectionManager connections = new ConnectionManager();
@@ -101,7 +102,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         GameData gameData = gameService.getGame(cmd.getGameID());
 
         String username = userService.getUsernameFromAuth(cmd.getAuthToken());
-        if (username == gameData.whiteUsername()) {
+        if (Objects.equals(username, gameData.whiteUsername())) {
             gameData = new GameData(
                     gameData.gameId(),
                     null,
@@ -109,7 +110,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
                     gameData.gameName(),
                     gameData.game()
             );
-        }else{
+        }else if (username.equals(gameData.blackUsername())){
             new GameData(
                     gameData.gameId(),
                     gameData.whiteUsername(),
