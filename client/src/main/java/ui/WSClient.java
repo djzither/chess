@@ -1,7 +1,6 @@
 package ui;
 
-import chess.ChessBoard;
-import chess.ChessGame;
+import chess.*;
 import com.google.gson.Gson;
 import jakarta.websocket.*;
 import jakarta.websocket.Session;
@@ -93,18 +92,18 @@ public class WSClient extends Endpoint{
     }
 
     public void sendMove(String from, String to, String promotion) throws ResponseException{
-        MoveCommand move;
-        if (promotion != null && !promotion.isEmpty()){
-            move = new MoveCommand(authToken, gameId, from, to, promotion.toUpperCase());
+        
+        ChessPosition startPos= ChessPosition.fromString(from);
+        ChessPosition endPos = ChessPosition.fromString(to);
+        ChessPiece.PieceType promotionPiece = null;
 
-        }else{
-            move = new MoveCommand(authToken, gameId, from, to, null);
-
+        if (promotion != null){
+            promotionPiece = ChessPiece.PieceType.valueOf(promotion);
         }
-        //
-
-
-        sendCommand(move);
+        
+        ChessMove move = new ChessMove(startPos, endPos, promotionPiece);
+        MoveCommand cmd = new MoveCommand(authToken,gameId, move);
+        sendCommand(cmd);
     }
 
     public void resign() throws ResponseException{
