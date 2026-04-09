@@ -108,19 +108,23 @@ public class WSClient extends Endpoint{
     }
 
     public void sendMove(String from, String to, String promotion) throws ResponseException{
-        
-        ChessPosition startPos= ChessPosition.fromString(from);
-        ChessPosition endPos = ChessPosition.fromString(to);
-        ChessPiece.PieceType promotionPiece = null;
+        try {
+            ChessPosition startPos = ChessPosition.fromString(from);
+            ChessPosition endPos = ChessPosition.fromString(to);
+            ChessPiece.PieceType promotionPiece = null;
 
-        if (promotion != null){
-            promotionPiece = ChessPiece.PieceType.valueOf(promotion);
+            if (promotion != null) {
+                promotionPiece = ChessPiece.PieceType.valueOf(promotion);
+            }
+
+            ChessMove move = new ChessMove(startPos, endPos, promotionPiece);
+            MoveCommand cmd = new MoveCommand(authToken, gameId, move);
+            cmd.setUsername(username);
+            sendCommand(cmd);
+        } catch (IllegalArgumentException e){
+            throw new ResponseException(ResponseException.Code.ClientError, "move must be in valid squares and in lower case");
+
         }
-        
-        ChessMove move = new ChessMove(startPos, endPos, promotionPiece);
-        MoveCommand cmd = new MoveCommand(authToken,gameId, move);
-        cmd.setUsername(username);
-        sendCommand(cmd);
     }
 
     public void resign() throws ResponseException{
@@ -131,8 +135,7 @@ public class WSClient extends Endpoint{
         if (playerColor != null) {
             command.setColor(playerColor.name());
         }
-        sendCommand(new UserGameCommand(UserGameCommand.CommandType.RESIGN, authToken, gameId));
-
+        sendCommand(command);
     }
 
     public void leavegame() throws ResponseException{
@@ -158,6 +161,9 @@ public class WSClient extends Endpoint{
         } catch (IOException e){
             throw new ResponseException(ResponseException.Code.ServerError, e.getMessage());
         }
+    }
+    public ChessGame getGame(){
+        return game;
     }
 }
 

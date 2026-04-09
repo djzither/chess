@@ -137,8 +137,12 @@ public class ChessClient {
 
                 switch (cmd) {
                     case "move":
-
+                        if (params.length < 2 || params.length > 3){
+                            System.out.println("move <from> <to> {promotion piece}");
+                            break;
+                        }
                         String promotion = params.length > 2 ? params[2] : null;
+
                         wsClient.sendMove(params[0], params[1], promotion);
                         break;
                     case "resign":
@@ -152,7 +156,7 @@ public class ChessClient {
                         running = false;
                         break;
                     case "redraw":
-                        MakeBoard board = new MakeBoard(currentGame);
+                        MakeBoard board = new MakeBoard(wsClient.getGame());
                         board.makeBoard(playerColor, null);
                         break;
                     case "legalmoves":
@@ -161,7 +165,7 @@ public class ChessClient {
                         System.out.println(gameHelp());
                         break;
                     default:
-                        gameHelp();
+                        System.out.println(gameHelp());
 
 
                 }
@@ -181,7 +185,7 @@ public class ChessClient {
                     - help -> displays this menu
                     - redraw -> redraws the chessboard
                     - leave -> removes usr form game
-                    - move <E5> <E4> -> make a move
+                    - move <E5> <E4> {promotion piece (Q)}-> make a move
                     - legalmoves -> gives legal moves
                     - resign -> you resign and loose
                     """;
@@ -231,8 +235,8 @@ public class ChessClient {
         }
 
         String gameName = params[0];
-        CreateGameRequest createGameRequest = new CreateGameRequest(gameName, null);
 
+        CreateGameRequest createGameRequest = new CreateGameRequest(gameName, authToken);
         server.createGame(createGameRequest);
 
         //gonna need weird stuff with game id i think based on insturctions
@@ -368,6 +372,9 @@ public class ChessClient {
         server.logout();
         return "You are logged out";
     }
+
+
+
 
 
 
