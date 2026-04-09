@@ -161,7 +161,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
 
         var notif = new Notification(
                 username + " resigned");
-        connections.broadcast(session, notif, cmd.getGameID());
+        connections.broadcast(null, notif, cmd.getGameID());
     }
 
     private void handleMakeMove(MoveCommand cmd, Session session) throws IOException, DataAccessException, InvalidMoveException {
