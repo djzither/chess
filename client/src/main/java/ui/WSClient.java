@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 import jakarta.websocket.*;
 import jakarta.websocket.Session;
 
-import org.eclipse.jetty.server.Authentication;
+
 import websocket.commands.MoveCommand;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ErrorMessages;
