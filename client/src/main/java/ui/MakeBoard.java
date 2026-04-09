@@ -26,6 +26,7 @@ public class MakeBoard {
 
 
         boolean isBlackView = (playerColor == ChessGame.TeamColor.BLACK && observe == null);
+        out.println();
         drawColHeaders(out, isBlackView);
 
         for (int boardRow = 0; boardRow < BOARD_SIZE_IN_SQUARES; boardRow++){
@@ -35,10 +36,11 @@ public class MakeBoard {
     }
 
     private static void drawColHeaders(PrintStream out, boolean isBlack){
+
         setBlack(out);
 
 
-        out.print("   ");
+        out.print(" ");
         String[] topHeaders = {" A ", " B ", " C ", " D ", " E ", " F ", " G ", " H "};
         if (!isBlack) {
             for (int i = 0; i < BOARD_SIZE_IN_SQUARES; i++) {

@@ -339,7 +339,7 @@ public class ChessClient {
         wsClient.connect(playersColor);
 
         gameCommands(playersColor);
-        return "joined game";
+        return "";
     }
 
     private String observe(String...params) throws ResponseException {

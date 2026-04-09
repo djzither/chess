@@ -82,7 +82,7 @@ public class WSClient extends Endpoint{
             }
             case ERROR -> {
                 ErrorMessages errorMessages = gson.fromJson(rawJson, ErrorMessages.class);
-                System.err.println("Error! "+ errorMessages.getErrorText());
+                System.err.println(""+ errorMessages.getErrorText());
 
             }
         }

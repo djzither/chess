@@ -134,15 +134,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
 
         String username = userService.getUsernameFromAuth(cmd.getAuthToken());
 
-        ChessGame.TeamColor playerColor = null;
-
-        if (username != null) {
-            if (username.equals(gameData.whiteUsername())) {
-                playerColor = ChessGame.TeamColor.WHITE;
-            } else if (username.equals(gameData.blackUsername())) {
-                playerColor = ChessGame.TeamColor.BLACK;
-            }
-        }
+        ChessGame.TeamColor playerColor = getPlayerColor(username, gameData);
 
         if(playerColor== null){
             var error = new ErrorMessages("You are observer and cant resign...");
@@ -169,7 +161,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
 
         var notif = new Notification(
                 username + " resigned");
-        connections.broadcast(null, notif, cmd.getGameID());
+        connections.broadcast(session, notif, cmd.getGameID());
     }
 
     private void handleMakeMove(MoveCommand cmd, Session session) throws IOException, DataAccessException, InvalidMoveException {
@@ -178,16 +170,8 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         ChessMove move = cmd.getMove();
         String username = userService.getUsernameFromAuth(cmd.getAuthToken());
 
-        ChessGame.TeamColor playerColor = null;
 
-        if (username != null) {
-            if (username.equals(gameData.whiteUsername())) {
-                playerColor = ChessGame.TeamColor.WHITE;
-            } else if (username.equals(gameData.blackUsername())) {
-                playerColor = ChessGame.TeamColor.BLACK;
-            }
-        }
-
+        ChessGame.TeamColor playerColor = getPlayerColor(username, gameData);
         if (playerColor == null || game.getTeamTurn() != playerColor) {
             var err = new ErrorMessages("unable to make move");
             session.getRemote().sendString(new Gson().toJson(err));
@@ -221,4 +205,19 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
                 username + " made move");
         connections.broadcast(session, notif, cmd.getGameID());
     }
+    private ChessGame.TeamColor getPlayerColor(String username, GameData gamedata){
+        ChessGame.TeamColor playerColor = null;
+
+        if (username != null) {
+            if (username.equals(gamedata.whiteUsername())) {
+                return ChessGame.TeamColor.WHITE;
+            } else if (username.equals(gamedata.blackUsername())) {
+                return ChessGame.TeamColor.BLACK;
+            }
+
+        }
+        return null;
+
+    }
+
 }
