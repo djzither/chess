@@ -143,7 +143,7 @@ public class WSClient extends Endpoint{
         System.out.println("Are you sure you want to resign? (yes/no): ");
         String input = new java.util.Scanner(System.in).nextLine().trim().toLowerCase();
         if (input.equals("yes") || input.equals("y")) {
-            resign(); // actually sends the RESIGN command
+            resign();
         } else {
             System.out.println("Resign cancelled.");
         }
@@ -176,5 +176,6 @@ public class WSClient extends Endpoint{
     public ChessGame getGame(){
         return game;
     }
+    //
 }
 
