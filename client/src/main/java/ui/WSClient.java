@@ -28,14 +28,16 @@ public class WSClient extends Endpoint{
     private final String authToken;
     private ChessGame.TeamColor playerColor;
     private final Gson gson = new Gson();
+    private final String username;
 
 
 
-    public WSClient(String serverUrl, Integer gameId, ChessGame currentGame, String authToken) throws ResponseException {
+    public WSClient(String serverUrl, Integer gameId, ChessGame currentGame, String authToken, String username) throws ResponseException {
+
 
         try {
 
-
+            this.username = username;
             this.gameId = gameId;
             this.game = currentGame;
             this.authToken = authToken;
@@ -87,7 +89,14 @@ public class WSClient extends Endpoint{
 
     public void connect(ChessGame.TeamColor color) throws ResponseException{
         this.playerColor = color;
-        sendCommand(new UserGameCommand(UserGameCommand.CommandType.CONNECT, authToken, gameId));
+        UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.CONNECT, authToken, gameId);
+        command.setUsername(username);
+
+        if (color != null){
+            command.setColor(color.name());
+        }
+        sendCommand(command);
+
 
     }
 

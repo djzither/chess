@@ -35,6 +35,7 @@ public class MakeBoard {
 
     private static void drawColHeaders(PrintStream out, boolean isBlack){
         setBlack(out);
+        
 
         out.print("   ");
         String[] topHeaders = {" A ", " B ", " C ", " D ", " E ", " F ", " G ", " H "};

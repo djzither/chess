@@ -137,7 +137,9 @@ public class ChessClient {
 
                 switch (cmd) {
                     case "move":
-                        wsClient.sendMove(params[0], params[1], params[2]);
+
+                        String promotion = params.length > 2 ? params[2] : null;
+                        wsClient.sendMove(params[0], params[1], promotion);
                         break;
                     case "resign":
 
@@ -154,6 +156,9 @@ public class ChessClient {
                         board.makeBoard(playerColor, null);
                         break;
                     case "legalmoves":
+                        break;
+                    case "help":
+                        System.out.println(gameHelp());
                         break;
                     default:
                         gameHelp();
@@ -213,6 +218,7 @@ public class ChessClient {
         RegisterLoginResult registerLoginResult = server.register(registerRequest);
 
         userName = registerLoginResult.username();
+        authToken = registerLoginResult.authToken();
 
         state = State.SIGNEDIN;
         return String.format("you registered as %s.", userName);
@@ -310,7 +316,7 @@ public class ChessClient {
         }
 
 
-        wsClient = new WSClient(serverUrl, game.gameId(), currentGame, authToken);
+        wsClient = new WSClient(serverUrl, game.gameId(), currentGame, authToken, userName);
         wsClient.connect(playersColor);
 
         gameCommands(playersColor);
@@ -344,7 +350,7 @@ public class ChessClient {
 
 
 
-        wsClient = new WSClient(serverUrl, game.gameId(),currentGame, authToken);
+        wsClient = new WSClient(serverUrl, game.gameId(),currentGame, authToken, userName);
         wsClient.connect(null);
 
         gameCommands(null);

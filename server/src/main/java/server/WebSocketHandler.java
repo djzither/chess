@@ -91,8 +91,8 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         session.getRemote().sendString(new Gson().toJson(loadGame));
 
         var notif = new Notification(
-                cmd.getUsername() + (cmd.isPlayer() ? " joined as " + cmd.getColor():
-                "is observering"));
+                cmd.getUsername() + (cmd.isPlayer() ? " joined as " + cmd.getColor() :
+                " is observering"));
         connections.broadcast(session, notif, cmd.getGameID());
 
 
