@@ -74,7 +74,7 @@ public class WSClient extends Endpoint{
 
 
                 MakeBoard board = new MakeBoard(game);
-                board.makeBoard(playerColor, null);
+                board.makeBoard(playerColor, null, null);
             }
             case NOTIFICATION -> {
                 Notification notification = gson.fromJson(rawJson, Notification.class);

@@ -6,6 +6,7 @@ import chess.ChessPosition;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 
 import static ui.EscapeSequences.*;
 
@@ -19,7 +20,7 @@ public class MakeBoard {
         this.game = game;
     }
 
-    public void makeBoard(ChessGame.TeamColor playerColor, String observe) {
+    public void makeBoard(ChessGame.TeamColor playerColor, String observe, Collection<ChessPosition> highlights) {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(ERASE_SCREEN);
 
@@ -28,14 +29,14 @@ public class MakeBoard {
         drawColHeaders(out, isBlackView);
 
         for (int boardRow = 0; boardRow < BOARD_SIZE_IN_SQUARES; boardRow++){
-            drawRowOfSquares(out, boardRow, isBlackView);
+            drawRowOfSquares(out, boardRow, isBlackView, highlights);
         }
         drawColHeaders(out, isBlackView);
     }
 
     private static void drawColHeaders(PrintStream out, boolean isBlack){
         setBlack(out);
-        
+
 
         out.print("   ");
         String[] topHeaders = {" A ", " B ", " C ", " D ", " E ", " F ", " G ", " H "};
@@ -62,7 +63,7 @@ public class MakeBoard {
         out.print(RESET_TEXT_COLOR);
     }
 
-    private void drawRowOfSquares(PrintStream out, int boardRow, boolean isBlack) {
+    private void drawRowOfSquares(PrintStream out, int boardRow, boolean isBlack, Collection<ChessPosition> highlights) {
         int displayRow;
         if (!isBlack) {
             displayRow = BOARD_SIZE_IN_SQUARES - boardRow;
@@ -83,14 +84,16 @@ public class MakeBoard {
                 actualRow = boardRow + 1;
                 actualCol = 8 - colBoard;
             }
-
-
-            if ((actualRow + actualCol) % 2 == 0) {
+            ChessPosition pos = new ChessPosition(actualRow, actualCol);
+            if (highlights != null && highlights.contains(pos)) {
+                out.print(SET_BG_COLOR_YELLOW);
+            }
+            else if ((actualRow + actualCol) % 2 == 0) {
                 out.print(SET_BG_COLOR_LIGHT_GREY);
             } else {
                 out.print(SET_BG_COLOR_BLUE);
             }
-            ChessPosition pos = new ChessPosition(actualRow, actualCol);
+
             ChessPiece piece = game.getBoard().getPiece(pos);
             if (piece != null) {
                 if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {

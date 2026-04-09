@@ -4,9 +4,10 @@ package ui;
 import chess.ChessGame;
 
 
+import chess.ChessMove;
+import chess.ChessPosition;
 import exception.ResponseException;
 import model.GameData;
-import org.eclipse.jetty.server.Response;
 import requestobjects.*;
 import server.ServerFacade;
 
@@ -157,9 +158,11 @@ public class ChessClient {
                         break;
                     case "redraw":
                         MakeBoard board = new MakeBoard(wsClient.getGame());
-                        board.makeBoard(playerColor, null);
+                        board.makeBoard(playerColor, null, null);
                         break;
                     case "legalmoves":
+                        legalMoves(params, playerColor);
+
                         break;
                     case "help":
                         System.out.println(gameHelp());
@@ -177,6 +180,18 @@ public class ChessClient {
 
 
         }
+
+    }
+    void legalMoves(String[] params, ChessGame.TeamColor playerColor){
+        ChessPosition start = ChessPosition.fromString(params[0]);
+        Collection<ChessMove> moves = wsClient.getGame().validMoves(start);
+        Collection<ChessPosition> highlights = new ArrayList<>();
+        for (ChessMove move : moves){
+            highlights.add(move.getEndPosition());
+        }
+        highlights.add(start);
+        MakeBoard board = new MakeBoard(wsClient.getGame());
+        board.makeBoard(playerColor, null, highlights);
 
     }
 
