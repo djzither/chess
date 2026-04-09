@@ -168,7 +168,7 @@ public class ChessClient {
                         System.out.println(gameHelp());
                         break;
                     default:
-                        System.out.println(gameHelp());
+                        System.out.println(gameHelp() + "\n you gave a bad command");
 
 
                 }
