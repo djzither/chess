@@ -218,7 +218,9 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         }
         ChessGame.TeamColor inCheck = game.getTeamTurn();
         if (game.isInCheck(inCheck)) {
-            String inCheckName = inCheck == ChessGame.TeamColor.WHITE ? gameData.whiteUsername() : gameData.blackUsername();
+            String inCheckName = inCheck == ChessGame.TeamColor.WHITE
+                    ? gameData.whiteUsername()
+                    : gameData.blackUsername();
             var checkNotif = new Notification(inCheckName + " is in check!");
             connections.broadcast(null, checkNotif, cmd.getGameID());
         }
