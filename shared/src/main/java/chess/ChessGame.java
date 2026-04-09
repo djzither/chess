@@ -119,7 +119,7 @@ public class ChessGame {
 
 
         if (piece.getTeamColor() != currentTurn){
-            throw new InvalidMoveException("not your turn");
+            throw new InvalidMoveException("unable to make move");
         }
         Collection<ChessMove> legal = validMoves(start);
         if (!legal.contains(move)){

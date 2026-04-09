@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import jakarta.websocket.*;
 import jakarta.websocket.Session;
 
+import org.eclipse.jetty.server.Authentication;
 import websocket.commands.MoveCommand;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ErrorMessages;
@@ -73,7 +74,7 @@ public class WSClient extends Endpoint{
 
 
                 MakeBoard board = new MakeBoard(game);
-                board.makeBoard(playerColor, game.toString());
+                board.makeBoard(playerColor, null);
             }
             case NOTIFICATION -> {
                 Notification notification = gson.fromJson(rawJson, Notification.class);
@@ -91,6 +92,12 @@ public class WSClient extends Endpoint{
         this.playerColor = color;
         UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.CONNECT, authToken, gameId);
         command.setUsername(username);
+        if (color != null) {
+            command.setPlayer(true);
+        } else {
+            command.setPlayer(false);
+        }
+
 
         if (color != null){
             command.setColor(color.name());
@@ -112,16 +119,31 @@ public class WSClient extends Endpoint{
         
         ChessMove move = new ChessMove(startPos, endPos, promotionPiece);
         MoveCommand cmd = new MoveCommand(authToken,gameId, move);
+        cmd.setUsername(username);
         sendCommand(cmd);
     }
 
     public void resign() throws ResponseException{
+
+        UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.RESIGN, authToken, gameId);
+        command.setUsername(username);
+        command.setPlayer(playerColor != null);
+        if (playerColor != null) {
+            command.setColor(playerColor.name());
+        }
         sendCommand(new UserGameCommand(UserGameCommand.CommandType.RESIGN, authToken, gameId));
 
     }
 
     public void leavegame() throws ResponseException{
-        sendCommand(new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, gameId));
+        UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, gameId);
+        command.setUsername(username);
+        command.setPlayer(playerColor != null);
+        if (playerColor != null) {
+            command.setColor(playerColor.name());
+        }
+        sendCommand(command);
+
         try{
             session.close();
         } catch (IOException ex){

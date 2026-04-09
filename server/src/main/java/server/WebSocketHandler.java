@@ -111,7 +111,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
                     gameData.game()
             );
         }else if (username.equals(gameData.blackUsername())){
-            new GameData(
+            gameData = new GameData(
                     gameData.gameId(),
                     gameData.whiteUsername(),
                     null,
@@ -124,7 +124,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         gameService.updateGame(gameData);
 
         var notif = new Notification(
-                cmd.getUsername() + " left the game");
+                username + " left the game");
         connections.broadcast(session, notif, cmd.getGameID());
     }
 
@@ -189,7 +189,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         }
 
         if (playerColor == null || game.getTeamTurn() != playerColor) {
-            var err = new ErrorMessages("Not your turn");
+            var err = new ErrorMessages("unable to make move");
             session.getRemote().sendString(new Gson().toJson(err));
             return;
         }
@@ -218,7 +218,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         connections.broadcast(null, loadGame, cmd.getGameID());
 
         var notif = new Notification(
-                cmd.getUsername() + " made move");
+                username + " made move");
         connections.broadcast(session, notif, cmd.getGameID());
     }
 }
