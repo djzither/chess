@@ -139,6 +139,15 @@ public class WSClient extends Endpoint{
         }
         sendCommand(command);
     }
+    public void confirmResign() throws ResponseException {
+        System.out.println("Are you sure you want to resign? (yes/no): ");
+        String input = new java.util.Scanner(System.in).nextLine().trim().toLowerCase();
+        if (input.equals("yes") || input.equals("y")) {
+            resign(); // actually sends the RESIGN command
+        } else {
+            System.out.println("Resign cancelled.");
+        }
+    }
 
     public void leavegame() throws ResponseException{
         UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, gameId);

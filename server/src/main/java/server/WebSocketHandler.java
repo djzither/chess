@@ -48,7 +48,8 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             switch (command.getCommandType()) {
                 case CONNECT -> handleConnect(command, ctx.session);
                 case LEAVE -> handleLeave(command, ctx.session);
-                case RESIGN -> handleResign(command, ctx.session);
+                case RESIGN ->
+                        handleResign(command, ctx.session);
                 case MAKE_MOVE ->{
                     MoveCommand moveCmd = new Gson().fromJson(ctx.message(), MoveCommand.class);
                     handleMakeMove(moveCmd, ctx.session);
@@ -141,6 +142,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             session.getRemote().sendString(new Gson().toJson(error));
             return;
         }
+
         if (game.isGameOver()){
             var error = new ErrorMessages("Game is already over");
             session.getRemote().sendString(new Gson().toJson(error));
@@ -177,16 +179,48 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             session.getRemote().sendString(new Gson().toJson(err));
             return;
         }
-
+        String lostName = null;
+        String winnerName = null;
         game.makeMove(move);
+        if (game.isInCheckmate(game.getTeamTurn())){
+            ChessGame.TeamColor lost = game.getTeamTurn();
+
+            if (lost == ChessGame.TeamColor.WHITE){
+                lostName = gameData.whiteUsername();
+            }
+            else{
+                lostName = gameData.blackUsername();
+            }
+
+            if (lost == ChessGame.TeamColor.WHITE){
+                winnerName = gameData.blackUsername();
+            }
+            else{
+                winnerName = gameData.whiteUsername();
+            }
+
+        }
+
+
+
+
 
         if (game.isInCheckmate(game.getTeamTurn())){
-            var gameOver= new Notification("Checkmate: Game Over");
+            var gameOver= new Notification("Checkmate: Game Over " + lostName + " was defeated by " + winnerName);
             connections.broadcast(null, gameOver, cmd.getGameID());
+
 
         }else if(game.isInStalemate(game.getTeamTurn())){
             var gameOver = new Notification("Stalemate: Game Over");
             connections.broadcast(null, gameOver, cmd.getGameID());
+        }else if(game.isInCheck(game.getTeamTurn())){
+            var check = new Notification("");
+        }
+        ChessGame.TeamColor inCheck = game.getTeamTurn();
+        if (game.isInCheck(inCheck)) {
+            String inCheckName = inCheck == ChessGame.TeamColor.WHITE ? gameData.whiteUsername() : gameData.blackUsername();
+            var checkNotif = new Notification(inCheckName + " is in check!");
+            connections.broadcast(null, checkNotif, cmd.getGameID());
         }
 
         GameData updatedGame = new GameData(
@@ -200,9 +234,10 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         //get the game and send to players
         LoadGame loadGame = new LoadGame(updatedGame.game());
         connections.broadcast(null, loadGame, cmd.getGameID());
-
+        String moveStr = positionToInput(move.getStartPosition()) + " -> " +
+                positionToInput(move.getEndPosition());
         var notif = new Notification(
-                username + " made move");
+                username + " made move: " + moveStr );
         connections.broadcast(session, notif, cmd.getGameID());
     }
     private ChessGame.TeamColor getPlayerColor(String username, GameData gamedata){
@@ -218,6 +253,11 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         }
         return null;
 
+    }
+    private String positionToInput(ChessPosition position) {
+        char file = (char) ('a' + position.getColumn() - 1);
+        int rank = position.getRow();
+        return "" + file + rank;
     }
 
 }

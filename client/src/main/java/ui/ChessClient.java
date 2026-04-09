@@ -148,8 +148,8 @@ public class ChessClient {
                         break;
                     case "resign":
 
-                        wsClient.resign();
-                        running = false;
+                        wsClient.confirmResign();
+
                         break;
 
                     case "leave":
