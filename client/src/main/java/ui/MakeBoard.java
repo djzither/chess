@@ -40,7 +40,7 @@ public class MakeBoard {
         setBlack(out);
 
 
-        out.print(" ");
+        out.print("   ");
         String[] topHeaders = {" A ", " B ", " C ", " D ", " E ", " F ", " G ", " H "};
         if (!isBlack) {
             for (int i = 0; i < BOARD_SIZE_IN_SQUARES; i++) {

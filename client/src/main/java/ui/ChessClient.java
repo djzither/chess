@@ -182,8 +182,22 @@ public class ChessClient {
         }
 
     }
-    void legalMoves(String[] params, ChessGame.TeamColor playerColor){
-        ChessPosition start = ChessPosition.fromString(params[0]);
+    void legalMoves(String[] params, ChessGame.TeamColor playerColor) throws ResponseException {
+        if (params.length != 1){
+            throw new ResponseException(ResponseException.Code.ClientError, "legalmoves <e5>");
+        }
+
+        ChessPosition start;
+        try {
+            start = ChessPosition.fromString(params[0]);
+        } catch (RuntimeException ex) {
+            throw new ResponseException(ResponseException.Code.ClientError, "square must be valid chess notation");
+        }
+        if (wsClient.getGame().getBoard().getPiece(start) == null) {
+            throw new ResponseException(ResponseException.Code.ClientError, "no piece at that square");
+        }
+
+
         Collection<ChessMove> moves = wsClient.getGame().validMoves(start);
         Collection<ChessPosition> highlights = new ArrayList<>();
         for (ChessMove move : moves){
@@ -200,8 +214,8 @@ public class ChessClient {
                     - help -> displays this menu
                     - redraw -> redraws the chessboard
                     - leave -> removes usr form game
-                    - move <E5> <E4> {promotion piece (Q)}-> make a move
-                    - legalmoves -> gives legal moves
+                    - move <e5> <e4> {promotion piece (Q)}-> make a move
+                    - legalmoves <e4> -> gives legal moves
                     - resign -> you resign and loose
                     """;
 
