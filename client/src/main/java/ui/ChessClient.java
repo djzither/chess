@@ -170,8 +170,8 @@ public class ChessClient {
 
                 }
             }catch(Throwable e){
-                var msg = e.toString();
-                System.out.print(msg);
+
+                System.out.print(e.getMessage());
             }
 
 

@@ -122,7 +122,7 @@ public class WSClient extends Endpoint{
             cmd.setUsername(username);
             sendCommand(cmd);
         } catch (IllegalArgumentException e){
-            throw new ResponseException(ResponseException.Code.ClientError, "move must be in valid squares and in lower case");
+            throw new ResponseException(ResponseException.Code.ClientError, "move must be in valid squares and in lower case and only include promotion if pawn at end");
 
         }
     }
